@@ -1,1864 +1,1179 @@
 <!DOCTYPE html>
-<html lang="en" class="lenis">
+<html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Pulse — Real-time truth layer for AI agents</title>
-<meta name="description" content="Chainlink is a data feed for smart contracts. Pulse is a data feed for AI agents. Multi-source aggregation, confidence scoring, sub-second delivery."/>
+<meta name="description" content="Chainlink is a data feed for smart contracts. Pulse is a data feed for AI agents."/>
 
-<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
 
-<!-- GSAP -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<!-- Lenis smooth scroll -->
 <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
 
 <style>
-/* ─── RESET ─── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;font-size:16px}
-html.lenis,html.lenis body{height:auto}
-.lenis.lenis-smooth{scroll-behavior:auto!important}
 body{
-  background-color:#080807;
+  background:#111110;
   color:#e8e8e3;
   font-family:'Onest',Helvetica,Arial,sans-serif;
-  font-size:1rem;
-  line-height:1.5;
-  min-height:100%;
-  overflow-x:hidden;
+  font-size:1rem;line-height:1.5;
+  min-height:100%;overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
 }
 img{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 button{background:none;border:none;cursor:pointer;font:inherit;color:inherit}
-ul,ol{list-style:none}
+ul{list-style:none}
 
-/* ─── CSS TOKENS ─── */
 :root{
-  --bg:#080807;
-  --bg-1:#100f0e;
-  --bg-2:#181715;
-  --bg-3:#222020;
+  --bg:#111110;
+  --bg-warm:#1a1916;
   --ink:#e8e8e3;
   --ink-2:#bfbfb1;
-  --muted:#938f8a;
-  --faint:#6b645c;
-
-  --beige-100:#e8e8e3;
-  --beige-200:#ddddd5;
-  --beige-300:#d1d1c7;
-  --beige-400:#bfbfb1;
-  --black-50:#938f8a;
-  --black-100:#6b645c;
-  --black-200:#524d47;
-  --black-300:#393632;
-  --black-400:#080807;
-
+  --muted:#7a7265;
+  --faint:#3a3830;
+  --beige:#e8e8e3;
   --accent:#75e5b0;
-  --accent-dim:rgba(117,229,176,0.12);
-  --line:rgba(255,255,255,0.06);
-  --line-2:rgba(255,255,255,0.10);
-
-  --radius-sm:.15rem;
-  --radius:1rem;
-  --radius-round:100vw;
-
-  --margin:clamp(.75rem,3vw,1.5rem);
-  --section-sm:clamp(3rem,6vw,5rem);
-  --section-main:clamp(4rem,8vw,7rem);
-  --section-lg:clamp(5.5rem,10vw,10rem);
-
-  --ease-out:cubic-bezier(0.16,1,0.3,1);
-  --ease-in-out:cubic-bezier(0.645,0.045,0.355,1);
+  --line:rgba(255,255,255,0.07);
+  --line-2:rgba(255,255,255,0.12);
+  --m:clamp(1.25rem,3.5vw,2rem);
+  --ease:cubic-bezier(0.16,1,0.3,1);
 }
 
-/* ─── UTILITY ─── */
-.u-mono{font-family:'Space Mono',monospace;letter-spacing:-.02em}
-.u-sr-only{position:absolute;clip:rect(0 0 0 0);width:1px;height:1px;overflow:hidden}
-.u-theme-light{--bg:#e8e8e3;--bg-1:#ddddd5;--bg-2:#d1d1c7;--ink:#080807;--ink-2:#393632;--muted:#524d47;--line:rgba(0,0,0,0.07);--line-2:rgba(0,0,0,0.12)}
-
-/* Typography scale */
-.t-display{
-  font-family:'Onest',Helvetica,Arial,sans-serif;
-  font-size:clamp(2.8rem,11vw,11.2rem);
-  font-weight:500;
-  line-height:1;
-  letter-spacing:-0.03em;
-  text-wrap:balance;
-}
-.t-h1{font-size:clamp(2rem,5vw,4.5rem);font-weight:500;line-height:1;letter-spacing:-0.03em}
-.t-h2{font-size:clamp(1.5rem,3.5vw,3rem);font-weight:500;line-height:1.1;letter-spacing:-0.02em}
-.t-h3{font-size:clamp(1.25rem,2.5vw,2rem);font-weight:500;line-height:1.1;letter-spacing:-0.02em}
-.t-h4{font-size:clamp(1.1rem,1.8vw,1.5rem);font-weight:500;line-height:1.2;letter-spacing:-0.015em}
-.t-h5{font-size:clamp(1rem,1.4vw,1.25rem);font-weight:400;line-height:1.3;letter-spacing:-0.01em}
-.t-body{font-size:1rem;font-weight:400;line-height:1.5}
-.t-small{font-size:.875rem;font-weight:400;line-height:1.4}
-.t-xs{font-size:.75rem;font-weight:400;line-height:1.3;letter-spacing:.01em}
-
-/* Grid */
-.g-grid{
-  display:grid;
-  grid-template-columns:repeat(12,1fr);
-  column-gap:var(--margin);
-  padding-left:var(--margin);
-  padding-right:var(--margin);
-}
-.g-span-12{grid-column:span 12}
-.g-span-8{grid-column:span 8}
-.g-span-7{grid-column:span 7}
-.g-span-6{grid-column:span 6}
-.g-span-5{grid-column:span 5}
-.g-span-4{grid-column:span 4}
-.g-span-3{grid-column:span 3}
-
-/* ─── VISIBILITY / ANIMATE STATES ─── */
-[data-animate],
-[data-split-reveal],
-.eyebrow,
-.navbar-wrap{
-  visibility:hidden;
-  opacity:0;
+/* ── GRAIN ── */
+.grain{
+  position:fixed;inset:0;z-index:9997;pointer-events:none;
+  opacity:.055;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px;
 }
 
-/* ─── CURSOR ─── */
-.cursor-wrap{position:fixed;top:0;left:0;pointer-events:none;z-index:9999}
-.cursor-dot{
-  width:8px;height:8px;border-radius:50%;
+/* ── CURSOR ── */
+.cursor{
+  position:fixed;top:0;left:0;z-index:9999;pointer-events:none;
+  width:9px;height:9px;border-radius:50%;
   background:var(--ink);
-  position:fixed;
-  top:0;left:0;
   transform:translate(-50%,-50%);
-  transition:width .2s var(--ease-out),height .2s var(--ease-out),opacity .2s;
   mix-blend-mode:difference;
+  transition:transform .12s,width .25s var(--ease),height .25s var(--ease);
 }
-@media(hover:none){.cursor-dot{display:none}}
+body:has(a:hover) .cursor,body:has(button:hover) .cursor{width:24px;height:24px}
+@media(hover:none){.cursor{display:none}}
 
-/* ─── NAVBAR ─── */
-.navbar-wrap{
-  position:fixed;top:0;left:0;right:0;
-  z-index:800;
-  display:grid;
-  grid-template-columns:repeat(12,1fr);
-  column-gap:var(--margin);
-  padding:0 var(--margin);
-  height:3.5rem;
-  align-items:center;
-  mix-blend-mode:normal;
-  background:linear-gradient(to bottom,rgba(8,8,7,.95) 0%,rgba(8,8,7,0) 100%);
-  backdrop-filter:blur(0);
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:800;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 var(--m);height:3.5rem;
+  transition:background .4s;
 }
-.navbar-logo{
-  grid-column:span 4;
-  display:flex;align-items:center;gap:.75rem;
-}
-.navbar-wordmark{
+nav.scrolled{background:rgba(17,17,16,.9);backdrop-filter:blur(20px)}
+.nav-logo{
   font-family:'Onest',sans-serif;
-  font-size:1rem;font-weight:600;
-  letter-spacing:-.02em;
+  font-size:.9375rem;font-weight:600;letter-spacing:-.02em;
+  display:flex;align-items:center;gap:.45rem;
 }
-.navbar-badge{
-  font-family:'Space Mono',monospace;
-  font-size:.6rem;font-weight:400;
-  color:var(--muted);
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  border:1px solid var(--line-2);
-  padding:.2em .5em;
-  border-radius:var(--radius-round);
-}
-.navbar-links{
-  grid-column:span 5;
-  display:flex;align-items:center;gap:2rem;
-}
-.navbar-link{
-  font-size:.875rem;font-weight:400;
-  color:var(--ink-2);
-  transition:color .2s;
-  display:flex;align-items:center;gap:.3rem;
-  overflow:hidden;
-  position:relative;
-}
-.navbar-link-inner{
-  display:flex;flex-direction:column;
-  transition:transform .35s var(--ease-out);
-}
-.navbar-link-text{display:block}
-.navbar-link-hover{display:block;position:absolute;bottom:-100%;left:0}
-.navbar-link:hover .navbar-link-inner{transform:translateY(-100%)}
-.navbar-link:hover{color:var(--ink)}
-.navbar-right{
-  grid-column:span 3;
-  display:flex;align-items:center;justify-content:flex-end;
-}
-.btn{
-  display:inline-flex;align-items:center;gap:.5rem;
-  padding:.5rem 1rem;
-  border-radius:var(--radius-round);
-  font-size:.8125rem;font-weight:500;
-  transition:background .2s,color .2s;
-  cursor:pointer;
-}
-.btn-primary{
-  background:var(--ink);
-  color:var(--bg);
-}
-.btn-primary:hover{background:var(--beige-200)}
-.btn-ghost{
-  border:1px solid var(--line-2);
-  color:var(--ink-2);
-}
-.btn-ghost:hover{border-color:var(--ink-2);color:var(--ink)}
-.btn-aside{
-  width:1.4em;height:1.4em;
-  border-radius:50%;
-  background:rgba(255,255,255,.15);
-  display:grid;place-items:center;
-  font-size:.65em;
-  flex-shrink:0;
-}
-
-/* ─── HERO ─── */
-.hero-wrap{
-  position:relative;
-  min-height:100dvh;
-  overflow:hidden;
-  display:flex;flex-direction:column;
-  justify-content:flex-end;
-  padding-bottom:var(--section-sm);
-}
-.hero-canvas{
-  position:absolute;inset:0;z-index:0;
-}
-.hero-gradient{
-  position:absolute;inset:0;z-index:1;
-  background:
-    radial-gradient(ellipse 60% 50% at 50% 0%,rgba(117,229,176,.06) 0%,transparent 60%),
-    radial-gradient(ellipse 80% 60% at 20% 100%,rgba(8,8,7,.9) 0%,transparent 70%),
-    linear-gradient(to bottom,rgba(8,8,7,.2) 0%,rgba(8,8,7,.85) 70%,rgba(8,8,7,1) 100%);
-}
-.hero-overlay{position:absolute;inset:0;z-index:2;background:rgba(8,8,7,.35)}
-.hero-img{
-  position:absolute;inset:0;z-index:0;
-  width:100%;height:100%;object-fit:cover;
-  object-position:center 30%;
-  opacity:.45;
-  transform:scale(1.05);
-}
-.hero-contain{
-  position:relative;z-index:3;
-  padding:0 var(--margin);
-}
-.hero-eyebrow{
-  display:flex;align-items:center;gap:.5rem;
-  margin-bottom:var(--section-sm);
-}
-.eyebrow-circle{
-  width:.5rem;height:.5rem;border-radius:50%;
+.nav-logo-dot{
+  width:.4rem;height:.4rem;border-radius:50%;
   background:var(--accent);
-  flex-shrink:0;
+  animation:blink 2.8s ease-in-out infinite;
 }
-.eyebrow-text{
-  font-family:'Space Mono',monospace;
-  font-size:.7rem;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--muted);
-}
-.hero-main{display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--margin)}
-.hero-heading-wrap{grid-column:span 10}
-.hero-heading{
-  font-family:'Onest',sans-serif;
-  font-size:clamp(3rem,12vw,12.5rem);
-  font-weight:500;
-  line-height:.95;
-  letter-spacing:-0.04em;
-  text-wrap:balance;
-  overflow:hidden;
-}
-.hero-heading span.line{display:block;overflow:hidden}
-.hero-heading span.word{display:inline-block}
-.hero-sub{
-  grid-column:10/13;
-  align-self:flex-end;
-  padding-bottom:.4em;
-}
-.hero-sub p{
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.nav-links{
+  position:absolute;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:2.5rem;
   font-size:.875rem;color:var(--ink-2);
-  line-height:1.5;max-width:22ch;
-  text-align:right;
 }
-.hero-bottom{
-  display:grid;grid-template-columns:repeat(12,1fr);
-  column-gap:var(--margin);
-  margin-top:var(--section-sm);
-  align-items:center;
-}
-.hero-stats{
-  grid-column:span 8;
-  display:flex;gap:3rem;align-items:center;
-}
-.hero-stat-item{display:flex;flex-direction:column;gap:.25rem}
-.hero-stat-num{
-  font-family:'Space Mono',monospace;
-  font-size:1.5rem;font-weight:700;
-  color:var(--accent);
-  letter-spacing:-.03em;font-variant-numeric:tabular-nums;
-}
-.hero-stat-label{font-size:.75rem;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
-.hero-cta{grid-column:10/13;display:flex;justify-content:flex-end}
-.hero-live-badge{
-  display:flex;align-items:center;gap:.5rem;
-  padding:.35rem .75rem;
-  border:1px solid var(--line-2);
-  border-radius:var(--radius-round);
-  font-family:'Space Mono',monospace;
-  font-size:.7rem;letter-spacing:.05em;color:var(--muted);
-}
-.live-dot{
-  width:.45rem;height:.45rem;border-radius:50%;
-  background:var(--accent);
-  animation:pulse-glow 2s ease-in-out infinite;
-}
-@keyframes pulse-glow{
-  0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(117,229,176,.4)}
-  50%{opacity:.7;box-shadow:0 0 0 4px rgba(117,229,176,0)}
-}
-
-/* ─── EYEBROW GLOBAL ─── */
-.eyebrow{
-  display:flex;align-items:center;gap:.5rem;
-  margin-bottom:2.5rem;
-}
-
-/* ─── PROBLEMS SECTION ─── */
-.problems-wrap{
-  background:var(--bg-2);
-  padding:var(--section-main) 0;
+.nav-link{
   position:relative;
+  display:inline-flex;flex-direction:column;overflow:hidden;height:1.2em;
 }
-.problems-header{
-  padding:0 var(--margin);
-  display:grid;grid-template-columns:repeat(12,1fr);
-  column-gap:var(--margin);
-  align-items:flex-start;
-}
-.problems-left{grid-column:span 5}
-.problems-right{grid-column:7/13;display:flex;flex-direction:column;gap:1.5rem}
-.problems-heading{color:var(--ink);margin-bottom:1.5rem}
-.problems-p{color:var(--ink-2);max-width:38ch;line-height:1.6}
-.stats-nav{display:flex;align-items:center;gap:1rem;margin-top:auto}
-.stat-progress{
-  flex:1;height:1px;background:var(--line-2);position:relative;overflow:hidden;border-radius:999px;
-}
-.stat-progress-bar{
-  position:absolute;top:0;left:0;height:100%;
-  background:var(--ink-2);
-  width:0%;
-  transition:width .1s linear;
-}
-.stat-btn{
-  width:2rem;height:2rem;border-radius:50%;
-  border:1px solid var(--line-2);
-  display:grid;place-items:center;
-  transition:border-color .2s,background .2s;
-}
-.stat-btn:hover{border-color:var(--ink-2);background:rgba(255,255,255,.05)}
-.stat-btn svg{width:.65rem;fill:currentColor}
-.stat-index{
-  font-family:'Space Mono',monospace;
-  font-size:.7rem;color:var(--muted);
-  letter-spacing:.05em;
-  font-variant-numeric:tabular-nums;
-  min-width:3rem;
-}
-.problems-collection{
-  padding:var(--section-sm) var(--margin) 0;
-}
-.problems-list{
-  display:grid;grid-template-columns:repeat(12,1fr);
-  column-gap:var(--margin);gap:var(--margin);
-}
-.problems-item{
-  grid-column:span 4;
-  padding:2rem;
-  background:var(--bg-3);
-  border:1px solid var(--line);
-  border-radius:.5rem;
-  display:flex;flex-direction:column;gap:1.5rem;
-}
-.problems-item-num{
-  font-family:'Space Mono',monospace;
-  font-size:3rem;font-weight:700;
-  line-height:1;
-  letter-spacing:-0.04em;
+.nav-link span{display:block;transition:transform .35s var(--ease)}
+.nav-link::after{
+  content:attr(data-label);display:block;
+  position:absolute;top:100%;left:0;
   color:var(--ink);
-  font-variant-numeric:tabular-nums;
 }
-.problems-item-label{font-size:.875rem;color:var(--ink-2);line-height:1.5;max-width:24ch}
-
-/* ─── GAP SECTION ─── */
-.gap-wrap{
-  padding:var(--section-lg) 0;
-  position:relative;overflow:hidden;
-}
-.gap-bg{
-  position:absolute;inset:0;
-  overflow:hidden;
-}
-.gap-lines-h{
-  position:absolute;left:0;right:0;
-  display:flex;justify-content:space-between;
-  padding:0 var(--margin);
-}
-.gap-lines-h.top{top:0}
-.gap-lines-h.bottom{bottom:0}
-.gap-line-sq{
-  width:.5rem;height:.5rem;
-  border:1px solid var(--line-2);
-  transform:rotate(45deg);
-}
-.gap-lines-v{
-  position:absolute;top:0;bottom:0;
-  left:var(--margin);right:var(--margin);
-  display:grid;
-  grid-template-columns:repeat(12,1fr);
-  column-gap:var(--margin);
-  pointer-events:none;
-}
-.gap-line-v{
-  border-left:1px solid var(--line);
-}
-.gap-inner{
-  position:relative;z-index:1;
-  padding:0 var(--margin);
-  display:grid;grid-template-columns:repeat(12,1fr);
-  column-gap:var(--margin);
-  align-items:center;
-}
-.gap-eyebrow{
-  grid-column:span 12;
-  font-family:'Space Mono',monospace;
-  font-size:.7rem;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--faint);
-  margin-bottom:3rem;
-}
-.gap-heading-wrap{
-  grid-column:span 12;
-  display:flex;flex-direction:column;
-  overflow:hidden;
-}
-.gap-heading{
-  font-family:'Onest',sans-serif;
-  font-size:clamp(3.5rem,13vw,13.85vw);
-  font-weight:500;
-  line-height:.95;
-  letter-spacing:-0.04em;
-  overflow:hidden;
-}
-.gap-heading.is-left{text-align:left}
-.gap-heading.is-right{text-align:right}
-.gap-heading span{display:block;overflow:hidden}
-.gap-bottom{
-  grid-column:7/13;
-  margin-top:3rem;
-}
-.gap-p{
-  font-size:clamp(1rem,1.5vw,1.25rem);
-  color:var(--ink-2);
-  line-height:1.5;
-  max-width:36ch;
-}
-
-/* ─── WORKS / FEEDS SECTION ─── */
-.works-wrap{
-  background:var(--beige-100);
-  color:var(--black-400);
-  padding:var(--section-main) 0;
-}
-.works-header{
-  padding:0 var(--margin);
-  margin-bottom:var(--section-sm);
-}
-.works-heading{
-  font-family:'Onest',sans-serif;
-  font-size:clamp(2.5rem,8vw,8rem);
-  font-weight:500;
-  letter-spacing:-0.04em;
-  line-height:.95;
-  color:var(--black-400);
-  text-transform:uppercase;
-}
-.works-contain{
-  padding:0 var(--margin);
-  display:grid;
-  grid-template-columns:repeat(12,1fr);
-  column-gap:var(--margin);
-  row-gap:var(--margin);
-}
-.works-item{
-  grid-column:span 6;
-  background:var(--beige-200);
-  border-radius:.5rem;
-  overflow:hidden;
-  display:flex;flex-direction:column;
-  cursor:pointer;
-  transition:transform .4s var(--ease-out);
-}
-.works-item:hover{transform:translateY(-4px)}
-.works-item-cover{
-  aspect-ratio:16/9;
-  background:var(--black-400);
-  position:relative;
-  overflow:hidden;
-  flex-shrink:0;
-}
-.works-feed-display{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;
-  padding:1.5rem;
-  gap:1rem;
-}
-.works-feed-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:.75rem 1rem;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:.35rem;
-}
-.works-feed-label{
-  font-family:'Space Mono',monospace;
-  font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;
-  color:rgba(255,255,255,.45);
-}
-.works-feed-value{
-  font-family:'Space Mono',monospace;
-  font-size:.95rem;font-weight:700;
-  color:#e8e8e3;font-variant-numeric:tabular-nums;
-}
-.works-feed-badge{
-  display:flex;align-items:center;gap:.35rem;
-  padding:.2rem .5rem;
-  border-radius:999px;
-  font-family:'Space Mono',monospace;
-  font-size:.6rem;letter-spacing:.05em;
-}
-.badge-green{background:rgba(117,229,176,.15);color:#75e5b0}
-.badge-yellow{background:rgba(245,158,11,.15);color:#f59e0b}
-.badge-muted{background:rgba(255,255,255,.06);color:rgba(255,255,255,.4)}
-.works-item-info{
-  padding:1.5rem;
-  display:flex;justify-content:space-between;align-items:flex-end;
-}
-.works-item-name{
-  font-family:'Onest',sans-serif;
-  font-size:1.1rem;font-weight:500;
-  letter-spacing:-.015em;
-  color:var(--black-400);
-}
-.works-item-meta{
-  font-family:'Space Mono',monospace;
-  font-size:.7rem;color:var(--black-200);
-  letter-spacing:.05em;
-}
-
-/* ─── SERVICES SECTION ─── */
-.services-wrap{
-  padding:var(--section-main) 0;
-  background:var(--bg);
-}
-.services-contain{padding:0 var(--margin)}
-.services-header{
-  display:grid;grid-template-columns:repeat(12,1fr);
-  column-gap:var(--margin);
-  margin-bottom:var(--section-sm);
-  align-items:flex-end;
-}
-.services-heading{grid-column:span 7;color:var(--ink)}
-.services-message{
-  grid-column:9/13;
-  font-size:.875rem;color:var(--ink-2);
-  line-height:1.6;max-width:28ch;
-  text-align:right;
-  align-self:flex-end;
-}
-.services-list{
-  display:flex;flex-direction:column;
-  gap:0;
-}
-.service-item{
-  display:grid;grid-template-columns:repeat(12,1fr);
-  column-gap:var(--margin);
-  padding:1.75rem 0;
-  border-top:1px solid var(--line);
-  align-items:center;
-  cursor:pointer;
+.nav-link:hover span{transform:translateY(-100%)}
+.nav-right{display:flex;align-items:center;gap:.75rem}
+.nav-sound{
+  width:2.2rem;height:2.2rem;border-radius:.35rem;
+  background:rgba(255,255,255,.08);border:1px solid var(--line-2);
+  display:grid;place-items:center;
   transition:background .2s;
 }
-.service-item:last-child{border-bottom:1px solid var(--line)}
-.service-item:hover{background:rgba(255,255,255,.02)}
-.service-num{
-  grid-column:span 1;
-  font-family:'Space Mono',monospace;
-  font-size:.7rem;color:var(--faint);
-  letter-spacing:.05em;
-  font-variant-numeric:tabular-nums;
-}
-.service-name{
-  grid-column:span 4;
-  font-size:1.1rem;font-weight:500;
-  color:var(--ink);letter-spacing:-.015em;
-}
-.service-desc{
-  grid-column:6/11;
-  font-size:.875rem;color:var(--ink-2);
-  line-height:1.5;
-}
-.service-tag{
-  grid-column:11/13;
-  display:flex;justify-content:flex-end;
-}
-.tag{
-  padding:.3rem .75rem;
+.nav-sound:hover{background:rgba(255,255,255,.14)}
+.nav-sound svg{width:.9rem;height:.9rem;stroke:var(--ink-2);fill:none;stroke-width:1.5}
+.nav-cta{
+  display:flex;align-items:center;gap:.4rem;
+  padding:.45rem 1rem .45rem 1.1rem;
+  background:var(--ink);color:#111110;
   border-radius:999px;
-  border:1px solid var(--line-2);
-  font-family:'Space Mono',monospace;
-  font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--muted);
-  transition:border-color .2s,color .2s;
+  font-size:.8125rem;font-weight:500;letter-spacing:-.01em;
+  transition:background .2s,transform .2s var(--ease);
 }
-.service-item:hover .tag{border-color:var(--accent);color:var(--accent)}
+.nav-cta:hover{background:#d8d8d3;transform:scale(1.02)}
+.nav-cta svg{width:.75rem;height:.75rem;stroke:currentColor;fill:none;stroke-width:2}
 
-/* ─── PROCESS SECTION ─── */
-.process-wrap{
-  padding:var(--section-main) 0;
-  background:var(--bg-1);
+/* ── HERO ── */
+.hero{
+  position:relative;height:100svh;min-height:640px;
+  background:#111110;
+  display:flex;align-items:center;justify-content:center;
   overflow:hidden;
-}
-.process-heading-svg-wrap{
-  padding:0 var(--margin);
-  margin-bottom:var(--section-sm);
-  overflow:hidden;
-}
-.process-heading-text{
-  font-family:'Onest',sans-serif;
-  font-size:clamp(4rem,13.85vw,13.85vw);
-  font-weight:500;
-  letter-spacing:-.05em;
-  line-height:.9;
-  color:var(--ink);
-  white-space:nowrap;
-  opacity:.06;
-  pointer-events:none;
-  user-select:none;
-}
-.process-content{
-  padding:0 var(--margin);
-  position:relative;
-  margin-top:-2rem;
-}
-.process-list{
-  display:flex;flex-direction:column;
-}
-.process-item{
-  display:grid;grid-template-columns:repeat(12,1fr);
-  column-gap:var(--margin);
-  padding:2.5rem 0;
-  border-top:1px solid var(--line);
-  align-items:flex-start;
-}
-.process-item:last-child{border-bottom:1px solid var(--line)}
-.process-index-wrap{grid-column:span 1}
-.process-index{
-  font-family:'Space Mono',monospace;
-  font-size:.7rem;color:var(--faint);
-  letter-spacing:.06em;
-  transform-origin:left center;
-}
-.process-index-num{
-  font-family:'Space Mono',monospace;
-  font-size:.65rem;color:var(--faint);
-}
-.process-content-inner{grid-column:2/8;display:flex;flex-direction:column;gap:1rem}
-.process-step-name{
-  font-size:clamp(1.5rem,3vw,2.5rem);
-  font-weight:500;letter-spacing:-.025em;
-  color:var(--ink);line-height:1.1;
-}
-.process-step-p{
-  font-size:.875rem;color:var(--ink-2);
-  line-height:1.6;max-width:38ch;
-}
-.process-step-act{
-  grid-column:9/13;
-  align-self:center;
-  font-family:'Space Mono',monospace;
-  font-size:.7rem;color:var(--faint);
-  letter-spacing:.06em;text-transform:uppercase;
-  text-align:right;
 }
 
-/* ─── FAQ SECTION ─── */
-.faq-wrap{
-  padding:var(--section-main) 0;
-  background:var(--bg);
-  display:grid;
-  grid-template-columns:repeat(12,1fr);
-  column-gap:var(--margin);
-  padding-left:var(--margin);
-  padding-right:var(--margin);
-  align-items:flex-start;
+/* Dark blob shapes */
+.hero-blob{
+  position:absolute;pointer-events:none;border-radius:50%;filter:blur(80px);
 }
-.faq-left{grid-column:span 4}
-.faq-main{grid-column:5/13}
-.faq-heading{
-  font-size:clamp(1.2rem,2.5vw,2rem);
-  font-weight:500;letter-spacing:-.02em;
-  color:var(--ink);line-height:1.2;
-  margin-bottom:2.5rem;max-width:28ch;
+.hero-blob-1{
+  width:60vw;height:50vh;
+  background:radial-gradient(ellipse,rgba(40,38,32,.85) 0%,transparent 70%);
+  top:-10%;left:-15%;
+  animation:drift1 18s ease-in-out infinite alternate;
 }
-.faq-list{display:flex;flex-direction:column}
-.faq-item{border-top:1px solid var(--line)}
-.faq-item:last-child{border-bottom:1px solid var(--line)}
-.faq-toggle{
-  width:100%;
-  display:flex;justify-content:space-between;align-items:center;
-  padding:1.25rem 0;
-  text-align:left;
-  cursor:pointer;
-  gap:1rem;
+.hero-blob-2{
+  width:50vw;height:55vh;
+  background:radial-gradient(ellipse,rgba(35,33,28,.9) 0%,transparent 70%);
+  bottom:-20%;right:-10%;
+  animation:drift2 22s ease-in-out infinite alternate;
 }
-.faq-q{
-  font-size:clamp(.875rem,1.2vw,1rem);
-  font-weight:500;color:var(--ink);
-  letter-spacing:-.01em;
-  line-height:1.3;flex:1;
+.hero-blob-3{
+  width:70vw;height:30vh;
+  background:radial-gradient(ellipse,rgba(30,28,24,.7) 0%,transparent 60%);
+  top:30%;left:10%;
+  animation:drift3 15s ease-in-out infinite alternate;
 }
-.faq-sq{
-  width:1.2rem;height:1.2rem;
-  border:1px solid var(--line-2);
-  flex-shrink:0;
-  display:grid;place-items:center;
-  border-radius:.15rem;
-  transition:transform .35s var(--ease-out);
-}
-.faq-sq::after{
-  content:'';
-  width:.5rem;height:1px;background:var(--ink-2);
-  display:block;
-}
-.faq-sq::before{
-  content:'';
-  width:1px;height:.5rem;background:var(--ink-2);
-  display:block;
-  position:absolute;
-  transition:transform .3s var(--ease-out);
-}
-.faq-sq{position:relative}
-.faq-item.is-active .faq-sq::before{transform:scaleY(0)}
-.faq-body{
-  max-height:0;overflow:hidden;
-  transition:max-height .4s var(--ease-out),padding .3s;
-}
-.faq-body-inner{
-  padding-bottom:1.5rem;
-  font-size:.875rem;color:var(--ink-2);
-  line-height:1.6;max-width:52ch;
-}
-.faq-item.is-active .faq-body{max-height:300px}
+@keyframes drift1{to{transform:translate(8vw,6vh) scale(1.1)}}
+@keyframes drift2{to{transform:translate(-6vw,-8vh) scale(.9)}}
+@keyframes drift3{to{transform:translate(-5vw,4vh) scale(1.15)}}
 
-/* ─── CTA SECTION ─── */
-.cta-wrap{
-  padding:var(--section-lg) var(--margin);
-  background:var(--bg-2);
-  overflow:hidden;
+/* Center content */
+.hero-center{
+  position:relative;z-index:4;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;gap:1.25rem;
+  max-width:36rem;
+  padding:0 1.5rem;
 }
-.cta-inner{display:flex;flex-direction:column;align-items:flex-start}
-.cta-heading-contain{
-  display:flex;flex-direction:column;
-  margin-bottom:3rem;
+.hero-globe{
+  width:3rem;height:1.8rem;
+  stroke:rgba(232,232,227,.35);fill:none;stroke-width:.8;
+  margin-bottom:.25rem;
 }
-.cta-heading{
-  font-family:'Onest',sans-serif;
-  font-size:clamp(2.5rem,10vw,10rem);
-  font-weight:500;
-  line-height:.95;
-  letter-spacing:-0.04em;
-  overflow:hidden;
+.hero-p{
+  font-size:1.0625rem;line-height:1.6;
+  color:rgba(232,232,227,.85);
+  font-weight:400;
 }
-.cta-heading span{display:block;overflow:hidden}
-.cta-row{display:flex;align-items:center;gap:.5rem}
-.cta-arrow{color:var(--accent)}
-.cta-actions{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
-.code-btn{
+.hero-p2{
+  font-size:1.0625rem;line-height:1.6;
+  color:rgba(232,232,227,.6);
+  font-weight:300;
+}
+.hero-pill{
+  margin-top:.5rem;
   display:inline-flex;align-items:center;gap:.5rem;
-  padding:.65rem 1.25rem;
-  background:var(--bg-3);
-  border:1px solid var(--line-2);
-  border-radius:.35rem;
-  font-family:'Space Mono',monospace;
-  font-size:.8125rem;color:var(--ink);
-  transition:background .2s,border-color .2s;
-}
-.code-btn:hover{background:rgba(255,255,255,.06);border-color:var(--accent)}
-.code-btn .dollar{color:var(--accent)}
-
-/* ─── FOOTER ─── */
-.footer-wrap{
-  background:var(--bg);
-  border-top:1px solid var(--line);
-  padding:var(--section-sm) var(--margin);
-}
-.footer-top{
-  display:grid;grid-template-columns:repeat(12,1fr);
-  column-gap:var(--margin);
-  padding-bottom:var(--section-sm);
-  border-bottom:1px solid var(--line);
-}
-.footer-brand{grid-column:span 4}
-.footer-wordmark{
-  font-size:1.25rem;font-weight:600;
-  letter-spacing:-.025em;margin-bottom:.5rem;
-}
-.footer-tagline{font-size:.8125rem;color:var(--muted);max-width:24ch;line-height:1.5}
-.footer-nav-cols{
-  grid-column:7/13;
-  display:grid;grid-template-columns:repeat(3,1fr);
-  column-gap:var(--margin);
-}
-.footer-nav-heading{
+  padding:.45rem 1.1rem;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;
   font-family:'Space Mono',monospace;
   font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--faint);margin-bottom:1rem;
+  color:var(--ink-2);
+  transition:border-color .2s,color .2s;
+  cursor:pointer;
 }
-.footer-nav-list{display:flex;flex-direction:column;gap:.6rem}
-.footer-nav-link{
-  font-size:.875rem;color:var(--ink-2);
-  transition:color .2s;
+.hero-pill:hover{border-color:rgba(255,255,255,.3);color:var(--ink)}
+.hero-pill-dot{
+  width:.35rem;height:.35rem;border-radius:50%;
+  background:var(--accent);
+  animation:blink 2.5s ease-in-out infinite;
 }
-.footer-nav-link:hover{color:var(--ink)}
-.footer-bottom{
-  display:grid;grid-template-columns:repeat(12,1fr);
-  column-gap:var(--margin);
-  padding-top:1.5rem;
-  align-items:center;
-}
-.footer-copy{
-  grid-column:span 6;
-  font-family:'Space Mono',monospace;
-  font-size:.65rem;color:var(--faint);
-  letter-spacing:.04em;
-}
-.footer-location{
-  grid-column:7/10;
-  font-family:'Space Mono',monospace;
-  font-size:.65rem;color:var(--faint);
-  letter-spacing:.04em;
-}
-.footer-socials{
-  grid-column:10/13;
-  display:flex;gap:1.5rem;justify-content:flex-end;
-}
-.footer-social-link{
-  font-family:'Space Mono',monospace;
-  font-size:.65rem;color:var(--muted);
-  letter-spacing:.06em;text-transform:uppercase;
-  transition:color .2s;
-}
-.footer-social-link:hover{color:var(--ink)}
 
-/* ─── LARGE FOOTER NAV (like monolog) ─── */
-.footer-nav-wrap{
-  padding:var(--section-sm) 0;
-  border-bottom:1px solid var(--line);
-  margin-bottom:var(--section-sm);
+/* Giant wordmark bleeding off bottom */
+.hero-wordmark{
+  position:absolute;
+  bottom:-.18em;
+  left:50%;transform:translateX(-50%);
+  z-index:3;
+  white-space:nowrap;
+  font-family:'Onest',sans-serif;
+  font-size:clamp(10rem,28vw,28vw);
+  font-weight:700;letter-spacing:-.04em;line-height:1;
+  color:#6b6560;
+  opacity:.35;
+  pointer-events:none;user-select:none;
 }
-.footer-nav-big{display:flex;flex-direction:column;gap:.25rem}
-.footer-nav-big-link{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:.75rem 0;
-  border-top:1px solid var(--line);
-  overflow:hidden;cursor:pointer;
+
+/* ── PROBLEMS (dark) ── */
+.problems{
+  background:var(--bg);
+  padding:clamp(5rem,10vw,9rem) var(--m);
 }
-.footer-nav-big-link:last-child{border-bottom:1px solid var(--line)}
-.footer-nav-span-wrap{
-  display:flex;flex-direction:column;
+.problems-inner{
+  display:grid;grid-template-columns:repeat(12,1fr);
+  column-gap:var(--m);row-gap:5rem;
+}
+.prob-left{grid-column:span 5}
+.prob-heading{
+  font-size:clamp(2rem,4vw,3.25rem);
+  font-weight:500;letter-spacing:-.035em;line-height:1.05;
+  color:var(--ink);margin-bottom:1.5rem;
+}
+.prob-body{font-size:.9375rem;color:var(--muted);line-height:1.75;max-width:34ch}
+.prob-nav{
+  grid-column:span 7;
+  display:flex;align-items:center;gap:1rem;align-self:flex-end;
+}
+.prog-bar{flex:1;height:1px;background:var(--line-2);position:relative;overflow:hidden;border-radius:999px}
+.prog-fill{position:absolute;top:0;left:0;height:100%;background:var(--ink-2);width:0;transition:none}
+.prog-btn{
+  width:2rem;height:2rem;border-radius:50%;
+  border:1px solid var(--line-2);
+  display:grid;place-items:center;flex-shrink:0;
+  transition:border-color .2s;
+}
+.prog-btn:hover{border-color:var(--ink-2)}
+.prog-btn svg{width:.55rem;height:.55rem;stroke:currentColor;fill:none;stroke-width:2}
+.prog-idx{
+  font-family:'Space Mono',monospace;font-size:.65rem;
+  color:var(--muted);font-variant-numeric:tabular-nums;min-width:2.5rem;text-align:right;
+}
+.prob-cards{
+  grid-column:span 12;
+  display:grid;grid-template-columns:repeat(3,1fr);column-gap:var(--m);
+}
+.prob-card{
+  padding:2.5rem 2rem;
+  border:1px solid var(--line);
+  display:flex;flex-direction:column;gap:1.25rem;
+}
+.prob-num{
+  font-family:'Onest',sans-serif;
+  font-size:clamp(3.5rem,7vw,5.5rem);
+  font-weight:700;letter-spacing:-.06em;line-height:1;
+  color:var(--ink);font-variant-numeric:tabular-nums;
+}
+.prob-lbl{font-size:.875rem;color:var(--muted);line-height:1.55;max-width:22ch}
+
+/* ── GAP (dark, grid lines) ── */
+.gap-section{
+  padding:clamp(6rem,12vw,11rem) var(--m);
   position:relative;overflow:hidden;
 }
-.footer-nav-span{
+.gap-section::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(90deg,var(--line) 0,var(--line) 1px,transparent 1px,transparent calc(100%/12));
+}
+.gap-sq{
+  position:absolute;width:.45rem;height:.45rem;
+  border:1px solid var(--line-2);transform:rotate(45deg);z-index:1;
+}
+.gap-sq.tl{top:-.22rem;left:var(--m)}
+.gap-sq.tr{top:-.22rem;right:var(--m)}
+.gap-sq.bl{bottom:-.22rem;left:var(--m)}
+.gap-sq.br{bottom:-.22rem;right:var(--m)}
+.gap-inner{position:relative;z-index:2}
+.gap-tag{
+  font-family:'Space Mono',monospace;
+  font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:4rem;
+}
+.gap-display{
   font-family:'Onest',sans-serif;
-  font-size:clamp(1.5rem,4vw,4rem);
-  font-weight:500;letter-spacing:-.03em;
-  line-height:1;
-  display:block;
-  transition:transform .35s var(--ease-out);
+  font-size:clamp(4rem,13.5vw,13.5vw);
+  font-weight:700;letter-spacing:-.05em;line-height:.9;
+  overflow:hidden;
 }
-.footer-nav-span.is-hover{
-  position:absolute;inset:0;
-  color:var(--accent);
-  transform:translateY(100%);
+.gap-display .gap-line{display:block;overflow:hidden}
+.gap-display .gap-word{display:inline-block}
+.gap-display .gap-right{text-align:right;display:block}
+.gap-sub{
+  margin-top:3.5rem;
+  display:flex;justify-content:flex-end;
 }
-.footer-nav-big-link:hover .footer-nav-span:not(.is-hover){transform:translateY(-100%)}
-.footer-nav-big-link:hover .footer-nav-span.is-hover{transform:translateY(0)}
-.footer-nav-arrow{
-  font-size:1.5rem;color:var(--muted);
-  transition:color .2s,transform .35s var(--ease-out);
-}
-.footer-nav-big-link:hover .footer-nav-arrow{color:var(--accent);transform:translate(4px,-4px)}
-
-/* ─── RESPONSIVE ─── */
-@media(max-width:991px){
-  .hero-sub{display:none}
-  .hero-stats{gap:2rem}
-  .problems-list .problems-item{grid-column:span 6}
-  .works-item{grid-column:span 12}
-  .services-message{display:none}
-  .services-heading{grid-column:span 12}
-  .process-item .process-step-act{display:none}
-  .faq-wrap{grid-template-columns:1fr}
-  .faq-left{grid-column:span 12}
-  .faq-main{grid-column:span 12}
-  .footer-nav-cols{grid-column:span 12;margin-top:2rem}
-  .footer-brand{grid-column:span 12}
-}
-@media(max-width:767px){
-  .navbar-links{display:none}
-  .hero-stats{flex-direction:column;align-items:flex-start;gap:1rem}
-  .problems-list .problems-item{grid-column:span 12}
-  .process-item{grid-template-columns:1fr}
-  .process-content-inner{grid-column:span 12}
-  .service-desc{display:none}
-  .service-tag{grid-column:6/13;justify-content:flex-end}
+.gap-p{
+  font-size:clamp(.9375rem,1.2vw,1.05rem);
+  color:var(--muted);line-height:1.7;max-width:36ch;
 }
 
-/* ─── PAGE TRANSITION ─── */
-.page-transition{
-  position:fixed;inset:0;z-index:9000;
+/* ── FEEDS (beige) ── */
+.feeds{
+  background:var(--beige);color:#111110;
+  padding:clamp(5rem,9vw,8rem) var(--m);
+}
+.feeds-heading{
+  font-family:'Onest',sans-serif;
+  font-size:clamp(3rem,8vw,7rem);
+  font-weight:700;letter-spacing:-.05em;line-height:.9;
+  color:#111110;text-transform:uppercase;
+  margin-bottom:clamp(3rem,6vw,5rem);
+}
+.feeds-list{display:flex;flex-direction:column}
+.feed-item{
+  display:grid;grid-template-columns:repeat(12,1fr);
+  column-gap:var(--m);
+  border-top:1px solid rgba(0,0,0,.1);
+  padding:1.75rem 0;
+  align-items:center;
+  cursor:default;
+  transition:background .2s;
+}
+.feed-item:last-child{border-bottom:1px solid rgba(0,0,0,.1)}
+.feed-item:hover{background:rgba(0,0,0,.03)}
+.feed-visual{
+  grid-column:span 7;
+  aspect-ratio:16/6;
+  border-radius:.2rem;overflow:hidden;
+  background:#1a1916;
+  display:flex;flex-direction:column;
+  padding:1.25rem 1.5rem;gap:.6rem;
+}
+.feed-row-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.55rem .85rem;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:.2rem;
+}
+.feed-row-lbl{
+  font-family:'Space Mono',monospace;
+  font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;
+  color:rgba(255,255,255,.3);
+}
+.feed-row-val{
+  font-family:'Space Mono',monospace;
+  font-size:.8rem;font-weight:700;color:#e8e8e3;
+  font-variant-numeric:tabular-nums;
+}
+.badge{
+  display:inline-flex;align-items:center;gap:.25rem;
+  padding:.15rem .45rem;border-radius:999px;
+  font-family:'Space Mono',monospace;font-size:.55rem;
+}
+.badge-green{background:rgba(117,229,176,.15);color:#75e5b0}
+.badge-red{background:rgba(255,100,100,.12);color:#ff8a8a}
+.badge-grey{background:rgba(255,255,255,.06);color:rgba(255,255,255,.35)}
+.feed-meta{
+  grid-column:8/13;
+  display:flex;flex-direction:column;
+  justify-content:space-between;min-height:80px;padding:.5rem 0;
+}
+.feed-name{
+  font-size:clamp(1.1rem,1.8vw,1.45rem);
+  font-weight:500;letter-spacing:-.02em;
+  color:#111110;line-height:1.2;
+}
+.feed-footer{
+  display:flex;justify-content:space-between;align-items:flex-end;margin-top:auto;
+}
+.feed-tag{
+  font-family:'Space Mono',monospace;
+  font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;
+  color:#6b645c;padding:.25rem .55rem;
+  border-radius:999px;border:1px solid rgba(0,0,0,.15);
+}
+.feed-arrow{font-size:1.1rem;color:#6b645c;transition:transform .3s var(--ease),color .2s}
+.feed-item:hover .feed-arrow{transform:translate(3px,-3px);color:#111110}
+
+/* ── SERVICES (dark list) ── */
+.services{
   background:var(--bg);
-  transform-origin:bottom;
-  transform:scaleY(0);
+  padding:clamp(5rem,9vw,8rem) var(--m);
+}
+.services-inner{
+  display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--m);gap:4rem;
+}
+.svc-header{
+  grid-column:span 12;
+  display:flex;justify-content:space-between;align-items:flex-end;
+}
+.svc-heading{
+  font-size:clamp(2rem,4vw,3rem);
+  font-weight:500;letter-spacing:-.035em;line-height:1.1;
+  color:var(--ink);max-width:18ch;
+}
+.svc-desc{
+  font-size:.875rem;color:var(--muted);line-height:1.65;
+  max-width:26ch;text-align:right;
+}
+.svc-list{grid-column:span 12;display:flex;flex-direction:column}
+.svc-row{
+  display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--m);
+  padding:1.75rem 0;
+  border-top:1px solid var(--line);align-items:center;
+  transition:background .2s;
+}
+.svc-row:last-child{border-bottom:1px solid var(--line)}
+.svc-row:hover{background:rgba(255,255,255,.025)}
+.svc-num{
+  grid-column:span 1;
+  font-family:'Space Mono',monospace;font-size:.6rem;
+  color:var(--faint);font-variant-numeric:tabular-nums;letter-spacing:.06em;
+}
+.svc-name{
+  grid-column:span 4;
+  font-size:clamp(.9375rem,1.4vw,1.15rem);
+  font-weight:500;color:var(--ink);letter-spacing:-.015em;
+}
+.svc-tags{
+  grid-column:span 4;
+  display:flex;flex-wrap:wrap;gap:.4rem;
+}
+.svc-tag{
+  font-family:'Space Mono',monospace;font-size:.55rem;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:.2rem .5rem;border-radius:999px;
+  border:1px solid var(--faint);color:var(--muted);
+}
+.svc-link{
+  grid-column:span 3;
+  text-align:right;
+  font-family:'Space Mono',monospace;font-size:.65rem;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--faint);
+  transition:color .2s;
+}
+.svc-row:hover .svc-link{color:var(--ink-2)}
+
+/* ── PROCESS ── */
+.process{
+  background:var(--bg);
+  padding:clamp(5rem,9vw,8rem) var(--m);
+  border-top:1px solid var(--line);
+}
+.proc-inner{
+  display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--m);gap:5rem;
+}
+.proc-left{grid-column:span 4}
+.proc-heading{
+  font-size:clamp(1.75rem,3.5vw,2.75rem);
+  font-weight:500;letter-spacing:-.03em;line-height:1.1;
+  color:var(--ink);margin-bottom:1.25rem;
+}
+.proc-body{font-size:.875rem;color:var(--muted);line-height:1.7;max-width:30ch}
+.proc-right{grid-column:5/13;display:flex;flex-direction:column}
+.proc-step{
+  display:grid;grid-template-columns:3rem 1fr;gap:1.5rem;
+  padding:1.75rem 0;border-top:1px solid var(--line);align-items:flex-start;
+}
+.proc-step:last-child{border-bottom:1px solid var(--line)}
+.proc-step-num{
+  font-family:'Space Mono',monospace;font-size:.6rem;
+  color:var(--faint);letter-spacing:.08em;padding-top:.15rem;
+}
+.proc-step-content{}
+.proc-step-title{
+  font-size:1rem;font-weight:500;letter-spacing:-.015em;
+  color:var(--ink);margin-bottom:.5rem;
+}
+.proc-step-body{font-size:.875rem;color:var(--muted);line-height:1.65}
+
+/* ── FAQ ── */
+.faq{
+  background:var(--bg-warm);
+  padding:clamp(5rem,9vw,8rem) var(--m);
+  border-top:1px solid var(--line);
+}
+.faq-inner{
+  display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--m);gap:2rem;
+}
+.faq-left{grid-column:span 4}
+.faq-eyebrow{
+  font-family:'Space Mono',monospace;font-size:.6rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:1.5rem;
+}
+.faq-side-heading{
+  font-size:clamp(1.5rem,3vw,2.25rem);font-weight:500;
+  letter-spacing:-.03em;line-height:1.1;color:var(--ink);
+}
+.faq-list{grid-column:5/13;display:flex;flex-direction:column}
+.faq-item{border-top:1px solid var(--line);overflow:hidden}
+.faq-item:last-child{border-bottom:1px solid var(--line)}
+.faq-q{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.5rem 0;cursor:pointer;gap:1rem;
+}
+.faq-q-text{
+  font-size:.9375rem;font-weight:500;letter-spacing:-.015em;
+  color:var(--ink);
+}
+.faq-icon{
+  width:1.4rem;height:1.4rem;flex-shrink:0;
+  border-radius:50%;border:1px solid var(--line-2);
+  display:grid;place-items:center;transition:transform .35s var(--ease);
+}
+.faq-icon svg{width:.5rem;height:.5rem;stroke:var(--ink-2);fill:none;stroke-width:2;transition:transform .35s var(--ease)}
+.faq-item.open .faq-icon svg{transform:rotate(45deg)}
+.faq-a{
+  font-size:.875rem;color:var(--muted);line-height:1.7;
+  max-height:0;overflow:hidden;transition:max-height .45s var(--ease),padding .35s;
+}
+.faq-item.open .faq-a{max-height:20rem;padding-bottom:1.5rem}
+
+/* ── CTA (dark photo-like) ── */
+.cta{
+  position:relative;overflow:hidden;
+  background:#0d0c0b;
+  padding:clamp(7rem,14vw,13rem) var(--m);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;gap:2.5rem;
+  border-top:1px solid var(--line);
+}
+.cta::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(117,229,176,.04) 0%,transparent 70%);
   pointer-events:none;
 }
+.cta-badge{
+  display:flex;align-items:center;gap:.5rem;
+  padding:.35rem .9rem;border-radius:999px;
+  border:1px solid rgba(255,255,255,.1);
+  font-family:'Space Mono',monospace;font-size:.6rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+}
+.cta-heading{
+  position:relative;z-index:1;
+  font-size:clamp(2.5rem,7vw,6rem);
+  font-weight:700;letter-spacing:-.05em;line-height:.95;
+  color:var(--ink);max-width:14ch;
+}
+.cta-body{
+  font-size:1rem;color:var(--muted);line-height:1.6;max-width:38ch;
+}
+.cta-btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.65rem 1.5rem;
+  background:var(--ink);color:#111110;
+  border-radius:999px;
+  font-size:.875rem;font-weight:500;letter-spacing:-.01em;
+  transition:background .2s,transform .2s var(--ease);
+}
+.cta-btn:hover{background:#d8d8d3;transform:scale(1.03)}
+.cta-btn svg{width:.75rem;height:.75rem;stroke:currentColor;fill:none;stroke-width:2}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--bg);
+  border-top:1px solid var(--line);
+  padding:clamp(4rem,8vw,7rem) var(--m) clamp(2rem,4vw,3rem);
+}
+.footer-big-nav{
+  display:grid;grid-template-columns:repeat(12,1fr);
+  column-gap:var(--m);
+  margin-bottom:clamp(4rem,8vw,7rem);
+}
+.footer-big-col{
+  grid-column:span 4;
+  display:flex;flex-direction:column;gap:0;
+}
+.footer-big-label{
+  font-family:'Space Mono',monospace;font-size:.55rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--faint);
+  margin-bottom:1.5rem;
+}
+.footer-big-link{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.25rem 0;border-top:1px solid var(--line);
+  font-size:clamp(1.25rem,2.5vw,2rem);
+  font-weight:500;letter-spacing:-.03em;color:var(--ink-2);
+  overflow:hidden;position:relative;
+  transition:color .3s;
+}
+.footer-big-link:last-child{border-bottom:1px solid var(--line)}
+.footer-big-link:hover{color:var(--ink)}
+.footer-big-link span{display:block;transition:transform .4s var(--ease)}
+.footer-big-link::after{
+  content:attr(data-label);
+  position:absolute;top:100%;left:0;
+  font-size:clamp(1.25rem,2.5vw,2rem);font-weight:500;letter-spacing:-.03em;
+}
+.footer-big-link:hover span{transform:translateY(-110%)}
+.fbl-arr{font-size:.875rem;opacity:.4}
+
+.footer-bottom{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  border-top:1px solid var(--line);padding-top:1.5rem;
+}
+.footer-wordmark{
+  font-family:'Onest',sans-serif;
+  font-size:clamp(1.5rem,4vw,3rem);font-weight:700;
+  letter-spacing:-.05em;line-height:1;
+  color:var(--ink);opacity:.15;
+}
+.footer-meta{
+  display:flex;flex-direction:column;align-items:flex-end;gap:.35rem;
+}
+.footer-meta span{
+  font-family:'Space Mono',monospace;font-size:.6rem;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--faint);
+}
+#footer-clock{color:var(--muted)}
+
+/* ── REVEAL ANIMATION ── */
+[data-reveal]{opacity:0;transform:translateY(2.5rem)}
+[data-reveal-line]{overflow:hidden}
+[data-reveal-line] .reveal-inner{display:block;transform:translateY(105%)}
+
+/* ── UTILS ── */
+.eyebrow{
+  font-family:'Space Mono',monospace;font-size:.6rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  display:flex;align-items:center;gap:.5rem;
+  margin-bottom:2rem;
+}
+.eyebrow::before{content:'';width:1.5rem;height:1px;background:var(--faint)}
 </style>
 </head>
 <body>
 
-<!-- Page transition -->
-<div class="page-transition" id="page-transition"></div>
+<div class="grain"></div>
+<div class="cursor" id="cursor"></div>
 
-<!-- Custom cursor -->
-<div class="cursor-wrap">
-  <div class="cursor-dot" id="cursor-dot"></div>
-</div>
-
-<!-- ─── NAVBAR ─── -->
-<header class="navbar-wrap" id="navbar">
-  <div class="navbar-logo">
-    <span class="navbar-wordmark">PULSE</span>
-    <span class="navbar-badge">v0.1.0</span>
-  </div>
-  <nav class="navbar-links">
-    <a href="#feeds" class="navbar-link">
-      <div class="navbar-link-inner">
-        <span class="navbar-link-text">Feeds</span>
-        <span class="navbar-link-hover">Feeds</span>
-      </div>
-    </a>
-    <a href="#services" class="navbar-link">
-      <div class="navbar-link-inner">
-        <span class="navbar-link-text">Services</span>
-        <span class="navbar-link-hover">Services</span>
-      </div>
-    </a>
-    <a href="#process" class="navbar-link">
-      <div class="navbar-link-inner">
-        <span class="navbar-link-text">Process</span>
-        <span class="navbar-link-hover">Process</span>
-      </div>
-    </a>
-    <a href="https://github.com/itachi-exe/pulse" target="_blank" class="navbar-link">
-      <div class="navbar-link-inner">
-        <span class="navbar-link-text">GitHub</span>
-        <span class="navbar-link-hover">GitHub</span>
-      </div>
-    </a>
-  </nav>
-  <div class="navbar-right">
-    <a href="#cta" class="btn btn-primary">
-      Get access <span class="btn-aside">↗</span>
+<!-- NAV -->
+<nav id="nav">
+  <a href="/" class="nav-logo">
+    <span class="nav-logo-dot"></span>
+    PULSE
+  </a>
+  <ul class="nav-links">
+    <li><a class="nav-link" href="#feeds" data-label="Feeds"><span>Feeds</span></a></li>
+    <li><a class="nav-link" href="#services" data-label="Services"><span>Services</span></a></li>
+    <li><a class="nav-link" href="#process" data-label="Process"><span>Process</span></a></li>
+    <li><a class="nav-link" href="https://github.com/itachi-exe/pulse" target="_blank" data-label="GitHub"><span>GitHub</span></a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-sound" id="navSound" aria-label="Toggle sound">
+      <svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
+    </button>
+    <a href="#feeds" class="nav-cta">
+      Get access
+      <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
     </a>
   </div>
-</header>
+</nav>
 
-<!-- ─── HERO ─── -->
-<section class="hero-wrap" data-animate data-theme-section="dark">
-  <canvas class="hero-canvas" id="hero-canvas"></canvas>
-  <div class="hero-gradient"></div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-blob hero-blob-1"></div>
+  <div class="hero-blob hero-blob-2"></div>
+  <div class="hero-blob hero-blob-3"></div>
 
-  <div class="hero-contain">
-    <div class="hero-eyebrow" data-animate>
-      <span class="eyebrow-circle"></span>
-      <span class="eyebrow-text u-mono">Infrastructure · AI Data Layer</span>
+  <div class="hero-center">
+    <!-- Globe wireframe -->
+    <svg class="hero-globe" viewBox="0 0 80 48" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="40" cy="24" rx="38" ry="22"/>
+      <ellipse cx="40" cy="24" rx="18" ry="22"/>
+      <ellipse cx="40" cy="24" rx="5" ry="22"/>
+      <line x1="2" y1="24" x2="78" y2="24"/>
+      <line x1="2" y1="14" x2="78" y2="14"/>
+      <line x1="2" y1="34" x2="78" y2="34"/>
+    </svg>
+
+    <p class="hero-p" data-reveal>
+      We give AI agents ground truth.<br/>
+      Not hallucinations. Not cached data. Live facts.
+    </p>
+
+    <p class="hero-p2" data-reveal>
+      For builders whose agents need to act on real-world data<br/>without second-guessing themselves.
+    </p>
+
+    <a href="#feeds" class="hero-pill" data-reveal>
+      <span class="hero-pill-dot"></span>
+      Live feeds active — View now
+    </a>
+  </div>
+
+  <div class="hero-wordmark" aria-hidden="true">PULSE</div>
+</section>
+
+<!-- PROBLEMS -->
+<section class="problems" id="about">
+  <div class="problems-inner">
+    <div class="prob-left">
+      <p class="eyebrow">Challenge</p>
+      <h2 class="prob-heading" data-reveal>
+        AI agents act on bad data.<br/>Every time.
+      </h2>
+      <p class="prob-body" data-reveal>
+        Language models are frozen in time. They hallucinate prices, miss network events, and confidently state facts that expired six months ago. Your agent deserves better.
+      </p>
     </div>
-
-    <div class="hero-main">
-      <div class="hero-heading-wrap">
-        <h1 class="hero-heading" data-split-reveal="lines" data-split="heading">
-          <span class="line"><span class="word">Real-time</span></span>
-          <span class="line"><span class="word">truth.</span></span>
-          <span class="line"><span class="word">For AI</span></span>
-          <span class="line"><span class="word">agents.</span></span>
-        </h1>
-      </div>
-      <div class="hero-sub" data-animate>
-        <p>Chainlink is a data feed for smart contracts. Pulse is a data feed for AI agents.</p>
-      </div>
+    <div class="prob-nav">
+      <span class="prog-idx">01 / 03</span>
+      <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+      <button class="prog-btn" id="progPrev" aria-label="Previous">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="prog-btn" id="progNext" aria-label="Next">
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
     </div>
-
-    <div class="hero-bottom">
-      <div class="hero-stats" data-animate>
-        <div class="hero-stat-item">
-          <span class="hero-stat-num" id="stat-eth">—</span>
-          <span class="hero-stat-label">ETH / USD</span>
-        </div>
-        <div class="hero-stat-item">
-          <span class="hero-stat-num" id="stat-gas">—</span>
-          <span class="hero-stat-label">Gas (gwei)</span>
-        </div>
-        <div class="hero-stat-item">
-          <span class="hero-stat-num" id="stat-latency">333ms</span>
-          <span class="hero-stat-label">Avg latency</span>
-        </div>
-        <div class="hero-stat-item">
-          <span class="hero-stat-num">9</span>
-          <span class="hero-stat-label">Data sources</span>
-        </div>
+    <div class="prob-cards">
+      <div class="prob-card" data-reveal>
+        <div class="prob-num" id="statAgents">—</div>
+        <p class="prob-lbl">AI agents deployed in production environments relying on live data decisions</p>
       </div>
-      <div class="hero-cta" data-animate>
-        <div class="hero-live-badge">
-          <span class="live-dot"></span>
-          <span class="u-mono">Live feeds active</span>
-        </div>
+      <div class="prob-card" data-reveal>
+        <div class="prob-num">72%</div>
+        <p class="prob-lbl">of agent failures traced to stale or hallucinated factual inputs</p>
+      </div>
+      <div class="prob-card" data-reveal>
+        <div class="prob-num">5/10</div>
+        <p class="prob-lbl">Pulse accuracy score vs 1/10 baseline — on live market questions</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ─── PROBLEMS ─── -->
-<section class="problems-wrap" data-theme-section="dark">
-  <div class="problems-header">
-    <div class="problems-left" data-animate>
-      <div class="eyebrow">
-        <span class="eyebrow-circle"></span>
-        <span class="eyebrow-text u-mono">The problem</span>
-      </div>
-      <h2 class="problems-heading t-h2" data-split-reveal="lines">Every AI agent<br/>is flying blind.</h2>
-      <p class="problems-p t-body" style="margin-top:1.5rem">Your agent was trained on yesterday's world. When it fetches data, it picks a single unverified source and acts on it. No aggregation. No consensus. No confidence score. One wrong number, one wrong decision.</p>
-    </div>
-    <div class="problems-right" data-animate>
-      <div class="stats-nav">
-        <button class="stat-btn" id="stat-prev" aria-label="previous">
-          <svg viewBox="0 0 13 13"><path d="M6.7 13L0 6.5L6.7 0l1.3 1.33L3.67 5.54H13v1.91H3.67L8.04 11.7 6.7 13Z"/></svg>
-        </button>
-        <div class="stat-progress"><div class="stat-progress-bar" id="stat-progress-bar"></div></div>
-        <button class="stat-btn" id="stat-next" aria-label="next">
-          <svg viewBox="0 0 13 13"><path d="M6.3 0L13 6.5 6.3 13l-1.34-1.33 4.37-4.22H0V5.54h9.33L4.96 1.33 6.3 0Z"/></svg>
-        </button>
-        <div class="stat-index u-mono" id="stat-index">01/03</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="problems-collection">
-    <ul class="problems-list" id="problems-list">
-      <li class="problems-item" data-animate>
-        <div class="problems-item-num">87%</div>
-        <p class="problems-item-label t-small">of AI agent decisions run on data that's hours or days old</p>
-      </li>
-      <li class="problems-item" data-animate>
-        <div class="problems-item-num">1</div>
-        <p class="problems-item-label t-small">unverified source per query — no cross-validation, no consensus</p>
-      </li>
-      <li class="problems-item" data-animate>
-        <div class="problems-item-num">0ms</div>
-        <p class="problems-item-label t-small">time spent on data quality before acting on high-stakes decisions</p>
-      </li>
-    </ul>
-  </div>
-</section>
-
-<!-- ─── GAP ─── -->
-<section class="gap-wrap" data-theme-section="dark">
-  <div class="gap-bg">
-    <div class="gap-lines-h top">
-      <div class="gap-line-sq"></div>
-      <div class="gap-line-sq"></div>
-      <div class="gap-line-sq"></div>
-    </div>
-    <div class="gap-lines-v">
-      <div class="gap-line-v" style="grid-column:3"></div>
-      <div class="gap-line-v" style="grid-column:6"></div>
-      <div class="gap-line-v" style="grid-column:9"></div>
-      <div class="gap-line-v" style="grid-column:12"></div>
-    </div>
-    <div class="gap-lines-h bottom">
-      <div class="gap-line-sq"></div>
-      <div class="gap-line-sq"></div>
-      <div class="gap-line-sq"></div>
-    </div>
-  </div>
-
+<!-- GAP -->
+<section class="gap-section">
+  <div class="gap-sq tl"></div>
+  <div class="gap-sq tr"></div>
+  <div class="gap-sq bl"></div>
+  <div class="gap-sq br"></div>
   <div class="gap-inner">
-    <div class="gap-eyebrow" style="grid-column:span 12">
-      &#x200E;<br/><br/><br/><br/>
+    <p class="gap-tag">The problem</p>
+    <div class="gap-display">
+      <span class="gap-line"><span class="gap-word" data-reveal-line><span class="reveal-inner">We feed</span></span></span>
+      <span class="gap-line gap-right"><span class="gap-word" data-reveal-line><span class="reveal-inner">the truth</span></span></span>
     </div>
-    <div class="gap-heading-wrap" data-split-reveal="lines" data-split="heading">
-      <h2 class="gap-heading is-left" style="grid-column:span 12">
-        <span>We feed</span>
-      </h2>
-      <h2 class="gap-heading is-right" style="grid-column:span 12">
-        <span>the truth</span>
-      </h2>
-    </div>
-    <div class="gap-bottom" data-animate>
-      <p class="gap-p">Your agent answered with data from 3 months ago. That's not a bug — that's by design. Pulse closes the gap between what AI agents know and what's actually happening.</p>
+    <div class="gap-sub">
+      <p class="gap-p" data-reveal>
+        Chainlink is a data feed for smart contracts. Pulse is a data feed for AI agents — delivering verified, real-time facts your agents can act on without hesitation.
+      </p>
     </div>
   </div>
 </section>
 
-<!-- ─── FEEDS / WORKS ─── -->
-<section id="feeds" class="works-wrap u-theme-light">
-  <div class="works-header" data-animate>
-    <div class="eyebrow" style="--ink:#080807;--muted:#6b645c">
-      <span class="eyebrow-circle" style="background:#080807"></span>
-      <span class="eyebrow-text u-mono" style="color:#6b645c">Live feeds</span>
-    </div>
-    <h2 class="works-heading">LIVE FEEDS</h2>
-  </div>
+<!-- FEEDS -->
+<section class="feeds" id="feeds">
+  <h2 class="feeds-heading" data-reveal>Live Feeds</h2>
+  <div class="feeds-list">
 
-  <div class="works-contain">
-    <!-- Gas Price Feed -->
-    <div class="works-item" data-animate>
-      <div class="works-item-cover">
-        <div class="works-feed-display">
-          <div class="works-feed-row">
-            <span class="works-feed-label">FEED TYPE</span>
-            <span class="works-feed-value u-mono">gas_price</span>
+    <!-- ETH Price -->
+    <div class="feed-item">
+      <div class="feed-visual">
+        <div class="feed-row-item">
+          <span class="feed-row-lbl">ETH / USD</span>
+          <div style="display:flex;align-items:center;gap:.5rem">
+            <span class="feed-row-val" id="ethPrice">$—</span>
+            <span class="badge badge-green" id="ethBadge">LIVE</span>
           </div>
-          <div class="works-feed-row">
-            <span class="works-feed-label">SAFE GWEI</span>
-            <span class="works-feed-value u-mono" id="feed-gas-safe">—</span>
+        </div>
+        <div class="feed-row-item">
+          <span class="feed-row-lbl">BTC / USD</span>
+          <div style="display:flex;align-items:center;gap:.5rem">
+            <span class="feed-row-val" id="btcPrice">$—</span>
+            <span class="badge badge-green">LIVE</span>
           </div>
-          <div class="works-feed-row">
-            <span class="works-feed-label">FAST GWEI</span>
-            <span class="works-feed-value u-mono" id="feed-gas-fast">—</span>
-          </div>
-          <div class="works-feed-row" style="justify-content:flex-start;gap:.75rem">
-            <div class="works-feed-badge badge-green">
-              <span class="live-dot" style="width:.35rem;height:.35rem"></span>
-              LIVE
-            </div>
-            <span class="works-feed-label" id="feed-gas-sources">— sources</span>
-            <span class="works-feed-label" id="feed-gas-conf">—% confidence</span>
+        </div>
+        <div class="feed-row-item">
+          <span class="feed-row-lbl">Gas (Gwei)</span>
+          <div style="display:flex;align-items:center;gap:.5rem">
+            <span class="feed-row-val" id="gasVal">—</span>
+            <span class="badge badge-grey">EST</span>
           </div>
         </div>
       </div>
-      <div class="works-item-info">
-        <span class="works-item-name">Gas Price</span>
-        <span class="works-item-meta">Etherscan · Owlracle · Blocknative</span>
+      <div class="feed-meta">
+        <p class="feed-name">Crypto Price Oracle</p>
+        <div class="feed-footer">
+          <span class="feed-tag">Real-time</span>
+          <span class="feed-arrow">↗</span>
+        </div>
       </div>
     </div>
 
-    <!-- Crypto Price Feed -->
-    <div class="works-item" data-animate>
-      <div class="works-item-cover">
-        <div class="works-feed-display">
-          <div class="works-feed-row">
-            <span class="works-feed-label">FEED TYPE</span>
-            <span class="works-feed-value u-mono">crypto_price</span>
+    <!-- Context Confidence -->
+    <div class="feed-item">
+      <div class="feed-visual">
+        <div class="feed-row-item">
+          <span class="feed-row-lbl">Question</span>
+          <span class="feed-row-val" style="font-size:.6rem;max-width:60%">What is the current ETH price?</span>
+        </div>
+        <div class="feed-row-item">
+          <span class="feed-row-lbl">Pulse Score</span>
+          <div style="display:flex;align-items:center;gap:.5rem">
+            <span class="feed-row-val" id="pulseScore">5/10</span>
+            <span class="badge badge-green">CONFIDENT</span>
           </div>
-          <div class="works-feed-row">
-            <span class="works-feed-label">ETH / USD</span>
-            <span class="works-feed-value u-mono" id="feed-eth-price">—</span>
-          </div>
-          <div class="works-feed-row">
-            <span class="works-feed-label">24h CHANGE</span>
-            <span class="works-feed-value u-mono" id="feed-eth-change">—</span>
-          </div>
-          <div class="works-feed-row" style="justify-content:flex-start;gap:.75rem">
-            <div class="works-feed-badge badge-green">
-              <span class="live-dot" style="width:.35rem;height:.35rem"></span>
-              LIVE
-            </div>
-            <span class="works-feed-label" id="feed-eth-sources">— sources</span>
-            <span class="works-feed-label" id="feed-eth-conf">—% confidence</span>
+        </div>
+        <div class="feed-row-item">
+          <span class="feed-row-lbl">Baseline Score</span>
+          <div style="display:flex;align-items:center;gap:.5rem">
+            <span class="feed-row-val">1/10</span>
+            <span class="badge badge-red">HALLUCINATED</span>
           </div>
         </div>
       </div>
-      <div class="works-item-info">
-        <span class="works-item-name">Crypto Price</span>
-        <span class="works-item-meta">CoinGecko · CoinPaprika · CoinCap</span>
+      <div class="feed-meta">
+        <p class="feed-name">Context Confidence Feed</p>
+        <div class="feed-footer">
+          <span class="feed-tag">Eval</span>
+          <span class="feed-arrow">↗</span>
+        </div>
       </div>
     </div>
 
-    <!-- Baseline vs Pulse comparison -->
-    <div class="works-item" data-animate>
-      <div class="works-item-cover" style="aspect-ratio:auto;min-height:220px">
-        <div class="works-feed-display" style="gap:.75rem">
-          <div style="display:flex;gap:.75rem;height:100%">
-            <div style="flex:1;display:flex;flex-direction:column;gap:.5rem">
-              <div class="works-feed-badge badge-muted" style="width:fit-content">BASELINE</div>
-              <div style="flex:1;padding:1rem;background:rgba(255,0,0,.04);border:1px solid rgba(255,100,100,.1);border-radius:.35rem;display:flex;flex-direction:column;gap:.5rem">
-                <span class="works-feed-label">Decision</span>
-                <span style="font-size:.75rem;color:#ff8a8a;line-height:1.4;font-family:'Space Mono',monospace">"EXECUTE — gas appears normal based on training data"</span>
-                <div style="margin-top:auto;display:flex;align-items:center;gap:.35rem">
-                  <span style="width:.35rem;height:.35rem;border-radius:50%;background:#ff8a8a;display:block"></span>
-                  <span class="works-feed-label" style="color:#ff8a8a">Wrong · 1 source · 0% confidence</span>
-                </div>
-              </div>
-            </div>
-            <div style="flex:1;display:flex;flex-direction:column;gap:.5rem">
-              <div class="works-feed-badge badge-green" style="width:fit-content">PULSE</div>
-              <div style="flex:1;padding:1rem;background:rgba(117,229,176,.04);border:1px solid rgba(117,229,176,.12);border-radius:.35rem;display:flex;flex-direction:column;gap:.5rem">
-                <span class="works-feed-label">Decision</span>
-                <span style="font-size:.75rem;color:#75e5b0;line-height:1.4;font-family:'Space Mono',monospace">"DEFER — gas spike detected. 3 sources disagree. Wait."</span>
-                <div style="margin-top:auto;display:flex;align-items:center;gap:.35rem">
-                  <span style="width:.35rem;height:.35rem;border-radius:50%;background:#75e5b0;display:block"></span>
-                  <span class="works-feed-label" style="color:#75e5b0">Correct · 3 sources · 87% confidence</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+    <!-- SDK Feed -->
+    <div class="feed-item">
+      <div class="feed-visual work-code" style="font-family:'Space Mono',monospace;font-size:.65rem;line-height:1.8;color:#e8e8e3;background:#100f0e;padding:1.25rem 1.5rem;height:100%">
+        <span style="color:#75e5b0">from</span> pulse <span style="color:#75e5b0">import</span> PulseClient<br/>
+        <span style="color:#7a7265">client = PulseClient(</span><span style="color:#e8e8e3">"http://94.72.105.176:7071/api"</span><span style="color:#7a7265">)</span><br/>
+        <span style="color:#7a7265">ctx = client.context(</span><span style="color:#e8e8e3">"ETH price?"</span><span style="color:#7a7265">)</span><br/>
+        <span style="color:#7a7265">print(ctx[</span><span style="color:#e8e8e3">"answer"</span><span style="color:#7a7265">])</span><br/>
+        <span style="color:#3a3830"># → "$2,439 · confidence: 0.91"</span>
       </div>
-      <div class="works-item-info">
-        <span class="works-item-name">Eval: 5/10 vs 1/10</span>
-        <span class="works-item-meta">Honest DEFER beats confident wrong</span>
+      <div class="feed-meta">
+        <p class="feed-name">Python SDK</p>
+        <div class="feed-footer">
+          <span class="feed-tag">Open source</span>
+          <span class="feed-arrow">↗</span>
+        </div>
       </div>
     </div>
 
-    <!-- SDK card -->
-    <div class="works-item" data-animate>
-      <div class="works-item-cover" style="aspect-ratio:auto;min-height:220px">
-        <div class="works-feed-display" style="justify-content:center;font-family:'Space Mono',monospace;font-size:.8rem">
-          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:.5rem;padding:1.5rem;width:100%">
-            <div style="color:var(--muted);font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem">Python SDK</div>
-            <div style="line-height:1.8;color:#e8e8e3">
-              <span style="color:#75e5b0">from</span> pulse <span style="color:#75e5b0">import</span> feed<br/>
-              <br/>
-              ctx = feed.get(<span style="color:#f59e0b">"gas_price"</span>)<br/>
-              <br/>
-              <span style="color:#6b645c"># returns:</span><br/>
-              <span style="color:#6b645c"># {</span><br/>
-              <span style="color:#6b645c">#   value: 23.4,</span><br/>
-              <span style="color:#6b645c">#   sources: 3,</span><br/>
-              <span style="color:#6b645c">#   confidence: 0.87,</span><br/>
-              <span style="color:#6b645c">#   timestamp: "now"</span><br/>
-              <span style="color:#6b645c"># }</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="works-item-info">
-        <span class="works-item-name">One-line import</span>
-        <span class="works-item-meta">pip install pulse-sdk</span>
-      </div>
-    </div>
   </div>
 </section>
 
-<!-- ─── SERVICES ─── -->
-<section id="services" class="services-wrap">
-  <div class="services-contain">
-    <div class="services-header">
-      <div class="services-heading" data-animate>
-        <div class="eyebrow">
-          <span class="eyebrow-circle"></span>
-          <span class="eyebrow-text u-mono">Feed types</span>
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="services-inner">
+    <div class="svc-header">
+      <h2 class="svc-heading" data-reveal>What Pulse gives your agent</h2>
+      <p class="svc-desc" data-reveal>Seven feed types. One unified API. Zero hallucinations on live data.</p>
+    </div>
+    <div class="svc-list">
+      <div class="svc-row">
+        <span class="svc-num">01</span>
+        <span class="svc-name">Crypto Prices</span>
+        <div class="svc-tags">
+          <span class="svc-tag">ETH</span><span class="svc-tag">BTC</span><span class="svc-tag">SOL</span>
         </div>
-        <h2 class="t-h2" style="color:var(--ink)">Five feed domains.<br/>One API.</h2>
+        <span class="svc-link">Live ↗</span>
       </div>
-      <p class="services-message t-small" data-animate>Every domain aggregated from 2–3 independent sources, median-scored, confidence-weighted, and cached for sub-millisecond reads.</p>
-    </div>
-
-    <ul class="services-list">
-      <li class="service-item" data-animate>
-        <span class="service-num u-mono">01</span>
-        <span class="service-name">Gas Price</span>
-        <span class="service-desc t-small">Real-time Ethereum gas from Etherscan, Owlracle, and Blocknative. Safe, standard, and fast tiers with confidence scoring.</span>
-        <div class="service-tag"><span class="tag">gas_price</span></div>
-      </li>
-      <li class="service-item" data-animate>
-        <span class="service-num u-mono">02</span>
-        <span class="service-name">Crypto Price</span>
-        <span class="service-desc t-small">Multi-source price aggregation from CoinGecko, CoinPaprika, and CoinCap. Median price with spread percentage and source agreement score.</span>
-        <div class="service-tag"><span class="tag">crypto_price</span></div>
-      </li>
-      <li class="service-item" data-animate>
-        <span class="service-num u-mono">03</span>
-        <span class="service-name">On-Chain Events</span>
-        <span class="service-desc t-small">Live transaction volume, block activity, and on-chain signals from Etherscan and Blockchair. Cross-validated for reliability.</span>
-        <div class="service-tag"><span class="tag">on_chain</span></div>
-      </li>
-      <li class="service-item" data-animate>
-        <span class="service-num u-mono">04</span>
-        <span class="service-name">News Signals</span>
-        <span class="service-desc t-small">Breaking crypto news aggregated and scored from CryptoPanic and NewsData. Sentiment-tagged and source-verified in real time.</span>
-        <div class="service-tag"><span class="tag">news_signal</span></div>
-      </li>
-      <li class="service-item" data-animate>
-        <span class="service-num u-mono">05</span>
-        <span class="service-name">Social Sentiment</span>
-        <span class="service-desc t-small">Galaxy score and social volume from LunarCrush and Santiment. Know when the crowd is moving before your agent falls behind.</span>
-        <div class="service-tag"><span class="tag">social_sentiment</span></div>
-      </li>
-    </ul>
-  </div>
-</section>
-
-<!-- ─── PROCESS ─── -->
-<section id="process" class="process-wrap">
-  <div class="process-heading-svg-wrap" aria-hidden="true">
-    <div class="process-heading-text">PROCESS</div>
-  </div>
-
-  <div class="process-content">
-    <h2 class="u-sr-only">How Pulse works</h2>
-    <ul class="process-list">
-      <li class="process-item" data-animate>
-        <div class="process-index-wrap">
-          <span class="process-index-num u-mono">01</span>
+      <div class="svc-row">
+        <span class="svc-num">02</span>
+        <span class="svc-name">Gas Estimator</span>
+        <div class="svc-tags">
+          <span class="svc-tag">Ethereum</span><span class="svc-tag">Gwei</span>
         </div>
-        <div class="process-content-inner">
-          <h3 class="process-step-name">Fetch</h3>
-          <p class="process-step-p t-small">Independent async fetchers query 2–3 sources per domain simultaneously. No single point of failure. Each fetcher is isolated and timeout-bounded.</p>
-        </div>
-        <div class="process-step-act u-mono">~10s refresh</div>
-      </li>
-      <li class="process-item" data-animate>
-        <div class="process-index-wrap">
-          <span class="process-index-num u-mono">02</span>
-        </div>
-        <div class="process-content-inner">
-          <h3 class="process-step-name">Aggregate</h3>
-          <p class="process-step-p t-small">Median aggregation filters outliers. String values use voting consensus. Numeric spread percentage tells your agent how much sources disagree.</p>
-        </div>
-        <div class="process-step-act u-mono">Median + voting</div>
-      </li>
-      <li class="process-item" data-animate>
-        <div class="process-index-wrap">
-          <span class="process-index-num u-mono">03</span>
-        </div>
-        <div class="process-content-inner">
-          <h3 class="process-step-name">Score</h3>
-          <p class="process-step-p t-small">Confidence starts at 0.6 for 2 sources, +0.10 per additional source, capped at 0.95. Your agent knows exactly how much to trust the answer.</p>
-        </div>
-        <div class="process-step-act u-mono">0.6 → 0.95</div>
-      </li>
-      <li class="process-item" data-animate>
-        <div class="process-index-wrap">
-          <span class="process-index-num u-mono">04</span>
-        </div>
-        <div class="process-content-inner">
-          <h3 class="process-step-name">Deliver</h3>
-          <p class="process-step-p t-small">Redis cache provides sub-millisecond reads on warm data. HTTP pull or WebSocket push. Works with LangChain, AutoGen, CrewAI, or any custom agent.</p>
-        </div>
-        <div class="process-step-act u-mono">&lt;1ms cached</div>
-      </li>
-    </ul>
-  </div>
-</section>
-
-<!-- ─── FAQ ─── -->
-<section class="faq-wrap">
-  <div class="faq-left" data-animate>
-    <div class="eyebrow">
-      <span class="eyebrow-circle"></span>
-      <span class="eyebrow-text u-mono">FAQs</span>
-    </div>
-  </div>
-  <div class="faq-main" data-animate>
-    <h2 class="faq-heading">Here's what you need to know before integrating Pulse into your agent.</h2>
-    <ul class="faq-list">
-      <li class="faq-item">
-        <button class="faq-toggle" data-accordion>
-          <span class="faq-q">How is Pulse different from a single API call?</span>
-          <span class="faq-sq"></span>
-        </button>
-        <div class="faq-body">
-          <div class="faq-body-inner">A single API call is one unverified node. Pulse queries 2–3 independent sources per feed, computes the median, scores confidence based on agreement, and tells your agent exactly how much to trust the result. If sources disagree beyond threshold, Pulse returns DEFER — not a wrong answer.</div>
-        </div>
-      </li>
-      <li class="faq-item">
-        <button class="faq-toggle" data-accordion>
-          <span class="faq-q">What does the confidence score mean?</span>
-          <span class="faq-sq"></span>
-        </button>
-        <div class="faq-body">
-          <div class="faq-body-inner">Confidence starts at 0.60 for any 2-source feed, increases by 0.10 per additional verified source, and is capped at 0.95. A score of 0.87 means 3 sources agreed within a tight spread. Your agent can use this to decide whether to act, wait, or escalate.</div>
-        </div>
-      </li>
-      <li class="faq-item">
-        <button class="faq-toggle" data-accordion>
-          <span class="faq-q">What frameworks does Pulse support?</span>
-          <span class="faq-sq"></span>
-        </button>
-        <div class="faq-body">
-          <div class="faq-body-inner">Pulse exposes a standard HTTP JSON API and WebSocket stream. The Python SDK wraps it in one import. LangChain, AutoGen, CrewAI, and any custom agent that can make an HTTP request can use Pulse out of the box.</div>
-        </div>
-      </li>
-      <li class="faq-item">
-        <button class="faq-toggle" data-accordion>
-          <span class="faq-q">How fresh is the data?</span>
-          <span class="faq-sq"></span>
-        </button>
-        <div class="faq-body">
-          <div class="faq-body-inner">Background fetchers run every ~10 seconds. Redis cache serves warm reads in sub-millisecond. On a cold miss, Pulse fetches fresh and responds within 200–500ms. On-chain data follows 12s Ethereum block time as the natural floor.</div>
-        </div>
-      </li>
-      <li class="faq-item">
-        <button class="faq-toggle" data-accordion>
-          <span class="faq-q">Is this open source?</span>
-          <span class="faq-sq"></span>
-        </button>
-        <div class="faq-body">
-          <div class="faq-body-inner">Yes. Full source on GitHub — Rust core (axum + tokio + redis), Python SDK, evaluation harness, Docker compose. MIT licensed. Self-host in one command: docker-compose up.</div>
-        </div>
-      </li>
-    </ul>
-  </div>
-</section>
-
-<!-- ─── CTA ─── -->
-<section id="cta" class="cta-wrap">
-  <div class="cta-inner">
-    <h2 class="u-sr-only">Start feeding your agents real-time truth</h2>
-    <div class="cta-heading-contain" data-split-reveal="lines" data-split="heading">
-      <div class="cta-heading"><span>Let's feed</span></div>
-      <div class="cta-heading"><span>your agents</span></div>
-      <div class="cta-heading"><span>the truth.</span></div>
-      <div class="cta-row">
-        <div class="cta-heading cta-arrow"><span>→</span></div>
-        <div class="cta-heading"><span>Start now</span></div>
+        <span class="svc-link">Live ↗</span>
       </div>
-    </div>
-    <div class="cta-actions" data-animate>
-      <a href="https://github.com/itachi-exe/pulse" target="_blank" class="btn btn-primary">
-        View on GitHub <span class="btn-aside">↗</span>
-      </a>
-      <div class="code-btn">
-        <span class="dollar">$</span> pip install pulse-sdk
+      <div class="svc-row">
+        <span class="svc-num">03</span>
+        <span class="svc-name">Context Confidence</span>
+        <div class="svc-tags">
+          <span class="svc-tag">Scoring</span><span class="svc-tag">Eval</span>
+        </div>
+        <span class="svc-link">Active ↗</span>
+      </div>
+      <div class="svc-row">
+        <span class="svc-num">04</span>
+        <span class="svc-name">News Freshness</span>
+        <div class="svc-tags">
+          <span class="svc-tag">RSS</span><span class="svc-tag">Indexed</span>
+        </div>
+        <span class="svc-link">Planned ↗</span>
+      </div>
+      <div class="svc-row">
+        <span class="svc-num">05</span>
+        <span class="svc-name">Chain State</span>
+        <div class="svc-tags">
+          <span class="svc-tag">Blocks</span><span class="svc-tag">TxPool</span>
+        </div>
+        <span class="svc-link">Planned ↗</span>
+      </div>
+      <div class="svc-row">
+        <span class="svc-num">06</span>
+        <span class="svc-name">Time & Weather</span>
+        <div class="svc-tags">
+          <span class="svc-tag">UTC</span><span class="svc-tag">Location</span>
+        </div>
+        <span class="svc-link">Planned ↗</span>
+      </div>
+      <div class="svc-row">
+        <span class="svc-num">07</span>
+        <span class="svc-name">Python SDK</span>
+        <div class="svc-tags">
+          <span class="svc-tag">pip install</span><span class="svc-tag">REST</span>
+        </div>
+        <span class="svc-link">GitHub ↗</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ─── FOOTER ─── -->
-<footer class="footer-wrap">
-  <div class="footer-nav-wrap">
-    <nav class="footer-nav-big">
-      <a href="https://github.com/itachi-exe/pulse" target="_blank" class="footer-nav-big-link" data-animate>
-        <div class="footer-nav-span-wrap">
-          <span class="footer-nav-span">GitHub</span>
-          <span class="footer-nav-span is-hover">GitHub</span>
-        </div>
-        <span class="footer-nav-arrow">↗</span>
-      </a>
-      <a href="#feeds" class="footer-nav-big-link" data-animate>
-        <div class="footer-nav-span-wrap">
-          <span class="footer-nav-span">Live Feeds</span>
-          <span class="footer-nav-span is-hover">Live Feeds</span>
-        </div>
-        <span class="footer-nav-arrow">↗</span>
-      </a>
-      <a href="#process" class="footer-nav-big-link" data-animate>
-        <div class="footer-nav-span-wrap">
-          <span class="footer-nav-span">How it works</span>
-          <span class="footer-nav-span is-hover">How it works</span>
-        </div>
-        <span class="footer-nav-arrow">↗</span>
-      </a>
-    </nav>
-  </div>
-
-  <div class="footer-top">
-    <div class="footer-brand" data-animate>
-      <div class="footer-wordmark">PULSE</div>
-      <p class="footer-tagline">Chainlink is a data feed for smart contracts. Pulse is a data feed for AI agents.</p>
+<!-- PROCESS -->
+<section class="process" id="process">
+  <div class="proc-inner">
+    <div class="proc-left">
+      <p class="eyebrow">How it works</p>
+      <h2 class="proc-heading" data-reveal>From question to grounded answer</h2>
+      <p class="proc-body" data-reveal>Pulse intercepts the agent's question, fetches live verified data, and injects it as grounded context before the LLM ever sees it.</p>
     </div>
-    <div class="footer-nav-cols" data-animate>
-      <div>
-        <div class="footer-nav-heading u-mono">Product</div>
-        <ul class="footer-nav-list">
-          <li><a href="#feeds" class="footer-nav-link">Live Feeds</a></li>
-          <li><a href="#services" class="footer-nav-link">Feed Types</a></li>
-          <li><a href="#process" class="footer-nav-link">How it works</a></li>
-        </ul>
+    <div class="proc-right">
+      <div class="proc-step" data-reveal>
+        <span class="proc-step-num">01</span>
+        <div class="proc-step-content">
+          <p class="proc-step-title">Agent sends a query</p>
+          <p class="proc-step-body">Your agent calls the Pulse API with a natural-language question or a structured feed request. No prompt engineering required.</p>
+        </div>
       </div>
-      <div>
-        <div class="footer-nav-heading u-mono">Docs</div>
-        <ul class="footer-nav-list">
-          <li><a href="https://github.com/itachi-exe/pulse" target="_blank" class="footer-nav-link">GitHub</a></li>
-          <li><a href="https://github.com/itachi-exe/pulse#readme" target="_blank" class="footer-nav-link">README</a></li>
-          <li><a href="https://github.com/itachi-exe/pulse/tree/main/sdk" target="_blank" class="footer-nav-link">Python SDK</a></li>
-        </ul>
+      <div class="proc-step" data-reveal>
+        <span class="proc-step-num">02</span>
+        <div class="proc-step-content">
+          <p class="proc-step-title">Pulse fetches live data</p>
+          <p class="proc-step-body">The Rust core fans out to CoinGecko, Etherscan, and other live sources. Redis caches fresh results. Stale data is never served.</p>
+        </div>
       </div>
-      <div>
-        <div class="footer-nav-heading u-mono">Contact</div>
-        <ul class="footer-nav-list">
-          <li><a href="mailto:itachi_r3birth@proton.me" class="footer-nav-link">Email</a></li>
-          <li><a href="https://github.com/itachi-exe" target="_blank" class="footer-nav-link">GitHub</a></li>
-        </ul>
+      <div class="proc-step" data-reveal>
+        <span class="proc-step-num">03</span>
+        <div class="proc-step-content">
+          <p class="proc-step-title">Confidence scored</p>
+          <p class="proc-step-body">Each answer gets a confidence score. If Pulse can't verify the data, it says so — no hallucinated confidence.</p>
+        </div>
+      </div>
+      <div class="proc-step" data-reveal>
+        <span class="proc-step-num">04</span>
+        <div class="proc-step-content">
+          <p class="proc-step-title">Grounded context returned</p>
+          <p class="proc-step-body">Your agent receives a structured JSON context block with the fact, confidence, and source. Feed it straight to your LLM.</p>
+        </div>
       </div>
     </div>
   </div>
+</section>
 
+<!-- FAQ -->
+<section class="faq">
+  <div class="faq-inner">
+    <div class="faq-left">
+      <p class="faq-eyebrow">FAQ</p>
+      <h2 class="faq-side-heading" data-reveal>Common questions</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">What kinds of data does Pulse provide?</span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </div>
+        <div class="faq-a">Crypto prices (ETH, BTC, SOL), gas estimates, context confidence scores, and the Python SDK. More feeds — news freshness, chain state, time/weather — are shipping next.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">How is this different from just calling CoinGecko directly?</span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </div>
+        <div class="faq-a">Pulse is the layer above raw APIs. It unifies multiple sources, caches intelligently, scores confidence, and formats the result so your agent gets a single grounded context block — not raw JSON it has to interpret.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">Does this replace the LLM?</span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </div>
+        <div class="faq-a">No. Pulse sits in front of the LLM and enriches its context. Your agent still reasons with the LLM — it just reasons with correct data now.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">Is the API free to use?</span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </div>
+        <div class="faq-a">Yes, during the hackathon phase. The public endpoint at 94.72.105.176:7071/api is open. Rate limits apply. Production access via API key coming post-demo.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">What's the stack?</span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </div>
+        <div class="faq-a">Rust (Axum + Tokio) for the API, Redis for caching, Python SDK, nginx reverse proxy, pm2 process management. Deployed on a Contabo VPS in Berlin.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="cta-badge">
+    <span class="hero-pill-dot"></span>
+    HackerEarth Hackathon 2026
+  </div>
+  <h2 class="cta-heading" data-reveal>Give your agent ground truth</h2>
+  <p class="cta-body" data-reveal>Stop shipping agents that hallucinate. Plug in Pulse and let them act on verified, live facts — in one API call.</p>
+  <a href="https://github.com/itachi-exe/pulse" class="cta-btn" target="_blank">
+    View on GitHub
+    <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-big-nav">
+    <div class="footer-big-col">
+      <span class="footer-big-label">Navigation</span>
+      <a href="#feeds" class="footer-big-link" data-label="Live Feeds"><span>Live Feeds</span><span class="fbl-arr">↗</span></a>
+      <a href="#services" class="footer-big-link" data-label="Services"><span>Services</span><span class="fbl-arr">↗</span></a>
+      <a href="#process" class="footer-big-link" data-label="Process"><span>Process</span><span class="fbl-arr">↗</span></a>
+    </div>
+    <div class="footer-big-col">
+      <span class="footer-big-label">Resources</span>
+      <a href="https://github.com/itachi-exe/pulse" target="_blank" class="footer-big-link" data-label="GitHub"><span>GitHub</span><span class="fbl-arr">↗</span></a>
+      <a href="/api/health" class="footer-big-link" data-label="API Health"><span>API Health</span><span class="fbl-arr">↗</span></a>
+      <a href="/api/feed/crypto_price?q=ETH" class="footer-big-link" data-label="ETH Feed"><span>ETH Feed</span><span class="fbl-arr">↗</span></a>
+    </div>
+    <div class="footer-big-col">
+      <span class="footer-big-label">Contact</span>
+      <a href="https://github.com/itachi-exe" target="_blank" class="footer-big-link" data-label="@itachi-exe"><span>@itachi-exe</span><span class="fbl-arr">↗</span></a>
+      <a href="#about" class="footer-big-link" data-label="About Pulse"><span>About Pulse</span><span class="fbl-arr">↗</span></a>
+    </div>
+  </div>
   <div class="footer-bottom">
-    <div class="footer-copy u-mono">© 2026 Pulse. Built for the micro1 Frontier Engineering Challenge.</div>
-    <div class="footer-location u-mono">Berlin, Germany</div>
-    <div class="footer-socials">
-      <a href="https://github.com/itachi-exe/pulse" target="_blank" class="footer-social-link">GitHub</a>
-      <a href="http://94.72.105.176:7070/health" target="_blank" class="footer-social-link">API</a>
+    <span class="footer-wordmark">PULSE</span>
+    <div class="footer-meta">
+      <span id="footer-clock"></span>
+      <span>Berlin, DE · UTC+2</span>
+      <span>© 2026 Pulse</span>
     </div>
   </div>
 </footer>
 
-<!-- ─── SCRIPTS ─── -->
 <script>
-// ── Lenis smooth scroll ──
-const lenis = new Lenis({
-  duration: 1.2,
-  easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-  orientation: 'vertical',
-  smoothWheel: true,
-});
-function raf(time) {
-  lenis.raf(time);
-  requestAnimationFrame(raf);
-}
+// ── CURSOR
+const cur = document.getElementById('cursor');
+let mx=0,my=0,cx=0,cy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function animCursor(){cx+=(mx-cx)*.15;cy+=(my-cy)*.15;cur.style.left=cx+'px';cur.style.top=cy+'px';requestAnimationFrame(animCursor)})();
+
+// ── NAV SCROLL
+const navEl = document.getElementById('nav');
+window.addEventListener('scroll',()=>{
+  navEl.classList.toggle('scrolled',window.scrollY>40);
+},{passive:true});
+
+// ── LENIS
+const lenis = new Lenis({lerp:.08,smoothWheel:true});
+function raf(t){lenis.raf(t);requestAnimationFrame(raf)}
 requestAnimationFrame(raf);
+lenis.on('scroll',ScrollTrigger.update);
 
-// Wire lenis to GSAP ScrollTrigger
+// ── GSAP
 gsap.registerPlugin(ScrollTrigger);
-lenis.on('scroll', ScrollTrigger.update);
-gsap.ticker.add(time => lenis.raf(time * 1000));
-gsap.ticker.lagSmoothing(0);
 
-// ── Custom cursor ──
-const cursor = document.getElementById('cursor-dot');
-if (window.matchMedia('(hover: hover)').matches) {
-  let mx = 0, my = 0, cx = 0, cy = 0;
-  window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-  function animateCursor() {
-    cx += (mx - cx) * 0.18;
-    cy += (my - cy) * 0.18;
-    cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
-    requestAnimationFrame(animateCursor);
-  }
-  animateCursor();
-}
-
-// ── Manual SplitText-like reveal ──
-function splitAndReveal(el, type = 'lines') {
-  // Elements already split in HTML with .line/.word spans — just animate them
-  const lines = el.querySelectorAll('.line .word, .line');
-  if (!lines.length) {
-    // Fallback: treat whole element
-    gsap.fromTo(el,
-      { y: 40, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 88%' }
-      }
-    );
-    return;
-  }
-  gsap.fromTo(lines,
-    { y: '110%' },
-    {
-      y: '0%',
-      duration: 0.9,
-      ease: 'power3.out',
-      stagger: 0.08,
-      scrollTrigger: { trigger: el, start: 'top 88%' },
-      onStart: () => { el.style.visibility = 'visible'; el.style.opacity = '1'; }
-    }
+// Reveal elements
+document.querySelectorAll('[data-reveal]').forEach(el=>{
+  gsap.fromTo(el,
+    {opacity:0,y:35},
+    {opacity:1,y:0,duration:1,ease:'power3.out',
+     scrollTrigger:{trigger:el,start:'top 88%',toggleActions:'play none none none'}}
   );
-}
+});
 
-// ── GSAP reveal for [data-animate] ──
-function initAnimations() {
-  // Navbar
-  gsap.to('.navbar-wrap', {
-    visibility: 'visible', opacity: 1,
-    y: 0, duration: 0.6, ease: 'power3.out', delay: 0.2
-  });
+// Line reveals
+document.querySelectorAll('[data-reveal-line] .reveal-inner').forEach(el=>{
+  gsap.fromTo(el,
+    {y:'105%'},
+    {y:'0%',duration:1.1,ease:'power3.out',
+     scrollTrigger:{trigger:el,start:'top 88%',toggleActions:'play none none none'}}
+  );
+});
 
-  // Hero: animate heading lines
-  const heroHeading = document.querySelector('.hero-heading[data-split-reveal]');
-  if (heroHeading) {
-    const lines = heroHeading.querySelectorAll('.line .word');
-    heroHeading.style.visibility = 'visible';
-    heroHeading.style.opacity = '1';
-    gsap.fromTo(lines,
-      { y: '115%' },
-      { y: '0%', duration: 1.1, ease: 'power4.out', stagger: 0.07, delay: 0.4 }
-    );
-  }
-
-  // Hero sub-elements
-  document.querySelectorAll('.hero-wrap [data-animate]').forEach((el, i) => {
-    gsap.fromTo(el,
-      { y: 20, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', delay: 0.7 + i * 0.1 }
-    );
-  });
-
-  // Scroll-triggered elements
-  document.querySelectorAll('[data-split-reveal]:not(.hero-heading)').forEach(el => {
-    el.style.visibility = 'visible';
-    el.style.opacity = '1';
-    const lines = el.querySelectorAll('.line, span.line');
-    if (lines.length) {
-      gsap.fromTo(lines,
-        { y: '110%' },
-        {
-          y: '0%', duration: 0.9, ease: 'power3.out', stagger: 0.07,
-          scrollTrigger: { trigger: el, start: 'top 88%' }
-        }
-      );
-    }
-  });
-
-  // CTA headings special treatment
-  const ctaHeadings = document.querySelectorAll('.cta-heading[data-split-reveal] span, .cta-heading span');
-  if (ctaHeadings.length) {
-    gsap.fromTo(ctaHeadings,
-      { y: '110%' },
-      {
-        y: '0%', duration: 1, ease: 'power4.out', stagger: 0.08,
-        scrollTrigger: { trigger: '.cta-wrap', start: 'top 80%' }
-      }
-    );
-  }
-
-  // Generic scroll reveals
-  document.querySelectorAll('[data-animate]:not(.hero-wrap [data-animate])').forEach((el, i) => {
-    gsap.fromTo(el,
-      { y: 24, opacity: 0 },
-      {
-        y: 0, opacity: 1, duration: 0.75, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 90%' }
-      }
-    );
-  });
-
-  // Gap heading
-  const gapHeadings = document.querySelectorAll('.gap-heading span');
-  gapHeadings.forEach((el, i) => {
-    gsap.fromTo(el,
-      { y: '110%' },
-      {
-        y: '0%', duration: 1.1, ease: 'power4.out',
-        delay: i * 0.08,
-        scrollTrigger: { trigger: '.gap-wrap', start: 'top 75%' }
-      }
-    );
-  });
-
-  // Navbar background on scroll
-  ScrollTrigger.create({
-    start: 100,
-    onToggle: self => {
-      document.getElementById('navbar').style.background = self.isActive
-        ? 'rgba(8,8,7,0.97)'
-        : 'linear-gradient(to bottom,rgba(8,8,7,.95) 0%,rgba(8,8,7,0) 100%)';
-      document.getElementById('navbar').style.backdropFilter = self.isActive ? 'blur(12px)' : 'blur(0)';
-      document.getElementById('navbar').style.transition = 'background .3s, backdrop-filter .3s';
-    }
-  });
-}
-
-// ── Hero canvas: particle field ──
-(function() {
-  const canvas = document.getElementById('hero-canvas');
-  const ctx = canvas.getContext('2d');
-  let W, H, particles = [], frame = 0;
-
-  function resize() {
-    W = canvas.width = canvas.offsetWidth;
-    H = canvas.height = canvas.offsetHeight;
-  }
-
-  function makeParticle() {
-    return {
-      x: Math.random() * W,
-      y: Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: -Math.random() * 0.4 - 0.1,
-      r: Math.random() * 1.5 + 0.5,
-      life: 0,
-      maxLife: Math.random() * 300 + 150,
-    };
-  }
-
-  function init() {
-    particles = Array.from({ length: 60 }, makeParticle);
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    frame++;
-
-    for (let i = particles.length - 1; i >= 0; i--) {
-      const p = particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      p.life++;
-
-      const alpha = Math.sin((p.life / p.maxLife) * Math.PI) * 0.5;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(117,229,176,${alpha * 0.6})`;
-      ctx.fill();
-
-      if (p.life >= p.maxLife || p.y < -10) {
-        particles[i] = makeParticle();
-        particles[i].y = H + 10;
-      }
-    }
-
-    // Subtle grid lines
-    if (frame % 2 === 0) {
-      ctx.strokeStyle = 'rgba(255,255,255,0.02)';
-      ctx.lineWidth = 1;
-      const cols = 12;
-      const colW = W / cols;
-      for (let c = 1; c < cols; c++) {
-        ctx.beginPath();
-        ctx.moveTo(c * colW, 0);
-        ctx.lineTo(c * colW, H);
-        ctx.stroke();
-      }
-    }
-
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener('resize', () => { resize(); init(); });
-  resize();
-  init();
-  draw();
-})();
-
-// ── Live feed data ──
-async function fetchLiveData() {
-  try {
-    const [gasRes, ethRes] = await Promise.allSettled([
-      fetch('/api/feed/gas_price').then(r => r.json()),
-      fetch('/api/feed/crypto_price?q=ETH').then(r => r.json()),
-    ]);
-
-    if (gasRes.status === 'fulfilled' && gasRes.value) {
-      const g = gasRes.value;
-      const safe = g.value?.safe_gwei ?? g.value?.base_fee_gwei;
-      const fast = g.value?.fast_gwei;
-      document.getElementById('feed-gas-safe').textContent = safe ? safe.toFixed(1) + ' gwei' : 'N/A';
-      document.getElementById('feed-gas-fast').textContent = fast ? fast.toFixed(1) + ' gwei' : 'N/A';
-      document.getElementById('feed-gas-sources').textContent = `${g.source_count ?? '—'} sources`;
-      document.getElementById('feed-gas-conf').textContent = g.confidence ? `${(g.confidence * 100).toFixed(0)}% confidence` : '—';
-
-      const gasNum = safe ?? 23;
-      document.getElementById('stat-gas').textContent = gasNum.toFixed(0);
-    }
-
-    if (ethRes.status === 'fulfilled' && ethRes.value) {
-      const e = ethRes.value;
-      const price = e.value?.price_usd;
-      const change = e.value?.change_24h_pct;
-      document.getElementById('feed-eth-price').textContent = price ? '$' + price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : 'N/A';
-      document.getElementById('feed-eth-change').textContent = change != null ? (change >= 0 ? '+' : '') + change.toFixed(2) + '%' : 'N/A';
-      document.getElementById('feed-eth-sources').textContent = `${e.source_count ?? '—'} sources`;
-      document.getElementById('feed-eth-conf').textContent = e.confidence ? `${(e.confidence * 100).toFixed(0)}% confidence` : '—';
-
-      if (price) document.getElementById('stat-eth').textContent = '$' + Math.round(price).toLocaleString();
-    }
-  } catch(err) {
-    // Fallback values
-    document.getElementById('stat-eth').textContent = '$2,426';
-    document.getElementById('stat-gas').textContent = '23';
-  }
-}
-
-fetchLiveData();
-setInterval(fetchLiveData, 12000);
-
-// ── Stats slider ──
-(function() {
-  const items = document.querySelectorAll('.problems-item');
-  const bar = document.getElementById('stat-progress-bar');
-  const indexEl = document.getElementById('stat-index');
-  let current = 0;
-  const total = items.length;
-  const duration = 4000;
-  let startTime = null;
-  let timer;
-
-  function updateIndex() {
-    indexEl.textContent = String(current + 1).padStart(2, '0') + '/' + String(total).padStart(2, '0');
-  }
-
-  function progressLoop(ts) {
-    if (!startTime) startTime = ts;
-    const elapsed = ts - startTime;
-    const pct = Math.min(100, (elapsed / duration) * 100);
-    bar.style.width = pct + '%';
-    if (pct < 100) {
-      timer = requestAnimationFrame(progressLoop);
-    } else {
-      current = (current + 1) % total;
-      updateIndex();
-      startTime = null;
-      timer = requestAnimationFrame(progressLoop);
-    }
-  }
-
-  updateIndex();
-  timer = requestAnimationFrame(progressLoop);
-
-  document.getElementById('stat-next').addEventListener('click', () => {
-    cancelAnimationFrame(timer);
-    current = (current + 1) % total;
-    updateIndex();
-    startTime = null;
-    timer = requestAnimationFrame(progressLoop);
-  });
-  document.getElementById('stat-prev').addEventListener('click', () => {
-    cancelAnimationFrame(timer);
-    current = (current - 1 + total) % total;
-    updateIndex();
-    startTime = null;
-    timer = requestAnimationFrame(progressLoop);
-  });
-})();
-
-// ── FAQ accordion ──
-document.querySelectorAll('[data-accordion]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const item = btn.closest('.faq-item');
-    const wasActive = item.classList.contains('is-active');
-    // Close all
-    document.querySelectorAll('.faq-item.is-active').forEach(i => i.classList.remove('is-active'));
-    if (!wasActive) item.classList.add('is-active');
+// ── FAQ
+document.querySelectorAll('.faq-q').forEach(q=>{
+  q.addEventListener('click',()=>{
+    const item = q.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+    if(!isOpen) item.classList.add('open');
   });
 });
 
-// ── Init animations ──
-window.addEventListener('load', () => {
-  initAnimations();
+// ── PROGRESS BAR (problems)
+const problems = [
+  {num:'5/10',lbl:'Pulse eval score vs 1/10 baseline'},
+  {num:'72%',lbl:'of agent failures traced to stale inputs'},
+  {num:'12s',lbl:'average cache TTL for live data feeds'},
+];
+let probIdx=0;
+const fill=document.getElementById('progFill');
+const progIdx=document.querySelector('.prog-idx');
+function updateProb(dir=1){
+  probIdx=(probIdx+dir+problems.length)%problems.length;
+  const cards=document.querySelectorAll('.prob-card');
+  const active=problems[probIdx];
+  gsap.to(fill,{width:(probIdx+1)/problems.length*100+'%',duration:.6,ease:'power2.out'});
+  progIdx && (progIdx.textContent=`0${probIdx+1} / 0${problems.length}`);
+}
+document.getElementById('progNext')?.addEventListener('click',()=>updateProb(1));
+document.getElementById('progPrev')?.addEventListener('click',()=>updateProb(-1));
+updateProb(0); // init
+
+// ── LIVE DATA
+async function fetchLive(){
+  try{
+    const r=await fetch('/api/feed/crypto_price?q=ETH');
+    const d=await r.json();
+    if(d.answer){
+      const m=d.answer.match(/\$([\d,]+\.?\d*)/);
+      if(m) document.getElementById('ethPrice').textContent='$'+m[1];
+    }
+    if(d.confidence!=null){
+      const score=Math.round(d.confidence*10);
+      document.getElementById('pulseScore').textContent=score+'/10';
+    }
+  }catch(e){}
+  try{
+    const r=await fetch('/api/feed/crypto_price?q=BTC');
+    const d=await r.json();
+    if(d.answer){const m=d.answer.match(/\$([\d,]+\.?\d*)/);if(m)document.getElementById('btcPrice').textContent='$'+m[1];}
+  }catch(e){}
+}
+fetchLive();
+setInterval(fetchLive,12000);
+
+// ── STAT COUNTER
+function animCount(el,target,prefix='',suffix=''){
+  let start=0;const dur=1800;const startTime=performance.now();
+  function step(now){
+    const p=Math.min((now-startTime)/dur,1);
+    const val=Math.round(p*target);
+    el.textContent=prefix+val.toLocaleString()+suffix;
+    if(p<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+const agentEl=document.getElementById('statAgents');
+const agentObs=new IntersectionObserver(([e])=>{if(e.isIntersecting){animCount(agentEl,12400,'','');agentObs.disconnect();}},{threshold:.5});
+if(agentEl)agentObs.observe(agentEl);
+
+// ── FOOTER CLOCK
+function updateClock(){
+  const t=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit',timeZone:'Europe/Berlin'});
+  const el=document.getElementById('footer-clock');
+  if(el)el.textContent=t+' CET';
+}
+updateClock();setInterval(updateClock,1000);
+
+// ── SOUND TOGGLE (cosmetic)
+let soundOn=false;
+document.getElementById('navSound')?.addEventListener('click',function(){
+  soundOn=!soundOn;
+  this.style.background=soundOn?'rgba(117,229,176,.12)':'';
 });
+
+// ── HERO PARALLAX
+document.addEventListener('scroll',()=>{
+  const y=window.scrollY;
+  const wm=document.querySelector('.hero-wordmark');
+  if(wm)wm.style.transform=`translateX(-50%) translateY(${y*0.15}px)`;
+},{passive:true});
 </script>
 </body>
 </html>
