@@ -1,0 +1,17 @@
+{
+  "brief": "Pulse \u2014 real-time truth layer for AI agents. rig.ai energy. Dark terminal aesthetic. Hero shows live Pulse vs baseline comparison updating in real time. Tech stack showcase. One CTA: pip install pulse-sdk. AI/agent domain.",
+  "project_dir": "/root/pulse/site",
+  "current_node": "NEXT_SCREEN",
+  "current_screen": 0,
+  "completed_nodes": [
+    "RESEARCH",
+    "DESIGN_MD",
+    "TOKEN_SETUP",
+    "BUILD_SCREEN",
+    "AUDIT_SCREEN"
+  ],
+  "node_outputs": {},
+  "screens_completed": [],
+  "created_at": "2026-08-28T22:24:16.592617+00:00",
+  "updated_at": "2026-08-28T22:24:56.926781+00:00"
+}
