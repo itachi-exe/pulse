@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  pulse:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "7070:7070"
+    environment:
+      REDIS_URL: redis://redis:6379
+      BIND_ADDR: "0.0.0.0:7070"
+      RUST_LOG: "pulse=info"
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7070/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
