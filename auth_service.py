@@ -6,6 +6,7 @@ Data: 20 categories, 80+ free sources, no-key Phase 1 fully wired.
 """
 
 import asyncio, hashlib, os, secrets, time, uuid, xml.etree.ElementTree as ET
+import re, html
 from contextlib import asynccontextmanager
 from datetime import datetime, timedelta, timezone
 from typing import Optional
@@ -364,6 +365,79 @@ def _ok(result):
     return result if not isinstance(result, Exception) else None
 
 # ─────────────────────────────────────────────────────────────────────────────
+# RSS ENGINE — pull, parse, normalize any RSS/Atom feed, no key ever
+# ─────────────────────────────────────────────────────────────────────────────
+def _strip_tags(text: str) -> str:
+    """Remove HTML tags and decode entities."""
+    if not text:
+        return ""
+    text = re.sub(r"<[^>]+>", "", text)
+    return html.unescape(text).strip()[:300]
+
+async def _fetch_rss(url: str, limit: int = 8) -> list[dict]:
+    """Fetch and parse an RSS or Atom feed. Returns list of {title, url, published, summary, source}."""
+    try:
+        text = await _get_text(url, timeout=10)
+        root = ET.fromstring(text)
+        ns   = {
+            "atom":    "http://www.w3.org/2005/Atom",
+            "media":   "http://search.yahoo.com/mrss/",
+            "content": "http://purl.org/rss/1.0/modules/content/",
+            "dc":      "http://purl.org/dc/elements/1.1/",
+        }
+        items = []
+
+        # Atom feed
+        if root.tag.endswith("feed"):
+            for entry in root.findall("atom:entry", ns)[:limit]:
+                link = next((l.get("href","") for l in entry.findall("atom:link", ns)
+                             if l.get("rel","alternate") in ("alternate","")), "")
+                items.append({
+                    "title":     _strip_tags(entry.findtext("atom:title", "", ns)),
+                    "url":       link,
+                    "published": _strip_tags(entry.findtext("atom:updated", "", ns) or entry.findtext("atom:published", "", ns)),
+                    "summary":   _strip_tags(entry.findtext("atom:summary", "", ns))[:200],
+                })
+        else:
+            # RSS 2.0
+            channel = root.find("channel")
+            feed_source = (channel.findtext("title") if channel is not None else "") or ""
+            for item in (channel or root).findall("item")[:limit]:
+                pub = (item.findtext("pubDate") or item.findtext("dc:date", "", ns) or "")[:40]
+                desc = item.findtext("description") or item.findtext("content:encoded", "", ns) or ""
+                items.append({
+                    "title":     _strip_tags(item.findtext("title") or ""),
+                    "url":       (item.findtext("link") or item.findtext("guid") or ""),
+                    "published": pub,
+                    "summary":   _strip_tags(desc)[:200],
+                    "source":    feed_source,
+                })
+
+        return [i for i in items if i.get("title")]
+    except Exception:
+        return []
+
+async def _multi_rss(feeds: list[tuple[str, str]], limit_per_feed: int = 5, total: int = 30) -> list[dict]:
+    """Fetch multiple RSS feeds concurrently. feeds = [(label, url), ...]"""
+    tasks = [_fetch_rss(url, limit_per_feed) for _, url in feeds]
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+    out = []
+    for (label, _), res in zip(feeds, results):
+        if not isinstance(res, Exception):
+            for item in res:
+                item["feed"] = label
+                out.append(item)
+    # deduplicate by title
+    seen = set()
+    deduped = []
+    for item in out:
+        key = item["title"][:60].lower()
+        if key not in seen:
+            seen.add(key)
+            deduped.append(item)
+    return deduped[:total]
+
+# ─────────────────────────────────────────────────────────────────────────────
 # 1. CRYPTO — Binance + CoinGecko + CoinCap + Fear&Greed + Kraken
 # ─────────────────────────────────────────────────────────────────────────────
 async def fetch_crypto():
@@ -656,47 +730,30 @@ async def fetch_economics():
     return result
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 6. NEWS — HackerNews + Reddit worldnews + Dev.to
+# 6. NEWS — 20+ RSS sources: Reuters, AP, BBC, Al Jazeera, Guardian, NPR, etc.
 # ─────────────────────────────────────────────────────────────────────────────
+NEWS_FEEDS = [
+    ("Reuters World",      "https://feeds.reuters.com/reuters/worldNews"),
+    ("AP Top News",        "https://feeds.apnews.com/rss/apf-topnews"),
+    ("BBC World",          "https://feeds.bbci.co.uk/news/world/rss.xml"),
+    ("Al Jazeera",         "https://www.aljazeera.com/xml/rss/all.xml"),
+    ("The Guardian World", "https://www.theguardian.com/world/rss"),
+    ("NPR News",           "https://feeds.npr.org/1001/rss.xml"),
+    ("Axios",              "https://api.axios.com/feed/"),
+    ("Politico",           "https://rss.politico.com/politics-news.xml"),
+    ("The Hill",           "https://thehill.com/feed/"),
+    ("Euronews",           "https://feeds.feedburner.com/euronews/en/news/"),
+    ("Deutsche Welle",     "https://rss.dw.com/xml/rss-en-all"),
+    ("France 24",          "https://www.france24.com/en/rss"),
+    ("South China Morning Post", "https://www.scmp.com/rss/91/feed"),
+    ("Times of India",     "https://timesofindia.indiatimes.com/rssfeeds/296589292.cms"),
+    ("HackerNews Top",     "https://news.ycombinator.com/rss"),
+    ("Reddit WorldNews",   "https://www.reddit.com/r/worldnews/.rss"),
+]
+
 async def fetch_news():
-    hn_t    = _get("https://hacker-news.firebaseio.com/v0/topstories.json")
-    reddit_t = _get("https://www.reddit.com/r/worldnews/hot.json?limit=8")
-    devto_t  = _get("https://dev.to/api/articles?top=1&per_page=6")
-
-    hn_r, reddit_r, devto_r = await _gather(hn_t, reddit_t, devto_t)
-
-    # HN stories
-    hn_stories = []
-    if _ok(hn_r) and isinstance(hn_r, list):
-        ids = hn_r[:8]
-        async with httpx.AsyncClient(timeout=8) as c:
-            tasks = [c.get(f"https://hacker-news.firebaseio.com/v0/item/{i}.json") for i in ids]
-            resps = await asyncio.gather(*tasks, return_exceptions=True)
-            for res in resps:
-                if not isinstance(res, Exception):
-                    s = res.json()
-                    if s and s.get("title"):
-                        hn_stories.append({"title": s["title"], "score": s.get("score"), "url": s.get("url","")})
-
-    # Reddit
-    reddit_posts = []
-    if _ok(reddit_r):
-        for p in (reddit_r.get("data", {}).get("children") or []):
-            d = p.get("data", {})
-            if not d.get("stickied"):
-                reddit_posts.append({"title": d.get("title","")[:120], "score": d.get("score"), "comments": d.get("num_comments")})
-
-    # Dev.to
-    devto_posts = []
-    if _ok(devto_r) and isinstance(devto_r, list):
-        for a in devto_r:
-            devto_posts.append({"title": a.get("title","")[:100], "reactions": a.get("positive_reactions_count"), "url": a.get("url","")})
-
-    return {
-        "hackernews": hn_stories[:6],
-        "reddit_worldnews": reddit_posts[:6],
-        "devto_top": devto_posts,
-    }
+    articles = await _multi_rss(NEWS_FEEDS, limit_per_feed=4, total=40)
+    return {"articles": articles, "source_count": len(NEWS_FEEDS), "sources": [f for f, _ in NEWS_FEEDS]}
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 7. WEATHER — Open-Meteo + wttr.in + NOAA alerts
@@ -953,139 +1010,120 @@ async def fetch_space():
     }
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 12. SCIENCE — arXiv + PubMed + ClinicalTrials
+# 12. SCIENCE — arXiv + PubMed + ClinicalTrials + Science RSS
 # ─────────────────────────────────────────────────────────────────────────────
+SCIENCE_FEEDS = [
+    ("NASA News",         "https://www.nasa.gov/rss/dyn/breaking_news.rss"),
+    ("Nature",            "https://www.nature.com/nature.rss"),
+    ("Science Magazine",  "https://www.science.org/rss/news_current.xml"),
+    ("New Scientist",     "https://www.newscientist.com/feed/home/"),
+    ("Scientific American","https://rss.sciam.com/ScientificAmerican-Global"),
+    ("ESA News",          "https://www.esa.int/rssfeed/Our_Activities/Space_Science"),
+    ("arXiv CS.AI",       "http://export.arxiv.org/rss/cs.AI"),
+    ("arXiv Physics",     "http://export.arxiv.org/rss/physics"),
+]
+
 async def fetch_science():
-    arxiv_t  = _get_text("http://export.arxiv.org/api/query?search_query=cat:cs.AI&sortBy=submittedDate&sortOrder=descending&max_results=8")
-    pubmed_t = _get(
-        "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
-        "?db=pubmed&term=artificial+intelligence+medicine&retmax=5&retmode=json&sort=pub+date"
-    )
+    rss_t    = _multi_rss(SCIENCE_FEEDS, limit_per_feed=4, total=25)
+    pubmed_t = _get("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=artificial+intelligence+medicine&retmax=5&retmode=json&sort=pub+date")
     trials_t = _get("https://clinicaltrials.gov/api/v2/studies?query.term=AI+cancer&pageSize=5&format=json")
 
-    arxiv_r, pubmed_r, trials_r = await _gather(arxiv_t, pubmed_t, trials_t)
+    articles, pubmed_r, trials_r = await asyncio.gather(rss_t, pubmed_t, trials_t, return_exceptions=True)
+    if isinstance(articles, Exception):
+        articles = []
 
-    # Parse arXiv XML
-    papers = []
-    if _ok(arxiv_r):
-        try:
-            ns = {"atom": "http://www.w3.org/2005/Atom"}
-            root = ET.fromstring(arxiv_r)
-            for entry in root.findall("atom:entry", ns)[:8]:
-                title   = (entry.findtext("atom:title", "", ns) or "").strip().replace("\n"," ")
-                summary = (entry.findtext("atom:summary", "", ns) or "").strip()[:200].replace("\n"," ")
-                authors = [a.findtext("atom:name","",ns) for a in entry.findall("atom:author",ns)]
-                link    = next((l.get("href","") for l in entry.findall("atom:link",ns) if l.get("type")=="text/html"), "")
-                papers.append({"title": title, "authors": authors[:3], "abstract": summary, "url": link})
-        except Exception:
-            pass
-
-    # PubMed IDs
     pubmed_ids = []
     if _ok(pubmed_r):
         pubmed_ids = pubmed_r.get("esearchresult", {}).get("idlist", [])
 
-    # Clinical trials
     active_trials = []
     if _ok(trials_r):
         for study in (trials_r.get("studies") or [])[:5]:
-            ps = study.get("protocolSection", {})
-            id_m   = ps.get("identificationModule", {})
-            stat_m = ps.get("statusModule", {})
-            desc_m = ps.get("descriptionModule", {})
+            ps   = study.get("protocolSection", {})
+            id_m = ps.get("identificationModule", {})
+            st_m = ps.get("statusModule", {})
             active_trials.append({
                 "nct_id": id_m.get("nctId"),
-                "title": (id_m.get("briefTitle") or "")[:100],
-                "status": stat_m.get("overallStatus"),
-                "brief": (desc_m.get("briefSummary") or "")[:150],
+                "title":  (id_m.get("briefTitle") or "")[:100],
+                "status": st_m.get("overallStatus"),
             })
 
     return {
-        "arxiv_ai_papers": papers,
+        "articles": articles,
+        "source_count": len(SCIENCE_FEEDS),
         "pubmed_recent_ids": pubmed_ids,
         "active_clinical_trials": active_trials,
-        "source": "arXiv + PubMed + ClinicalTrials.gov",
     }
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 13. MEDICAL — FDA drug/food/device recalls + WHO alerts
+# 13. MEDICAL — FDA recalls + WHO + Health RSS feeds
 # ─────────────────────────────────────────────────────────────────────────────
+MEDICAL_FEEDS = [
+    ("WHO News",         "https://www.who.int/rss-feeds/news-english.xml"),
+    ("CDC Newsroom",     "https://tools.cdc.gov/api/v2/resources/media/403372.rss"),
+    ("NIH News",         "https://www.nih.gov/news-events/news-releases/feed"),
+    ("WebMD Health",     "https://rssfeeds.webmd.com/rss/rss.aspx?RSSSource=RSS_PUBLIC"),
+    ("Medscape",         "https://www.medscape.com/cx/rssfeeds/2122.xml"),
+    ("STAT News",        "https://www.statnews.com/feed/"),
+    ("Health Affairs",   "https://www.healthaffairs.org/rss/site_5/41.xml"),
+]
+
 async def fetch_medical():
+    rss_t    = _multi_rss(MEDICAL_FEEDS, limit_per_feed=4, total=25)
     drug_t   = _get("https://api.fda.gov/drug/enforcement.json?limit=5&sort=recall_initiation_date:desc")
     food_t   = _get("https://api.fda.gov/food/enforcement.json?limit=5&sort=recall_initiation_date:desc")
     device_t = _get("https://api.fda.gov/device/recall.json?limit=5&sort=event_date_initiated:desc")
-    ae_t     = _get("https://api.fda.gov/drug/event.json?limit=5&sort=receivedate:desc")
 
-    drug_r, food_r, device_r, ae_r = await _gather(drug_t, food_t, device_t, ae_t)
+    articles, drug_r, food_r, device_r = await asyncio.gather(rss_t, drug_t, food_t, device_t, return_exceptions=True)
+    if isinstance(articles, Exception):
+        articles = []
 
     def parse_recalls(data, date_field):
         if not _ok(data):
             return []
-        return [
-            {
-                "product": (r.get("product_description","") or r.get("device_name",""))[:80],
-                "reason": (r.get("reason_for_recall","") or r.get("recall_reason","",""))[:100],
-                "class": r.get("classification",""),
-                "date": r.get(date_field,""),
-            }
-            for r in (data.get("results") or [])
-        ]
-
-    adverse_events = []
-    if _ok(ae_r):
-        for r in (ae_r.get("results") or []):
-            drugs = [d.get("medicinalproduct","") for d in (r.get("patient",{}).get("drug",[]) or [])]
-            reactions = [rx.get("reactionmeddrapt","") for rx in (r.get("patient",{}).get("reaction",[]) or [])]
-            adverse_events.append({"drugs": drugs[:3], "reactions": reactions[:3], "serious": r.get("serious")})
+        return [{"product": (r.get("product_description","") or r.get("device_name",""))[:80],
+                 "reason": (r.get("reason_for_recall","") or "")[:100],
+                 "class": r.get("classification",""),
+                 "date": r.get(date_field,"")} for r in (data.get("results") or [])]
 
     return {
+        "articles": articles,
+        "source_count": len(MEDICAL_FEEDS),
         "drug_recalls": parse_recalls(drug_r, "recall_initiation_date"),
         "food_recalls": parse_recalls(food_r, "recall_initiation_date"),
         "device_recalls": parse_recalls(device_r, "event_date_initiated"),
-        "adverse_events": adverse_events[:3],
-        "source": "OpenFDA",
+        "source": "WHO + CDC + NIH + OpenFDA",
     }
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 14. TECH — HackerNews + npm + PyPI + Dev.to + Crates.io
+# 14. TECH — RSS from TechCrunch, Wired, Ars, The Verge, MIT Tech Review + APIs
 # ─────────────────────────────────────────────────────────────────────────────
+TECH_FEEDS = [
+    ("TechCrunch",        "https://techcrunch.com/feed/"),
+    ("Wired",             "https://www.wired.com/feed/rss"),
+    ("Ars Technica",      "https://feeds.arstechnica.com/arstechnica/index"),
+    ("The Verge",         "https://www.theverge.com/rss/index.xml"),
+    ("MIT Tech Review",   "https://www.technologyreview.com/feed/"),
+    ("HackerNews Best",   "https://news.ycombinator.com/rss"),
+    ("Dev.to",            "https://dev.to/feed"),
+    ("GitHub Blog",       "https://github.blog/feed/"),
+    ("Stack Overflow Blog","https://stackoverflow.blog/feed/"),
+    ("Smashing Magazine", "https://www.smashingmagazine.com/feed/"),
+    ("CSS-Tricks",        "https://css-tricks.com/feed/"),
+    ("A List Apart",      "https://alistapart.com/main/feed/"),
+]
+
 async def fetch_tech():
-    hn_best_t = _get("https://hacker-news.firebaseio.com/v0/beststories.json")
-    npm_t     = _get("https://api.npmjs.org/downloads/point/last-week/react")
-    pypi_t    = _get("https://pypistats.org/api/packages/requests/recent")
-    devto_t   = _get("https://dev.to/api/articles?top=7&per_page=8")
-    crates_t  = _get("https://crates.io/api/v1/crates?sort=downloads&per_page=5")
-
-    hn_r, npm_r, pypi_r, devto_r, crates_r = await _gather(hn_best_t, npm_t, pypi_t, devto_t, crates_t)
-
-    hn_stories = []
-    if _ok(hn_r) and isinstance(hn_r, list):
-        async with httpx.AsyncClient(timeout=8) as c:
-            tasks = [c.get(f"https://hacker-news.firebaseio.com/v0/item/{i}.json") for i in hn_r[:6]]
-            resps = await asyncio.gather(*tasks, return_exceptions=True)
-            for res in resps:
-                if not isinstance(res, Exception):
-                    s = res.json()
-                    if s and s.get("title"):
-                        hn_stories.append({"title": s["title"], "score": s.get("score"), "url": s.get("url","")})
-
-    devto = []
-    if _ok(devto_r) and isinstance(devto_r, list):
-        for a in devto_r:
-            devto.append({"title": a.get("title","")[:100], "reactions": a.get("positive_reactions_count"), "tags": a.get("tag_list",[])[:4]})
-
-    top_crates = []
-    if _ok(crates_r):
-        for c in (crates_r.get("crates") or []):
-            top_crates.append({"name": c.get("name"), "downloads": c.get("downloads"), "description": (c.get("description") or "")[:80]})
-
+    articles = await _multi_rss(TECH_FEEDS, limit_per_feed=4, total=35)
+    # Also grab npm/PyPI stats as structured data
+    npm_t   = _get("https://api.npmjs.org/downloads/point/last-week/react")
+    pypi_t  = _get("https://pypistats.org/api/packages/requests/recent")
+    npm_r, pypi_r = await _gather(npm_t, pypi_t)
     return {
-        "hackernews_best": hn_stories,
-        "devto_weekly": devto,
+        "articles": articles,
+        "source_count": len(TECH_FEEDS),
         "npm_react_downloads_7d": _ok(npm_r) and npm_r.get("downloads"),
         "pypi_requests_downloads_7d": _ok(pypi_r) and (pypi_r.get("data",{}).get("last_week")),
-        "top_rust_crates": top_crates,
-        "source": "HackerNews + npm + PyPI + Dev.to + Crates.io",
     }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1243,42 +1281,35 @@ async def fetch_social():
     }
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 19. POLITICS — GDELT + Reddit r/politics + Congress.gov RSS
+# 19. POLITICS — RSS from major political sources + GDELT
 # ─────────────────────────────────────────────────────────────────────────────
+POLITICS_FEEDS = [
+    ("Reuters Politics",   "https://feeds.reuters.com/reuters/politicsNews"),
+    ("AP Politics",        "https://feeds.apnews.com/rss/apf-politics"),
+    ("BBC Politics",       "https://feeds.bbci.co.uk/news/politics/rss.xml"),
+    ("The Guardian Pol.",  "https://www.theguardian.com/politics/rss"),
+    ("Politico",           "https://rss.politico.com/politics-news.xml"),
+    ("The Hill",           "https://thehill.com/homenews/feed/"),
+    ("Roll Call",          "https://rollcall.com/feed/"),
+    ("Foreign Policy",     "https://foreignpolicy.com/feed/"),
+    ("Al Jazeera",         "https://www.aljazeera.com/xml/rss/all.xml"),
+    ("Axios Politics",     "https://api.axios.com/feed/"),
+    ("Reddit Politics",    "https://www.reddit.com/r/politics/.rss"),
+    ("Reddit WorldPol",    "https://www.reddit.com/r/worldpolitics/.rss"),
+]
+
 async def fetch_politics():
-    reddit_t = _get("https://www.reddit.com/r/politics/hot.json?limit=8")
-    gdelt_t  = _get(
-        "https://api.gdeltproject.org/api/v2/doc/doc?query=politics&mode=artlist&maxrecords=10&format=json&timespan=24H"
+    articles = await _multi_rss(POLITICS_FEEDS, limit_per_feed=4, total=35)
+    # GDELT for global tone/events
+    gdelt_t = _get(
+        "https://api.gdeltproject.org/api/v2/doc/doc?query=politics&mode=artlist&maxrecords=8&format=json&timespan=24H"
     )
-
-    reddit_r, gdelt_r = await _gather(reddit_t, gdelt_t)
-
-    reddit_posts = []
-    if _ok(reddit_r):
-        for p in (reddit_r.get("data",{}).get("children") or []):
-            d = p.get("data",{})
-            if not d.get("stickied"):
-                reddit_posts.append({
-                    "title": d.get("title","")[:120],
-                    "score": d.get("score"),
-                    "comments": d.get("num_comments"),
-                })
-
-    gdelt_articles = []
+    gdelt_r = (await _gather(gdelt_t))[0]
+    gdelt = []
     if _ok(gdelt_r):
         for a in (gdelt_r.get("articles") or [])[:8]:
-            gdelt_articles.append({
-                "title": (a.get("title") or "")[:100],
-                "url": a.get("url",""),
-                "domain": a.get("domain",""),
-                "tone": a.get("tone"),
-            })
-
-    return {
-        "reddit_politics": reddit_posts[:6],
-        "gdelt_global_news": gdelt_articles,
-        "source": "Reddit r/politics + GDELT",
-    }
+            gdelt.append({"title": (a.get("title") or "")[:100], "url": a.get("url",""), "domain": a.get("domain",""), "tone": a.get("tone")})
+    return {"articles": articles, "gdelt_global": gdelt, "source_count": len(POLITICS_FEEDS)}
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 20. AVIATION — OpenSky Network live flights
