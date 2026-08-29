@@ -359,10 +359,13 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
 .partner-card{display:flex;align-items:center;gap:1.25rem;padding:1.5rem 1.75rem;border-bottom:1px solid var(--line);transition:background .2s;}
 .partner-card:last-child{border-bottom:none;}
 .partner-card:hover{background:rgba(255,255,255,.03);}
-.partner-card-icon{font-size:1.4rem;width:2.5rem;flex-shrink:0;text-align:center;}
+.partner-card-icon{width:2.5rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.partner-card-icon svg{width:20px;height:20px;stroke:var(--accent);}
 .partner-card-text{display:flex;flex-direction:column;gap:.2rem;}
 .partner-card-text strong{font-size:.875rem;font-weight:600;color:var(--ink);}
 .partner-card-text span{font-size:.8rem;color:var(--muted);}
+
+@media(max-width:768px){
   .faq-l,.faq-r{grid-column:auto;}
   .faq-l{margin-bottom:2rem;}
   /* Footer */
