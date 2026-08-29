@@ -507,9 +507,9 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
       <img src="assets/img-conf.jpg" alt="Confidence scoring terminal" loading="lazy"/>
     </div>
     <div class="work-meta">
-      <p class="wss">Feed 02: Confidence Layer</p>
-      <h3 class="work-name">Context Confidence Score</h3>
-      <p class="work-desc">Pulse scores every answer. If it can't verify the data, it says DEFER. No hallucinated confidence returned. Ever.</p>
+      <p class="wss">Feed 02: Multi-Source Aggregation</p>
+      <h3 class="work-name">Cross-Referenced Ground Truth</h3>
+      <p class="work-desc">Every answer is cross-referenced across multiple independent sources before it reaches your agent. If the sources disagree or go silent, Pulse flags it. No fabricated data ever passes through.</p>
       <div class="work-tags"><span class="wtag">Eval</span><span class="wtag">Scoring</span><span class="wtag">Ground Truth</span></div>
     </div>
   </div>
@@ -522,7 +522,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
     <div class="work-meta">
       <p class="wss">Feed 03: Python SDK</p>
       <h3 class="work-name">pip install pulse</h3>
-      <p class="work-desc">One import. One method call. Your agent gets grounded context with a confidence score and source attribution. Open source on GitHub.</p>
+      <p class="work-desc">One import. One method call. Your agent gets a structured data block with source attribution, a freshness timestamp, and the raw values. Open source on GitHub.</p>
       <div class="work-tags"><span class="wtag">Python</span><span class="wtag">Open Source</span><span class="wtag">REST</span></div>
     </div>
   </div>
@@ -610,12 +610,12 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
         <p class="proc-txt">150+ live sources fire simultaneously. Binance, USGS, NOAA, Reuters, NASA, WHO, NVD. The freshest data available on earth, right now, delivered in milliseconds.</p>
       </div>
       <div class="proc-step" data-r>
-        <div class="proc-step-head"><span class="proc-n">03</span><p class="proc-title">Confidence scored</p></div>
+        <div class="proc-step-head"><span class="proc-n">03</span><p class="proc-title">Multi-source aggregation</p></div>
         <p class="proc-txt">Your agent gets the fact, the source, and when it was pulled. What you do with that information is your edge. Pulse just makes sure it's real.</p>
       </div>
       <div class="proc-step" data-r>
-        <div class="proc-step-head"><span class="proc-n">04</span><p class="proc-title">Grounded context returned</p></div>
-        <p class="proc-txt">Your agent receives a structured JSON block with the fact, confidence, and source. Feed it straight to your LLM.</p>
+        <div class="proc-step-head"><span class="proc-n">04</span><p class="proc-title">Attested data returned</p></div>
+        <p class="proc-txt">Your agent receives a structured JSON block: the fact, the source it came from, and the exact timestamp it was fetched. Feed it straight to your LLM.</p>
       </div>
     </div>
     <div class="proc-photo">
