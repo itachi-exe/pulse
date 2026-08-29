@@ -1,5 +1,5 @@
 """
-Pulse SDK — Real-time truth layer for AI agents.
+Pulse SDK — Live data for AI agents.
 
 One-line integration:
     from pulse import feed

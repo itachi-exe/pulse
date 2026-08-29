@@ -2,7 +2,7 @@
 name = "pulse-core"
 version = "0.1.0"
 edition = "2021"
-description = "Real-time truth layer for AI agents"
+description = "Live data feeds for AI agents"
 
 [[bin]]
 name = "pulse"
