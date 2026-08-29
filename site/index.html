@@ -75,9 +75,9 @@ nav.scrolled{background:rgba(13,12,11,.92);backdrop-filter:blur(20px);}
 
 .hero-center{position:relative;z-index:4;display:flex;flex-direction:column;align-items:center;text-align:center;gap:1rem;max-width:30rem;padding:0 1.5rem;margin-top:-18vh;}
 
-/* Wireframe globe — matches bymonolog size */
-.hero-icon{width:3.5rem;height:2.2rem;margin-bottom:.75rem;}
-.hero-icon ellipse,.hero-icon line{stroke:rgba(240,237,232,.32);fill:none;stroke-width:.8;}
+/* Pulse waveform icon */
+.hero-icon{width:5rem;height:2rem;margin-bottom:.75rem;}
+.hero-icon path{stroke:rgba(240,237,232,.35);fill:none;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;}
 
 .hero-h{font-size:1.0625rem;font-weight:400;line-height:1.7;color:rgba(240,237,232,.82);}
 .hero-sub{font-size:.9375rem;font-weight:300;line-height:1.7;color:rgba(240,237,232,.48);}
@@ -286,13 +286,9 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
   <div class="hero-blob hb2"></div>
   <div class="hero-blob hb3"></div>
   <div class="hero-center">
-    <svg class="hero-icon" viewBox="0 0 80 48">
-      <ellipse cx="40" cy="24" rx="38" ry="22"/>
-      <ellipse cx="40" cy="24" rx="16" ry="22"/>
-      <ellipse cx="40" cy="24" rx="4" ry="22"/>
-      <line x1="2" y1="24" x2="78" y2="24"/>
-      <line x1="5" y1="14" x2="75" y2="14"/>
-      <line x1="5" y1="34" x2="75" y2="34"/>
+    <!-- Pulse waveform / EKG -->
+    <svg class="hero-icon" viewBox="0 0 80 32" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 16 L14 16 L20 4 L26 28 L32 10 L38 22 L44 16 L80 16"/>
     </svg>
     <p class="hero-h" data-r>We give AI agents ground truth.<br/>Not hallucinations. Not cached data. Live facts.</p>
     <p class="hero-sub" data-r>For builders whose agents need to act on real-world<br/>data without second-guessing themselves.</p>
