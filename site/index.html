@@ -53,10 +53,10 @@ nav.scrolled{background:rgba(13,12,11,.92);backdrop-filter:blur(20px);}
 .nav-link::after{content:attr(data-l);position:absolute;top:100%;left:0;color:var(--ink);}
 .nav-link:hover span{transform:translateY(-100%);}
 .nav-right{display:flex;align-items:center;gap:.6rem;}
-.nav-sound{width:2.1rem;height:2.1rem;border-radius:.3rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);display:grid;place-items:center;transition:background .2s;}
+.nav-sound{width:2.1rem;height:2.1rem;border-radius:0;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);display:grid;place-items:center;transition:background .2s;}
 .nav-sound:hover{background:rgba(255,255,255,.14);}
 .nav-sound svg{width:.85rem;height:.85rem;stroke:var(--ink-2);fill:none;stroke-width:1.5;}
-.nav-cta{display:inline-flex;align-items:center;gap:.35rem;padding:.42rem 1rem .42rem 1.1rem;background:var(--ink);color:#0d0c0b;border-radius:999px;font-size:.8rem;font-weight:500;letter-spacing:-.01em;transition:background .2s;}
+.nav-cta{display:inline-flex;align-items:center;gap:.35rem;padding:.42rem 1rem .42rem 1.1rem;background:var(--ink);color:#0d0c0b;border-radius:0;font-size:.8rem;font-weight:500;letter-spacing:-.01em;transition:background .2s;}
 .nav-cta:hover{background:#d8d5ce;}
 .nav-cta svg{width:.7rem;height:.7rem;stroke:currentColor;fill:none;stroke-width:2;}
 
@@ -136,9 +136,9 @@ nav.scrolled{background:rgba(13,12,11,.92);backdrop-filter:blur(20px);}
 /* Slide */
 .work-slide{display:none;grid-template-columns:repeat(12,1fr);column-gap:var(--m);align-items:center;}
 .work-slide.active{display:grid;}
-.work-img{grid-column:span 7;aspect-ratio:16/9;border-radius:.2rem;overflow:hidden;background:#1a1916;}
+.work-img{grid-column:span 7;aspect-ratio:16/9;border-radius:0;overflow:hidden;background:#1a1916;}
 .work-img-inner{width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;padding:1.5rem 2rem;gap:.7rem;}
-.wrow{display:flex;justify-content:space-between;align-items:center;padding:.55rem .85rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:.18rem;}
+.wrow{display:flex;justify-content:space-between;align-items:center;padding:.55rem .85rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:0;}
 .wrow-l{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);}
 .wrow-v{font-family:'Space Mono',monospace;font-size:.8rem;font-weight:700;color:#e8e8e3;font-variant-numeric:tabular-nums;}
 .wbadge{display:inline-flex;align-items:center;gap:.2rem;padding:.12rem .4rem;border-radius:999px;font-family:'Space Mono',monospace;font-size:.52rem;}
