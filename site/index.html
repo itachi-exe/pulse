@@ -555,7 +555,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
     </div>
     <div class="test-quote">
       <p class="test-q" data-r>"Stop shipping agents that hallucinate. Give them ground truth and watch your accuracy jump 5x overnight."</p>
-      <p class="test-attr">— Pulse, built for HackerEarth Agents Track · Berlin, 2026</p>
+      <p class="test-attr">— Pulse, built for HackerEarth Agents Track · 2026</p>
     </div>
     <div class="test-badge">
       <div class="test-b"><span class="test-b-dot"></span>HackerEarth 2026</div>
@@ -596,7 +596,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
       <div class="proc-photo-img">
         <img src="assets/img-feeds.jpg" alt="Pulse in operation" loading="lazy"/>
       </div>
-      <p class="proc-photo-cap">Pulse API — Berlin, 2026</p>
+      <p class="proc-photo-cap">Pulse API — 2026</p>
     </div>
   </div>
 </section>
@@ -643,7 +643,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
       </div>
       <div class="faq-item">
         <div class="faq-q"><span class="faq-qt">What's the stack?</span><span class="faq-ic"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div>
-        <div class="faq-ans">Rust (Axum + Tokio) for the API, Redis for caching, Python SDK, nginx reverse proxy, pm2. Deployed on a Contabo VPS in Berlin.</div>
+        <div class="faq-ans">Rust (Axum + Tokio) for the API, Redis for caching, Python SDK, and a REST + WebSocket interface. Open source on GitHub.</div>
       </div>
     </div>
   </div>
@@ -672,7 +672,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
   </div>
   <div class="ft-meta">
     <div class="ft-clock-wrap">
-      <span class="ft-city">Berlin, DE (UTC+2)</span>
+      <span class="ft-city">UTC</span>
       <span class="ft-time" id="ftClock"></span>
     </div>
     <div class="ft-center">
@@ -766,8 +766,8 @@ if(aEl){const ob=new IntersectionObserver(([e])=>{if(e.isIntersecting){animCount
 
 // CLOCK
 function tick(){
-  const t=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit',timeZone:'Europe/Berlin'});
-  const el=document.getElementById('ftClock');if(el)el.textContent=t+' CET';
+  const t=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit',timeZone:'UTC'});
+  const el=document.getElementById('ftClock');if(el)el.textContent=t+' UTC';
 }tick();setInterval(tick,1000);
 
 // SOUND

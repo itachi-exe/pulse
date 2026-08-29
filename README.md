@@ -109,7 +109,7 @@ Baseline on a gas spike: *"EXECUTE — gas appears normal."* Pulse on the same s
 | Cache | Redis |
 | Agent SDK | Python |
 | MCP integration | Python (mcp 2.x) |
-| Deployment | pm2 + nginx, Contabo VPS Berlin |
+| Deployment | Production server, always-on |
 
 ---
 
@@ -143,5 +143,5 @@ python3 -c "from pulse import PulseClient; c = PulseClient('http://localhost:707
 
 **Track:** AI Infrastructure / Agent Tooling
 **Deadline:** Aug 31, 2026 18:00 UTC
-**Live demo:** http://94.72.105.176:7071
+**Live demo:** https://pulse.itachi.dev
 **Contact:** itachi_r3birth@proton.me
