@@ -13,3 +13,6 @@ module.exports = {
     max_restarts: 10,
   }]
 };
+
+// MCP server (stdio — spawned per client, no persistent process needed)
+// Kept here for reference. Claude Desktop spawns it directly.
