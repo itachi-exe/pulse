@@ -1472,21 +1472,38 @@ async def get_feed(category: str, request: Request, db=Depends(get_db)):
         request.query_params.get("key") or
         request.headers.get("Authorization","").removeprefix("Bearer ").strip()
     )
+    session_token = request.cookies.get("pulse_token")
 
-    if not api_key:
-        if category not in ("crypto", "weather"):
-            raise HTTPException(401, "API key required. Sign up at pulse.dev")
-    else:
-        user = await resolve_user_from_key(api_key, db)
-        if not user:
+    authed_user = None
+
+    if api_key:
+        authed_user = await resolve_user_from_key(api_key, db)
+        if not authed_user:
             raise HTTPException(401, "Invalid API key")
+    elif session_token:
+        try:
+            payload = jwt.decode(session_token, JWT_SECRET, algorithms=["HS256"])
+            uid = payload.get("sub")
+            if uid:
+                async with db.execute("SELECT * FROM users WHERE id=?", (uid,)) as cur:
+                    row = await cur.fetchone()
+                if row:
+                    authed_user = dict(row)
+        except Exception:
+            pass
+
+    if authed_user:
         async with db.execute(
             "SELECT enabled FROM user_categories WHERE user_id=? AND category=?",
-            (user["id"], category)
+            (authed_user["id"], category)
         ) as cur:
             row = await cur.fetchone()
         if row and not row["enabled"]:
             raise HTTPException(403, f"Category '{category}' is disabled in your settings")
+    else:
+        # Unauthenticated: only crypto + weather as free preview
+        if category not in ("crypto", "weather"):
+            raise HTTPException(401, "API key required. Sign up at pulse.dev")
 
     if category not in FEED_MAP:
         raise HTTPException(404, f"Unknown category '{category}'. Available: {list(FEED_MAP.keys())}")
