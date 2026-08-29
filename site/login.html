@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Pulse — Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0d0c0b;--ink:#f0ede8;--ink-2:#c8c4bc;--muted:#807a72;--faint:#38342e;--accent:#75e5b0;--line:rgba(255,255,255,.07);--ease:cubic-bezier(.16,1,.3,1);}
+body{background:var(--bg);color:var(--ink);font-family:'Onest',sans-serif;min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none}
+
+/* GRAIN */
+.grain{position:fixed;inset:0;z-index:9;pointer-events:none;opacity:.1;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px;}
+
+/* BLOB */
+.blob{position:fixed;border-radius:50%;pointer-events:none;}
+.blob1{width:60vw;height:60vh;background:radial-gradient(ellipse,rgba(72,64,44,.9) 0%,transparent 70%);top:-10%;left:-20%;filter:blur(60px);}
+.blob2{width:50vw;height:50vh;background:radial-gradient(ellipse,rgba(50,45,32,.7) 0%,transparent 60%);bottom:-10%;right:-15%;filter:blur(55px);}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.25rem,4vw,3rem);height:3.5rem;}
+.nav-logo{font-size:.9375rem;font-weight:700;letter-spacing:-.02em;}
+
+/* MAIN */
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:5rem 1.25rem 2rem;}
+.card{width:100%;max-width:26rem;position:relative;z-index:10;}
+.card-eyebrow{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem;}
+.card-title{font-size:clamp(1.6rem,4vw,2.2rem);font-weight:500;letter-spacing:-.04em;line-height:1.1;margin-bottom:.5rem;}
+.card-sub{font-size:.9rem;color:var(--muted);margin-bottom:2.5rem;line-height:1.6;}
+
+/* GOOGLE BTN */
+.btn-google{display:flex;align-items:center;justify-content:center;gap:.75rem;width:100%;padding:.85rem 1.25rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:var(--ink);font-size:.875rem;font-weight:500;cursor:pointer;transition:background .2s,border-color .2s;border-radius:0;font-family:'Onest',sans-serif;text-decoration:none;}
+.btn-google:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22);}
+.btn-google svg{width:1.1rem;height:1.1rem;flex-shrink:0;}
+
+/* DIVIDER */
+.divider{display:flex;align-items:center;gap:1rem;margin:1.75rem 0;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--line);}
+.divider span{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);}
+
+/* FORM */
+.field{display:flex;flex-direction:column;gap:.45rem;margin-bottom:1rem;}
+label{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+input{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:var(--ink);font-family:'Onest',sans-serif;font-size:.9375rem;padding:.75rem 1rem;outline:none;border-radius:0;transition:border-color .2s;width:100%;}
+input:focus{border-color:rgba(255,255,255,.3);}
+input::placeholder{color:var(--faint);}
+
+/* BTN PRIMARY */
+.btn-primary{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:.85rem;background:var(--ink);color:#0d0c0b;font-family:'Onest',sans-serif;font-size:.875rem;font-weight:600;cursor:pointer;border:none;border-radius:0;transition:background .2s;margin-top:1.25rem;}
+.btn-primary:hover{background:#d8d5ce;}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;}
+
+/* ERROR */
+.msg{margin-top:1rem;padding:.75rem 1rem;font-size:.8125rem;border-radius:0;display:none;}
+.msg.error{background:rgba(255,80,80,.08);border:1px solid rgba(255,80,80,.2);color:#ff8080;}
+.msg.success{background:rgba(117,229,176,.08);border:1px solid rgba(117,229,176,.2);color:var(--accent);}
+
+/* FOOTER */
+.card-footer{margin-top:2rem;font-size:.8125rem;color:var(--muted);text-align:center;}
+.card-footer a{color:var(--ink-2);border-bottom:1px solid var(--faint);transition:border-color .2s;}
+.card-footer a:hover{border-color:var(--muted);}
+
+/* TABS */
+.tabs{display:flex;margin-bottom:2rem;border-bottom:1px solid var(--line);}
+.tab{padding:.6rem 0;margin-right:2rem;font-size:.875rem;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s,border-color .2s;}
+.tab.active{color:var(--ink);border-bottom-color:var(--ink);}
+
+@media(max-width:480px){main{padding:4.5rem 1rem 2rem;}.card{max-width:100%;}}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+
+<nav>
+  <a href="/" class="nav-logo">PULSE</a>
+</nav>
+
+<main>
+  <div class="card">
+    <p class="card-eyebrow">Developer access</p>
+    <h1 class="card-title">Welcome back.</h1>
+    <p class="card-sub">Sign in to manage your feeds and API keys.</p>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('login')">Sign In</div>
+      <div class="tab" onclick="switchTab('signup')">Create Account</div>
+    </div>
+
+    <!-- Google -->
+    <a href="/auth/google" class="btn-google">
+      <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
+      Continue with Google
+    </a>
+
+    <div class="divider"><span>or</span></div>
+
+    <!-- Login form -->
+    <div id="loginForm">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email"/>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password"/>
+      </div>
+      <button class="btn-primary" onclick="doLogin()" id="loginBtn">Sign In</button>
+      <div class="msg" id="loginMsg"></div>
+    </div>
+
+    <!-- Signup form -->
+    <div id="signupForm" style="display:none">
+      <div class="field">
+        <label>Name</label>
+        <input type="text" id="signupName" placeholder="Your name" autocomplete="name"/>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="signupEmail" placeholder="you@example.com" autocomplete="email"/>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="signupPass" placeholder="Min 8 characters" autocomplete="new-password"/>
+      </div>
+      <button class="btn-primary" onclick="doSignup()" id="signupBtn">Create Account</button>
+      <div class="msg" id="signupMsg"></div>
+    </div>
+
+    <div class="card-footer">
+      By continuing you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
+    </div>
+  </div>
+</main>
+
+<script>
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===(tab==='login'?0:1)));
+  document.getElementById('loginForm').style.display = tab==='login'?'block':'none';
+  document.getElementById('signupForm').style.display = tab==='signup'?'block':'none';
+}
+
+function showMsg(id, text, type='error'){
+  const el=document.getElementById(id);
+  el.textContent=text; el.className='msg '+type; el.style.display='block';
+}
+
+async function doLogin(){
+  const btn=document.getElementById('loginBtn');
+  btn.disabled=true; btn.textContent='Signing in…';
+  const r = await fetch('/auth/login',{
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      email: document.getElementById('loginEmail').value,
+      password: document.getElementById('loginPass').value,
+    }), credentials:'include'
+  });
+  const d = await r.json();
+  if(r.ok){ window.location='/dashboard'; }
+  else{ showMsg('loginMsg', d.detail||'Login failed'); btn.disabled=false; btn.textContent='Sign In'; }
+}
+
+async function doSignup(){
+  const btn=document.getElementById('signupBtn');
+  btn.disabled=true; btn.textContent='Creating account…';
+  const pass=document.getElementById('signupPass').value;
+  if(pass.length<8){ showMsg('signupMsg','Password must be at least 8 characters'); btn.disabled=false; btn.textContent='Create Account'; return; }
+  const r = await fetch('/auth/signup',{
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      name: document.getElementById('signupName').value,
+      email: document.getElementById('signupEmail').value,
+      password: pass,
+    }), credentials:'include'
+  });
+  const d = await r.json();
+  if(r.ok){ window.location='/dashboard'; }
+  else{ showMsg('signupMsg', d.detail||'Signup failed'); btn.disabled=false; btn.textContent='Create Account'; }
+}
+
+document.addEventListener('keydown', e=>{ if(e.key==='Enter'){ const sf=document.getElementById('signupForm'); sf.style.display!=='none'?doSignup():doLogin(); } });
+</script>
+</body>
+</html>
