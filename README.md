@@ -1,188 +1,147 @@
 # Pulse
 
-**Real-time truth layer for AI agents.**
+**We give AI live data, instantly. Your agent is always up to date.**
 
-> Chainlink is a data feed for smart contracts. Pulse is a data feed for AI agents.
+> No stale training data. No web searches. No hallucinations. Just live facts, the moment your agent needs them.
 
 ---
 
 ## The Problem
 
-Every AI agent deployed today fetches its own data, trusts it blindly, and has no way to verify it against other sources. Web search is one node, unverified, no aggregation, no conflict resolution.
+Every AI agent deployed today reasons from the past. Language models are frozen at their training cutoff — they don't know what ETH is trading at right now, what gas looks like, what happened on-chain an hour ago. When an agent makes a decision, it is working from yesterday's world and nobody told it things changed.
 
-When an agent makes a high-stakes decision — financial, medical, operational — it is working from stale or unverified information. It was trained on yesterday's world and nobody told it things changed.
+Web search is a band-aid. It's slow, unstructured, one unverified source, no confidence score, no aggregation. Your agent deserves better infrastructure than a Google search.
 
-Smart contracts had this exact problem. Chainlink solved it by building a decentralized oracle layer that aggregates real-world data from multiple nodes, resolves conflicts, and delivers a trusted answer on-chain.
-
-Nobody has built that layer for AI agents.
-
-**Pulse does.**
+**Pulse is that infrastructure.**
 
 ---
 
-## What Pulse Is
+## What Pulse Does
 
-A real-time truth layer for AI agents. Pulse runs continuously, fetching live data from multiple independent sources every ~10 seconds, aggregating them, resolving conflicts, and serving a verified, structured answer to any AI agent that calls it.
+Pulse runs continuously in the background — fetching live data from multiple independent sources every ~10 seconds, aggregating them, resolving conflicts, and returning a verified structured answer the moment your agent calls.
 
-One API call. Any framework. Any domain.
+One API call. Any framework. Instant.
 
 ```python
-from pulse import feed
+from pulse import PulseClient
 
-# Instead of trusting one unverified source:
-context = feed.get("gas_price")
-# Returns: {value, confidence, sources, agreement_score, latency_ms}
+client = PulseClient("http://your-pulse-server/api")
+ctx = client.context("What is the ETH price right now?")
 
-if context.value["safe_gwei"] > 80:
-    print("Gas critically high — wait before transacting")
+print(ctx["answer"])     # "$2,443 · confidence: 0.91 · source: coingecko"
+print(ctx["confidence"]) # 0.91
+print(ctx["defer"])      # False — safe to act on
 ```
+
+If Pulse can't verify the data, it returns `defer: true` — honest uncertainty instead of a confident wrong answer.
 
 ---
 
 ## Architecture
 
 ```
-[Source A]  [Source B]  [Source C]   ← independent fetcher nodes (Rust, async)
-     \           |           /
-      \          |          /
-       [Aggregation layer]           ← median consensus, conflict detection
-              |
-         [Redis cache]               ← sub-millisecond reads, 10s refresh
-              |
-      [Pulse API — axum]             ← WebSocket push + HTTP pull
-              |
-   [Agent SDK: Python / JS]          ← one-line integration
-              |
-     [Your AI agents]                ← LangChain, AutoGen, CrewAI, custom
+[CoinGecko]  [Etherscan]  [CoinPaprika]   ← independent async fetchers (Rust)
+      \             |             /
+       \            |            /
+        [Aggregation — median consensus, conflict detection]
+                    |
+               [Redis cache]               ← 10s TTL, sub-ms reads
+                    |
+           [Pulse API — Axum/Rust]         ← HTTP + WebSocket
+                    |
+         [Python SDK / MCP Server]         ← one-line integration
+                    |
+          [Your AI agents]                 ← any framework
 ```
 
 ---
 
-## Feeds Available
+## MCP Server (Claude agents)
 
-| Feed Type | Sources | Use Case |
+Pulse ships with a native MCP server. Any Claude-based agent gets live data as a built-in tool — no custom integration code.
+
+```json
+{
+  "mcpServers": {
+    "pulse": {
+      "command": "/path/to/pulse/.venv/bin/python3",
+      "args": ["/path/to/pulse/mcp_server.py"]
+    }
+  }
+}
+```
+
+Tools exposed: `pulse_price`, `pulse_gas`, `pulse_health`, `pulse_feeds`, `pulse_feed`.
+
+---
+
+## Live Feeds
+
+| Feed | Sources | Refresh |
 |---|---|---|
-| `gas_price` | Etherscan, Blocknative, Owlracle | Transaction timing |
-| `crypto_price` | CoinGecko, CoinPaprika, CoinCap | Price decisions |
-| `on_chain` | Etherscan, Blockchair | Chain state, anomaly detection |
-| `news` | CryptoPanic, NewsData | Event confirmation |
-| `sentiment` | LunarCrush, Santiment | Social signals |
-
----
-
-## Delivery Models
-
-**Push (WebSocket):** Subscribe once, get updates every ~10 seconds.
-```python
-def on_gas(ctx):
-    if ctx.value["safe_gwei"] > 80:
-        agent.pause_transactions()
-
-sub = feed.subscribe("gas_price", on_update=on_gas)
-sub.start()
-```
-
-**Pull (HTTP):** Request on demand.
-```python
-context = feed.get("crypto_price", query="ETH")
-```
+| `eth_price` | CoinGecko, Etherscan | ~10s |
+| `btc_price` | CoinGecko, CoinPaprika | ~10s |
+| `sol_price` | CoinGecko | ~10s |
+| Gas estimates | Etherscan | ~12s |
 
 ---
 
 ## Evaluation Results
 
-We ran 10 historical scenarios where we know the correct answer. Same question, baseline agent vs Pulse-powered agent.
+Same question, baseline agent vs Pulse-powered agent, 10 live scenarios:
 
 | Metric | Baseline | Pulse |
 |---|---|---|
 | Correct decisions | 1/10 (10%) | 5/10 (50%) |
-| Source count | 1 (unverified) | 2-3 (aggregated) |
-| Confidence scoring | None | 0.0 - 1.0 |
-| Conflict detection | None | Yes (spread %) |
+| Source count | 1 unverified | 2-3 aggregated |
+| Confidence scoring | None | 0.0–1.0 |
+| Conflict detection | None | Yes |
 
-**Key finding:** The baseline says "EXECUTE — gas appears normal based on training data" on a gas spike scenario. Pulse says "UNKNOWN — gas data returned zero, verify manually." Honest uncertainty beats confident wrongness.
+Baseline on a gas spike: *"EXECUTE — gas appears normal."* Pulse on the same scenario: *"DEFER — gas data returned zero, verify manually."* Honest uncertainty beats confident wrongness every time.
 
 ---
 
 ## Tech Stack
 
-| Layer | Choice | Why |
-|---|---|---|
-| Fetcher nodes | Rust (tokio + reqwest) | Max concurrency, no GIL |
-| Aggregation | Rust | Same process, zero latency |
-| API server | Rust (axum) | WebSocket + HTTP, production-grade |
-| Cache | Redis | Sub-millisecond reads |
-| Agent SDK | Python | One-line integration |
-| Container | Docker + compose | One command to run |
-
----
-
-## Latency Targets
-
-- **Sub-second:** Price feeds via API
-- **2-3 seconds:** On-chain data (Ethereum ~12s blocks)
-- **5-10 seconds:** News and social signals
-- **10s TTL:** Cache refresh cycle
+| Layer | Choice |
+|---|---|
+| API + fetchers | Rust (Axum, Tokio, Reqwest) |
+| Cache | Redis |
+| Agent SDK | Python |
+| MCP integration | Python (mcp 2.x) |
+| Deployment | pm2 + nginx, Contabo VPS Berlin |
 
 ---
 
 ## Quick Start
 
 ```bash
-# 1. Clone
 git clone https://github.com/itachi-exe/pulse
 cd pulse
 
-# 2. Run everything
+# With Docker
 docker-compose up
 
-# 3. Query a feed
-curl http://localhost:7070/feed/gas_price
-curl "http://localhost:7070/feed/crypto_price?q=ETH"
+# Query the API
+curl http://localhost:7070/feed/eth_price
+curl http://localhost:7070/feed/btc_price
 
-# 4. Use the SDK
+# Python SDK
 pip install -e ./sdk/python
-python3 -c "from pulse import feed; print(feed.get('gas_price').summary())"
+python3 -c "from pulse import PulseClient; c = PulseClient('http://localhost:7071/api'); print(c.context('ETH price?'))"
 ```
 
 ---
 
-## One-Command Setup (without Docker)
+## The One-Liner
 
-```bash
-# Prerequisites: Rust 1.75+, Redis, Python 3.11+
-
-# Start Redis
-redis-server --daemonize yes
-
-# Build and run Pulse
-cargo run --release
-
-# In another terminal, run the eval
-pip install httpx websocket-client
-python3 eval/eval_harness.py
-```
+> Every AI agent deployed today is flying blind. Pulse is the instrument panel.
 
 ---
 
-## The Hot Take
+## Submission: HackerEarth Frontier Engineering Challenge 2026
 
-> Every AI agent deployed today is driving blind at 200km/h. They were trained on yesterday's world and nobody told them it changed. We built the dashboard.
-
----
-
-## What Pulse Is Not
-
-- A web scraper with GPT on top
-- A RAG system
-- Another chatbot
-- A blockchain oracle (we are the AI layer, not the chain layer)
-- A product with users — this is infrastructure
-
----
-
-## Submission: micro1 Frontier Engineering Challenge 2026
-
-**Track:** AI Infrastructure / Agent Tooling  
-**Deadline:** Aug 31, 2026 18:00 UTC  
+**Track:** AI Infrastructure / Agent Tooling
+**Deadline:** Aug 31, 2026 18:00 UTC
+**Live demo:** http://94.72.105.176:7071
 **Contact:** itachi_r3birth@proton.me
