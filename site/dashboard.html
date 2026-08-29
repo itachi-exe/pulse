@@ -57,7 +57,8 @@ button{background:none;border:none;cursor:pointer;font:inherit;color:inherit}
 .cat-card:hover{background:rgba(255,255,255,.03);}
 .cat-card.enabled{background:rgba(117,229,176,.04);}
 .cat-card.enabled::after{content:'';position:absolute;top:0;left:0;bottom:0;width:2px;background:var(--accent);}
-.cat-icon{font-size:1.4rem;line-height:1;}
+.cat-icon{width:1.5rem;height:1.5rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cat-icon svg{width:18px;height:18px;stroke:var(--accent,#75e5b0);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
 .cat-name{font-size:.9375rem;font-weight:500;letter-spacing:-.02em;}
 .cat-desc{font-size:.8125rem;color:var(--muted);line-height:1.5;}
 .cat-toggle{margin-top:auto;padding-top:.75rem;display:flex;align-items:center;justify-content:space-between;}
@@ -480,7 +481,7 @@ async function testKey(prefix){
   // We can't test with just the prefix — just do a health check
   const r = await fetch(`${API}/auth/health`,{credentials:'include'});
   el.style.color='var(--ink-2)';
-  el.textContent = r.ok ? '✓ Service is online. Paste your full key into the code examples above to test a live feed.' : '✗ Service unreachable.';
+  el.textContent = r.ok ? 'Service is online. Paste your full key into the code examples above to test a live feed.' : 'Service unreachable.';
 }
 
 async function deleteKey(prefix){

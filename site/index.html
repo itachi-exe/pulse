@@ -48,10 +48,6 @@ ul{list-style:none}
 /* GRAIN */
 .grain{position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:.12;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px;}
 
-/* CURSOR */
-.cursor{position:fixed;top:0;left:0;z-index:9999;pointer-events:none;width:8px;height:8px;border-radius:50%;background:var(--ink);transform:translate(-50%,-50%);mix-blend-mode:difference;}
-@media(hover:none){.cursor{display:none}}
-
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:800;display:flex;align-items:center;justify-content:space-between;padding:0 var(--m);height:3.5rem;transition:background .4s;}
 nav.scrolled{background:rgba(13,12,11,.92);backdrop-filter:blur(20px);}
@@ -62,9 +58,10 @@ nav.scrolled{background:rgba(13,12,11,.92);backdrop-filter:blur(20px);}
 .nav-link::after{content:attr(data-l);position:absolute;top:100%;left:0;color:var(--ink);}
 .nav-link:hover span{transform:translateY(-100%);}
 .nav-right{display:flex;align-items:center;gap:.6rem;}
-.nav-sound{width:2.1rem;height:2.1rem;border-radius:0;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);display:grid;place-items:center;transition:background .2s;}
-.nav-sound:hover{background:rgba(255,255,255,.14);}
-.nav-sound svg{width:.85rem;height:.85rem;stroke:var(--ink-2);fill:none;stroke-width:1.5;}
+.nav-live{display:flex;align-items:center;gap:.4rem;padding:.3rem .6rem;border:1px solid rgba(255,255,255,.15);background:rgba(117,229,176,.06);}
+.nav-live-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse-dot 2s infinite;}
+.nav-live-txt{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);}
+@keyframes pulse-dot{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(117,229,176,.5);}50%{opacity:.6;box-shadow:0 0 0 4px rgba(117,229,176,0);}}
 .nav-cta{display:inline-flex;align-items:center;gap:.35rem;padding:.42rem 1rem .42rem 1.1rem;background:var(--ink);color:#0d0c0b;border-radius:0;font-size:.8rem;font-weight:500;letter-spacing:-.01em;transition:background .2s;}
 .nav-cta:hover{background:#d8d5ce;}
 .nav-cta svg{width:.7rem;height:.7rem;stroke:currentColor;fill:none;stroke-width:2;}
@@ -288,7 +285,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
 
   /* Nav */
   .nav-center{display:none;}
-  .nav-sound{display:none;}
+  .nav-live{display:none;}
   .nav-burger{display:flex;}
 
   /* Hero */
@@ -390,7 +387,6 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
 <body>
 
 <div class="grain"></div>
-<div class="cursor" id="cur"></div>
 
 <!-- NAV -->
 <nav id="nav">
@@ -402,9 +398,10 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
     <a class="nav-link" href="#process" data-l="Process"><span>Process</span></a>
   </div>
   <div class="nav-right">
-    <button class="nav-sound" id="sndBtn" aria-label="Sound">
-      <svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg>
-    </button>
+    <div class="nav-live" id="liveBadge">
+      <span class="nav-live-dot"></span>
+      <span class="nav-live-txt">Live</span>
+    </div>
     <a href="/login" class="nav-cta">
       Get access
       <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
@@ -434,7 +431,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
       <path d="M0 16 L14 16 L20 4 L26 28 L32 10 L38 22 L44 16 L80 16"/>
     </svg>
     <p class="hero-h" data-r>Your AI knows everything<br/>happening in the world right now.</p>
-    <p class="hero-sub" data-r>Right now your agent is guessing. Hallucinating prices. Fabricating news. Confidently lying about things that changed months ago. Pulse injects live reality the instant your agent needs it. No search, no delay, no bullshit.</p>
+    <p class="hero-sub" data-r>Right now your agent is guessing. Hallucinating prices. Fabricating news. Confidently lying about things that changed months ago. Pulse injects live reality the instant your agent needs it. No search. No delay. Just live data.</p>
   </div>
   <div class="hero-wm" aria-hidden="true">PULSE</div>
 </section>
@@ -642,28 +639,36 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
     </div>
     <div class="partner-r">
       <div class="partner-card">
-        <div class="partner-card-icon">📡</div>
+        <div class="partner-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.75l6 6 9-13.5"/><circle cx="12" cy="12" r="10"/></svg>
+        </div>
         <div class="partner-card-text">
           <strong>Real-time feeds</strong>
           <span>Market data, news, sensors, APIs</span>
         </div>
       </div>
       <div class="partner-card">
-        <div class="partner-card-icon">🔬</div>
+        <div class="partner-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg>
+        </div>
         <div class="partner-card-text">
           <strong>Specialized datasets</strong>
           <span>Research, science, government, health</span>
         </div>
       </div>
       <div class="partner-card">
-        <div class="partner-card-icon">🌍</div>
+        <div class="partner-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 010 20M2 12h20"/></svg>
+        </div>
         <div class="partner-card-text">
           <strong>Regional sources</strong>
           <span>Local news, markets, infrastructure</span>
         </div>
       </div>
       <div class="partner-card">
-        <div class="partner-card-icon">⚡</div>
+        <div class="partner-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+        </div>
         <div class="partner-card-text">
           <strong>High-frequency data</strong>
           <span>Sub-second updates, streaming feeds</span>
@@ -760,12 +765,6 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
 </footer>
 
 <script>
-// CURSOR
-const cur=document.getElementById('cur');
-let mx=0,my=0,cx=0,cy=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
-(function tc(){cx+=(mx-cx)*.14;cy+=(my-cy)*.14;cur.style.left=cx+'px';cur.style.top=cy+'px';requestAnimationFrame(tc)})();
-
 // NAV SCROLL
 const navEl=document.getElementById('nav');
 window.addEventListener('scroll',()=>navEl.classList.toggle('scrolled',window.scrollY>30),{passive:true});
@@ -840,9 +839,6 @@ function tick(){
   const t=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit',timeZone:'UTC'});
   const el=document.getElementById('ftClock');if(el)el.textContent=t+' UTC';
 }tick();setInterval(tick,1000);
-
-// SOUND
-document.getElementById('sndBtn')?.addEventListener('click',function(){this.style.background=this.dataset.on?'':'rgba(117,229,176,.1)';this.dataset.on=this.dataset.on?'':'1';});
 
 // BURGER / DRAWER
 const burger=document.getElementById('burgerBtn');
