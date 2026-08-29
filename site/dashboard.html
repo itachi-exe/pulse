@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Pulse — Dashboard</title>
+<title>Pulse: Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -450,7 +450,7 @@ async function generateKey(){
     const c = document.getElementById('keysContainer');
     c.innerHTML = `
       <div style="background:rgba(117,229,176,.06);border:1px solid rgba(117,229,176,.2);padding:1rem;margin-bottom:1rem;">
-        <p style="font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem">Your new API key — copy it now, it won't be shown again</p>
+        <p style="font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem">Your new API key: copy it now, it won't be shown again</p>
         <div class="key-row">
           <div class="key-display" id="newKeyDisplay">${d.key}</div>
           <button class="btn-sm btn-solid" onclick="navigator.clipboard.writeText('${d.key}');this.textContent='Copied!'">Copy</button>
@@ -520,7 +520,7 @@ function switchDocsTab(tab){
 function loadDocsCategories(){
   const el = document.getElementById('docsCategories');
   el.innerHTML = Object.entries(categories).map(([key,cat])=>
-    `<span style="color:var(--accent)">${key}</span> &nbsp;— ${cat.label}<br/>`
+    `<span style="color:var(--accent)">${key}</span> : ${cat.label}<br/>`
   ).join('');
 }
 
