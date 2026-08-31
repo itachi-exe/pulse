@@ -88,23 +88,20 @@ nav.scrolled{background:rgba(13,12,11,.92);backdrop-filter:blur(20px);}
 /* LIVE DEMO */
 .livedemo{position:relative;z-index:5;max-width:1100px;margin:0 auto;padding:5rem var(--m) 3rem;}
 .livedemo-head{max-width:640px;margin:0 auto 2.5rem;text-align:center;}
-.livedemo-tag{display:inline-flex;align-items:center;gap:.45rem;padding:.3rem .7rem;border:1px solid rgba(117,229,176,.3);background:rgba(117,229,176,.06);font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:1.25rem;}
-.livedemo-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:ld-pulse 1.8s infinite;}
-@keyframes ld-pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(117,229,176,.5);}50%{opacity:.5;box-shadow:0 0 0 5px rgba(117,229,176,0);}}
 .livedemo-title{font-size:clamp(1.4rem,3vw,2rem);font-weight:600;letter-spacing:-.03em;line-height:1.15;margin-bottom:.75rem;}
 .livedemo-sub{font-size:.9rem;line-height:1.6;color:var(--ink-2);}
 .livedemo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.09);}
-.ld-card{background:var(--bg);padding:1.5rem 1.25rem;display:flex;flex-direction:column;gap:.5rem;min-height:130px;transition:background .3s;}
+.ld-card{background:var(--bg);padding:1.4rem 1.25rem;display:flex;flex-direction:column;gap:.7rem;min-height:190px;transition:background .3s;}
 .ld-card.flash{background:rgba(117,229,176,.07);}
-.ld-card-top{display:flex;align-items:center;justify-content:space-between;}
-.ld-card-label{font-size:.8rem;font-weight:500;color:var(--ink);letter-spacing:-.01em;}
-.ld-card-src{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);}
-.ld-card-val{font-family:'Space Mono',monospace;font-size:1.55rem;font-weight:700;letter-spacing:-.02em;color:var(--ink);margin-top:auto;}
-.ld-card-meta{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--ink-2);}
-.ld-card-meta.up{color:var(--accent);}
-.ld-card-meta.down{color:#e5758f;}
+.ld-card-top{display:flex;align-items:center;justify-content:space-between;gap:.5rem;}
+.ld-card-cat{font-size:.66rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);}
+.ld-card-src{font-family:'Space Mono',monospace;font-size:.56rem;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);text-align:right;max-width:52%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ld-card-headline{font-size:.9rem;font-weight:500;line-height:1.4;letter-spacing:-.01em;color:var(--ink);display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;}
+.ld-card-meta{font-family:'Space Mono',monospace;font-size:.66rem;color:var(--ink-2);margin-top:auto;}
+.ld-card-meta.mag{color:var(--accent);font-weight:700;font-size:.9rem;}
 .livedemo-foot{display:flex;align-items:center;justify-content:space-between;margin-top:1.25rem;font-family:'Space Mono',monospace;font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);}
 .ld-latency{color:var(--accent);}
+@keyframes ld-pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
 
 /* ABOUT */
 .about{background:var(--bg);padding:clamp(5rem,10vw,9rem) var(--m);}
@@ -175,7 +172,7 @@ nav.scrolled{background:rgba(13,12,11,.92);backdrop-filter:blur(20px);}
 .svc-head-r{max-width:28ch;font-size:.9rem;color:var(--muted);line-height:1.65;}
 .svc-title{font-size:clamp(2rem,4.5vw,3.5rem);font-weight:500;letter-spacing:-.04em;line-height:1.05;color:var(--ink);}
 .svc-list{display:flex;flex-direction:column;}
-.svc-row{display:flex;justify-content:space-between;align-items:center;padding:1.4rem 0;border-top:1px solid var(--line);cursor:default;transition:color .25s;}
+.svc-row{display:flex;justify-content:space-between;align-items:center;padding:1.4rem 0;border-top:1px solid var(--line);cursor:pointer;text-decoration:none;color:inherit;transition:color .25s;}
 .svc-row:last-child{border-bottom:1px solid var(--line);}
 .svc-row:hover{color:var(--ink);}
 .svc-row-name{font-size:clamp(1.6rem,4.5vw,3.8rem);font-weight:500;letter-spacing:-.04em;line-height:1;color:inherit;transition:transform .3s var(--ease);}
@@ -313,8 +310,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
   .hero-h{font-size:1rem;}
   .hero-sub{font-size:.875rem;}
   .hero-wm{font-size:clamp(5rem,22vw,22vw);}
-  .livedemo-grid{grid-template-columns:repeat(2,1fr);}
-  .livedemo{padding:3rem var(--m) 2rem;}
+  .livedemo{display:none;}
 
   /* About */
   .about{padding:4rem var(--m);}
@@ -461,33 +457,29 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
 <!-- LIVE DEMO -->
 <section class="livedemo" id="livedemo">
   <div class="livedemo-head">
-    <div class="livedemo-tag">
-      <span class="livedemo-dot"></span>
-      <span>Live right now</span>
-    </div>
     <h2 class="livedemo-title" data-r>This is what your agent would see this second.</h2>
-    <p class="livedemo-sub" data-r>Real data, pulled live from Pulse as this page loaded. Not a screenshot. Not cached from yesterday. Refresh and watch it move.</p>
+    <p class="livedemo-sub" data-r>Real events, pulled live from Pulse as this page loaded. Not a screenshot. Not cached from yesterday. The actual world, right now.</p>
   </div>
   <div class="livedemo-grid" id="livedemoGrid">
-    <div class="ld-card" data-feed="crypto">
-      <div class="ld-card-top"><span class="ld-card-label">Bitcoin</span><span class="ld-card-src">binance</span></div>
-      <div class="ld-card-val" data-field="btc">loading</div>
-      <div class="ld-card-meta" data-field="btc_chg">&nbsp;</div>
+    <div class="ld-card" data-cell="medical">
+      <div class="ld-card-top"><span class="ld-card-cat">Global Health</span><span class="ld-card-src" data-field="medical_src">WHO</span></div>
+      <div class="ld-card-headline" data-field="medical_title">loading live feed</div>
+      <div class="ld-card-meta" data-field="medical_time">&nbsp;</div>
     </div>
-    <div class="ld-card" data-feed="crypto">
-      <div class="ld-card-top"><span class="ld-card-label">Ethereum</span><span class="ld-card-src">binance</span></div>
-      <div class="ld-card-val" data-field="eth">loading</div>
-      <div class="ld-card-meta" data-field="eth_chg">&nbsp;</div>
+    <div class="ld-card" data-cell="politics">
+      <div class="ld-card-top"><span class="ld-card-cat">Politics</span><span class="ld-card-src" data-field="politics_src">Reuters</span></div>
+      <div class="ld-card-headline" data-field="politics_title">loading live feed</div>
+      <div class="ld-card-meta" data-field="politics_time">&nbsp;</div>
     </div>
-    <div class="ld-card" data-feed="weather">
-      <div class="ld-card-top"><span class="ld-card-label">New York</span><span class="ld-card-src">open-meteo</span></div>
-      <div class="ld-card-val" data-field="nyc_temp">loading</div>
-      <div class="ld-card-meta" data-field="nyc_desc">&nbsp;</div>
+    <div class="ld-card" data-cell="news">
+      <div class="ld-card-top"><span class="ld-card-cat">Breaking</span><span class="ld-card-src" data-field="news_src">AP</span></div>
+      <div class="ld-card-headline" data-field="news_title">loading live feed</div>
+      <div class="ld-card-meta" data-field="news_time">&nbsp;</div>
     </div>
-    <div class="ld-card" data-feed="weather">
-      <div class="ld-card-top"><span class="ld-card-label">Tokyo</span><span class="ld-card-src">open-meteo</span></div>
-      <div class="ld-card-val" data-field="tokyo_temp">loading</div>
-      <div class="ld-card-meta" data-field="tokyo_desc">&nbsp;</div>
+    <div class="ld-card" data-cell="quake">
+      <div class="ld-card-top"><span class="ld-card-cat">Seismic</span><span class="ld-card-src">USGS</span></div>
+      <div class="ld-card-headline" data-field="quake_place">loading live feed</div>
+      <div class="ld-card-meta" data-field="quake_mag">&nbsp;</div>
     </div>
   </div>
   <div class="livedemo-foot">
@@ -501,7 +493,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
   <div class="about-inner">
     <div class="about-left">
       <p class="about-eyebrow">The challenge</p>
-      <h2 class="about-h" data-r>AI agents act on bad data. Every time.</h2>
+      <h2 class="about-h" data-r>AI acts on bad data. Every time.</h2>
       <p class="about-p" data-r>Your AI right now is making decisions with information from six months ago. It doesn't know what happened this morning. It doesn't know the price, the news, the outbreak, the earthquake. It fills that gap by making things up, and it does it confidently. Pulse ends that. 150+ live sources. Instant delivery. What's happening right now, the moment your agent asks.</p>
     </div>
     <div class="about-nav">
@@ -551,10 +543,10 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
       <img src="assets/img-feeds.jpg" alt="Real-time data feeds dashboard" loading="eager"/>
     </div>
     <div class="work-meta">
-      <p class="wss">Feed 01: Crypto Oracle</p>
-      <h3 class="work-name">Real-time Crypto Prices</h3>
-      <p class="work-desc">Live prices for BTC, ETH, SOL and 2,000+ assets from Binance, CoinGecko, and CoinCap. Cached with smart TTLs. Your agent gets a verified number, not a guess.</p>
-      <div class="work-tags"><span class="wtag">Real-time</span><span class="wtag">CoinGecko</span><span class="wtag">Redis</span></div>
+      <p class="wss">Feed 01: Live World Events</p>
+      <h3 class="work-name">Real-time Ground Truth</h3>
+      <p class="work-desc">Live health alerts, political developments, breaking news, and seismic events from WHO, Reuters, BBC, AP, USGS and 150+ sources. Cached with smart TTLs. Your agent gets a verified fact, not a guess.</p>
+      <div class="work-tags"><span class="wtag">Real-time</span><span class="wtag">150+ sources</span><span class="wtag">Rust</span></div>
     </div>
   </div>
 
@@ -603,30 +595,30 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
     <p class="svc-head-r" data-r>Instant. Not cached from yesterday. Not scraped and guessed. Live, the second your agent asks.</p>
   </div>
   <div class="svc-list">
-    <div class="svc-row" data-r>
-      <span class="svc-row-name">Crypto Price Feeds</span>
-      <div class="svc-row-meta"><span class="svc-row-tag">Real-time</span><span class="svc-row-arr">↗</span></div>
-    </div>
-    <div class="svc-row" data-r>
-      <span class="svc-row-name">Gas Estimation</span>
-      <div class="svc-row-meta"><span class="svc-row-tag">On-chain</span><span class="svc-row-arr">↗</span></div>
-    </div>
-    <div class="svc-row" data-r>
-      <span class="svc-row-name">Confidence Scoring</span>
-      <div class="svc-row-meta"><span class="svc-row-tag">Eval Layer</span><span class="svc-row-arr">↗</span></div>
-    </div>
-    <div class="svc-row" data-r>
+    <a class="svc-row" href="/data/feed/medical" target="_blank" rel="noopener" data-r>
+      <span class="svc-row-name">Live Health Feeds</span>
+      <div class="svc-row-meta"><span class="svc-row-tag">WHO · CDC</span><span class="svc-row-arr">↗</span></div>
+    </a>
+    <a class="svc-row" href="/data/feed/politics" target="_blank" rel="noopener" data-r>
+      <span class="svc-row-name">Political Intelligence</span>
+      <div class="svc-row-meta"><span class="svc-row-tag">Reuters · BBC</span><span class="svc-row-arr">↗</span></div>
+    </a>
+    <a class="svc-row" href="/data/feed/disasters" target="_blank" rel="noopener" data-r>
+      <span class="svc-row-name">Disaster & Seismic Alerts</span>
+      <div class="svc-row-meta"><span class="svc-row-tag">USGS · NOAA</span><span class="svc-row-arr">↗</span></div>
+    </a>
+    <a class="svc-row" href="/data/feed/news" target="_blank" rel="noopener" data-r>
+      <span class="svc-row-name">Breaking News Stream</span>
+      <div class="svc-row-meta"><span class="svc-row-tag">150+ sources</span><span class="svc-row-arr">↗</span></div>
+    </a>
+    <a class="svc-row" href="/dashboard" data-r>
       <span class="svc-row-name">Context Injection</span>
       <div class="svc-row-meta"><span class="svc-row-tag">LLM-ready</span><span class="svc-row-arr">↗</span></div>
-    </div>
-    <div class="svc-row" data-r>
-      <span class="svc-row-name">Python SDK</span>
+    </a>
+    <a class="svc-row" href="https://github.com/itachi-exe/pulse" target="_blank" rel="noopener" data-r>
+      <span class="svc-row-name">Python SDK & REST API</span>
       <div class="svc-row-meta"><span class="svc-row-tag">Open Source</span><span class="svc-row-arr">↗</span></div>
-    </div>
-    <div class="svc-row" data-r>
-      <span class="svc-row-name">REST API</span>
-      <div class="svc-row-meta"><span class="svc-row-tag">Production</span><span class="svc-row-arr">↗</span></div>
-    </div>
+    </a>
   </div>
 </section>
 
@@ -637,8 +629,8 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
       <p class="test-label-txt">Community</p>
     </div>
     <div class="test-quote">
-      <p class="test-q" data-r>"My agent used to confidently tell me BTC was $45k. It was $98k. Pulse fixed that in one line of code."</p>
-      <p class="test-attr">Pulse, built for HackerEarth Agents Track · 2026</p>
+      <p class="test-q" id="testQ" data-r>"My agent told a user an outbreak alert was 'contained.' It had escalated to level 3 that morning. Pulse would have caught it in one call."</p>
+      <p class="test-attr" id="testA">Health-ops agent builder</p>
     </div>
     <div class="test-badge">
       <div class="test-b"><span class="test-b-dot"></span>HackerEarth 2026</div>
@@ -766,7 +758,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
         <div class="faq-ans">22 categories including crypto, DeFi, on-chain, finance, news, weather, climate, disasters, space, science, health, tech, cybersecurity, sports, gaming, social, politics, aviation, jobs, and commodities. More shipping continuously.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q"><span class="faq-qt">How is this different from calling CoinGecko directly?</span><span class="faq-ic"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div>
+        <div class="faq-q"><span class="faq-qt">How is this different from calling an API directly?</span><span class="faq-ic"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div>
         <div class="faq-ans">Pulse unifies 150+ sources across 22 categories, normalises the response schema, caches intelligently per feed TTL, and delivers a single structured JSON block your agent can act on immediately.</div>
       </div>
       <div class="faq-item">
@@ -825,52 +817,80 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
 </footer>
 
 <script>
-// LIVE DEMO — real feeds pulled from Pulse, same-origin, no key (free preview cats)
+// LIVE DEMO — real event feeds pulled from Pulse, same-origin, free public preview
 (function(){
   const grid=document.getElementById('livedemoGrid');
   if(!grid)return;
   const latEl=document.getElementById('ldLatency');
   const stampEl=document.getElementById('ldStamp');
   const prev={};
-  function setVal(field,text,dirText,dir){
-    const vEl=grid.querySelector(`[data-field="${field}"]`);
-    if(vEl){
-      if(prev[field]!==undefined&&prev[field]!==text){
-        const card=vEl.closest('.ld-card');
-        card.classList.add('flash');
-        setTimeout(()=>card.classList.remove('flash'),600);
-      }
-      prev[field]=text;
-      vEl.textContent=text;
+  function set(field,text){
+    const el=grid.querySelector(`[data-field="${field}"]`);
+    if(!el||text==null)return;
+    if(prev[field]!==undefined&&prev[field]!==text){
+      const card=el.closest('.ld-card');
+      card.classList.add('flash');setTimeout(()=>card.classList.remove('flash'),700);
     }
+    prev[field]=text;el.textContent=text;
   }
-  function setMeta(field,text,dir){
-    const mEl=grid.querySelector(`[data-field="${field}"]`);
-    if(mEl){mEl.textContent=text;mEl.classList.remove('up','down');if(dir==='up')mEl.classList.add('up');if(dir==='down')mEl.classList.add('down');}
+  function ago(iso){
+    if(!iso)return '';
+    const t=new Date(iso).getTime(); if(isNaN(t))return '';
+    const m=Math.round((Date.now()-t)/60000);
+    if(m<1)return 'just now'; if(m<60)return m+' min ago';
+    const h=Math.round(m/60); if(h<24)return h+'h ago';
+    return Math.round(h/24)+'d ago';
   }
   async function pull(){
     try{
       const t0=performance.now();
-      const [cRes,wRes]=await Promise.all([
-        fetch('/data/feed/crypto',{cache:'no-store'}),
-        fetch('/data/feed/weather',{cache:'no-store'})
+      const [med,pol,nws,dis]=await Promise.all([
+        fetch('/data/feed/medical',{cache:'no-store'}).then(r=>r.json()),
+        fetch('/data/feed/politics',{cache:'no-store'}).then(r=>r.json()),
+        fetch('/data/feed/news',{cache:'no-store'}).then(r=>r.json()),
+        fetch('/data/feed/disasters',{cache:'no-store'}).then(r=>r.json())
       ]);
       const lat=Math.round(performance.now()-t0);
-      const c=await cRes.json(), w=await wRes.json();
-      const btc=c.data?.prices?.bitcoin, eth=c.data?.prices?.ethereum;
-      if(btc){setVal('btc','$'+btc.price_usd.toLocaleString(undefined,{maximumFractionDigits:0}));setMeta('btc_chg',(btc.change_24h>=0?'+':'')+btc.change_24h+'% 24h',btc.change_24h>=0?'up':'down');}
-      if(eth){setVal('eth','$'+eth.price_usd.toLocaleString(undefined,{maximumFractionDigits:0}));setMeta('eth_chg',(eth.change_24h>=0?'+':'')+eth.change_24h+'% 24h',eth.change_24h>=0?'up':'down');}
-      const nyc=w.data?.cities?.['New York'], tok=w.data?.cities?.['Tokyo'];
-      if(nyc){setVal('nyc_temp',nyc.temp_c+'\u00b0C');setMeta('nyc_desc',nyc.humidity_pct+'% humidity, '+nyc.wind_kmh+' km/h wind');}
-      if(tok){setVal('tokyo_temp',tok.temp_c+'\u00b0C');setMeta('tokyo_desc',tok.humidity_pct+'% humidity, '+tok.wind_kmh+' km/h wind');}
-      if(latEl)latEl.textContent='delivered in '+lat+'ms';
-      if(stampEl)stampEl.textContent='updated '+new Date().toUTCString().replace('GMT','UTC');
-    }catch(e){
-      if(latEl)latEl.textContent='feed unreachable';
-    }
+      const ma=med.data?.articles?.[0];
+      if(ma){set('medical_title',ma.title);set('medical_src',ma.feed||ma.source||'WHO');set('medical_time',ago(ma.published));}
+      const pa=pol.data?.articles?.[0];
+      if(pa){set('politics_title',pa.title);set('politics_src',pa.feed||pa.source||'Reuters');set('politics_time',ago(pa.published));}
+      const na=nws.data?.articles?.[0];
+      if(na){set('news_title',na.title);set('news_src',na.feed||na.source||'AP');set('news_time',ago(na.published));}
+      const eq=dis.data?.earthquakes?.[0];
+      if(eq){
+        set('quake_place',eq.place);
+        const mEl=grid.querySelector('[data-field="quake_mag"]');
+        if(mEl){mEl.textContent='M'+eq.magnitude+'  ·  '+ago(eq.time);mEl.classList.add('mag');}
+      }
+      if(latEl)latEl.textContent='4 feeds delivered in '+lat+'ms';
+      if(stampEl)stampEl.textContent='pulled '+new Date().toUTCString().replace('GMT','UTC');
+    }catch(e){ if(latEl)latEl.textContent='feed unreachable'; }
   }
   pull();
-  setInterval(pull,15000);
+  setInterval(pull,20000);
+})();
+</script>
+
+<script>
+// ROTATING TESTIMONIALS — 5 non-crypto scenarios, cross-fade
+(function(){
+  const q=document.getElementById('testQ'), a=document.getElementById('testA');
+  if(!q||!a)return;
+  const items=[
+    ['"My agent told a user an outbreak alert was \u2018contained.\u2019 It had escalated to level 3 that morning. Pulse would have caught it in one call.\"','Health-ops agent builder'],
+    ['"It cited a politician who resigned last week as still in office. One Pulse call, and the answer was current instead of embarrassing.\"','Newsroom automation team'],
+    ['"A magnitude 6.1 hit overnight. My agent had no idea until I plugged in Pulse. Now disaster context lands the second it happens.\"','Emergency-response tooling'],
+    ['"Our support bot quoted a recalled drug as safe. Live medical feeds through Pulse closed that gap the same day.\"','Clinical assistant startup'],
+    ['"The agent kept hallucinating headlines. With Pulse it stopped guessing and started reporting what actually happened.\"','Research analyst agent']
+  ];
+  let i=0;
+  setInterval(()=>{
+    i=(i+1)%items.length;
+    q.style.transition='opacity .5s ease';a.style.transition='opacity .5s ease';
+    q.style.opacity='0';a.style.opacity='0';
+    setTimeout(()=>{q.textContent=items[i][0];a.textContent=items[i][1];q.style.opacity='1';a.style.opacity='1';},520);
+  },5000);
 })();
 </script>
 

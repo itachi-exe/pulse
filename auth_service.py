@@ -1529,8 +1529,10 @@ async def get_feed(category: str, request: Request, db=Depends(get_db)):
         if row and not row["enabled"]:
             raise HTTPException(403, f"Category '{category}' is disabled in your settings")
     else:
-        # Unauthenticated: only crypto + weather as free preview
-        if category not in ("crypto", "weather"):
+        # Unauthenticated: free public preview for the landing-page live demo.
+        # Read-only, non-commercial categories only. Full catalog needs a key.
+        FREE_PREVIEW = ("crypto", "weather", "medical", "politics", "news", "science", "disasters")
+        if category not in FREE_PREVIEW:
             raise HTTPException(401, "API key required. Sign up at pulse.dev")
 
     if category not in FEED_MAP:
