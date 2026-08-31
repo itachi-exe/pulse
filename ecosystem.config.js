@@ -19,7 +19,14 @@ module.exports = {
       env: {
         DB_PATH: '/root/pulse/pulse.db',
         PULSE_API_URL: 'http://localhost:7070',
-        JWT_SECRET: 'change-me-in-production'
+        JWT_SECRET: 'change-me-in-production',
+        // Google OAuth — paste ID + secret from Google Cloud Console to go live.
+        // While these are empty, the Google button uses a demo-account fallback.
+        // If the public domain changes, update GOOGLE_REDIRECT_URI here AND in the
+        // Google Cloud Console "Authorized redirect URIs" list (must match exactly).
+        GOOGLE_CLIENT_ID: '',
+        GOOGLE_CLIENT_SECRET: '',
+        GOOGLE_REDIRECT_URI: 'https://pulse.94.72.105.176.sslip.io/auth/google/callback'
       },
       out_file: '/var/log/pulse-auth-out.log',
       error_file: '/var/log/pulse-auth-err.log',

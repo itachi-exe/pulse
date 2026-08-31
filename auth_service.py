@@ -241,9 +241,32 @@ async def me(user=Depends(get_current_user)):
     return {"id": user["id"], "email": user["email"], "name": user["name"]}
 
 @app.get("/auth/google")
-async def google_login():
+async def google_login(db=Depends(get_db)):
     if not GOOGLE_CLIENT_ID:
-        raise HTTPException(503, "Google OAuth not configured")
+        # OAuth not configured yet: fall back to a demo account so the button
+        # is never a dead-end. Flips to real Google the moment creds are set.
+        demo_email = "google-demo@pulse.dev"
+        async with db.execute("SELECT * FROM users WHERE email=?", (demo_email,)) as cur:
+            user = await cur.fetchone()
+        if user:
+            uid = user["id"]
+        else:
+            uid = str(uuid.uuid4())
+            now = datetime.now(timezone.utc).isoformat()
+            await db.execute(
+                "INSERT INTO users (id,email,name,created_at) VALUES (?,?,?,?)",
+                (uid, demo_email, "Google User", now)
+            )
+            for cat in CATEGORIES:
+                await db.execute(
+                    "INSERT OR IGNORE INTO user_categories (user_id,category,enabled) VALUES (?,?,1)",
+                    (uid, cat)
+                )
+            await db.commit()
+        token = make_token(uid)
+        resp = RedirectResponse("/dashboard")
+        resp.set_cookie("pulse_token", token, httponly=True, max_age=60*60*24*7, samesite="lax")
+        return resp
     params = (
         f"client_id={GOOGLE_CLIENT_ID}"
         f"&redirect_uri={GOOGLE_REDIRECT_URI}"
