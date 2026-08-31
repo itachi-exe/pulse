@@ -35,6 +35,8 @@ print(ctx["defer"])      # False — safe to act on
 
 If Pulse can't verify the data, it returns `defer: true` — honest uncertainty instead of a confident wrong answer.
 
+**Full developer documentation:** see [DOCS.md](./DOCS.md) — API reference, auth, response shapes, and how to connect Pulse to your AI (raw HTTP, Python, OpenAI function calling, LangChain, MCP).
+
 ---
 
 ## Architecture
