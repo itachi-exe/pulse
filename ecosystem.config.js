@@ -26,7 +26,7 @@ module.exports = {
         // Google Cloud Console "Authorized redirect URIs" list (must match exactly).
         GOOGLE_CLIENT_ID: '',
         GOOGLE_CLIENT_SECRET: '',
-        GOOGLE_REDIRECT_URI: 'https://pulse.94.72.105.176.sslip.io/auth/google/callback'
+        GOOGLE_REDIRECT_URI: 'https://getpulsedata.online/auth/google/callback'
       },
       out_file: '/var/log/pulse-auth-out.log',
       error_file: '/var/log/pulse-auth-err.log',
