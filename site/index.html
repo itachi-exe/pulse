@@ -85,6 +85,27 @@ nav.scrolled{background:rgba(13,12,11,.92);backdrop-filter:blur(20px);}
 
 .hero-wm{position:absolute;bottom:-.12em;left:50%;transform:translateX(-50%);z-index:3;white-space:nowrap;font-family:'Onest',sans-serif;font-size:clamp(10rem,28vw,28vw);font-weight:900;letter-spacing:-.04em;line-height:1;color:#9a9188;opacity:.38;pointer-events:none;user-select:none;}
 
+/* LIVE DEMO */
+.livedemo{position:relative;z-index:5;max-width:1100px;margin:0 auto;padding:5rem var(--m) 3rem;}
+.livedemo-head{max-width:640px;margin:0 auto 2.5rem;text-align:center;}
+.livedemo-tag{display:inline-flex;align-items:center;gap:.45rem;padding:.3rem .7rem;border:1px solid rgba(117,229,176,.3);background:rgba(117,229,176,.06);font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:1.25rem;}
+.livedemo-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:ld-pulse 1.8s infinite;}
+@keyframes ld-pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(117,229,176,.5);}50%{opacity:.5;box-shadow:0 0 0 5px rgba(117,229,176,0);}}
+.livedemo-title{font-size:clamp(1.4rem,3vw,2rem);font-weight:600;letter-spacing:-.03em;line-height:1.15;margin-bottom:.75rem;}
+.livedemo-sub{font-size:.9rem;line-height:1.6;color:var(--ink-2);}
+.livedemo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.09);}
+.ld-card{background:var(--bg);padding:1.5rem 1.25rem;display:flex;flex-direction:column;gap:.5rem;min-height:130px;transition:background .3s;}
+.ld-card.flash{background:rgba(117,229,176,.07);}
+.ld-card-top{display:flex;align-items:center;justify-content:space-between;}
+.ld-card-label{font-size:.8rem;font-weight:500;color:var(--ink);letter-spacing:-.01em;}
+.ld-card-src{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);}
+.ld-card-val{font-family:'Space Mono',monospace;font-size:1.55rem;font-weight:700;letter-spacing:-.02em;color:var(--ink);margin-top:auto;}
+.ld-card-meta{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--ink-2);}
+.ld-card-meta.up{color:var(--accent);}
+.ld-card-meta.down{color:#e5758f;}
+.livedemo-foot{display:flex;align-items:center;justify-content:space-between;margin-top:1.25rem;font-family:'Space Mono',monospace;font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);}
+.ld-latency{color:var(--accent);}
+
 /* ABOUT */
 .about{background:var(--bg);padding:clamp(5rem,10vw,9rem) var(--m);}
 .about-inner{display:grid;grid-template-columns:repeat(12,1fr);column-gap:clamp(1rem,3vw,2rem);row-gap:5rem;}
@@ -292,6 +313,8 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
   .hero-h{font-size:1rem;}
   .hero-sub{font-size:.875rem;}
   .hero-wm{font-size:clamp(5rem,22vw,22vw);}
+  .livedemo-grid{grid-template-columns:repeat(2,1fr);}
+  .livedemo{padding:3rem var(--m) 2rem;}
 
   /* About */
   .about{padding:4rem var(--m);}
@@ -433,6 +456,44 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
     <p class="hero-sub" data-r>Right now your agent is guessing. Hallucinating prices. Fabricating news. Confidently lying about things that changed months ago. Pulse injects live reality the instant your agent needs it. No search. No delay. Just live data.</p>
   </div>
   <div class="hero-wm" aria-hidden="true">PULSE</div>
+</section>
+
+<!-- LIVE DEMO -->
+<section class="livedemo" id="livedemo">
+  <div class="livedemo-head">
+    <div class="livedemo-tag">
+      <span class="livedemo-dot"></span>
+      <span>Live right now</span>
+    </div>
+    <h2 class="livedemo-title" data-r>This is what your agent would see this second.</h2>
+    <p class="livedemo-sub" data-r>Real data, pulled live from Pulse as this page loaded. Not a screenshot. Not cached from yesterday. Refresh and watch it move.</p>
+  </div>
+  <div class="livedemo-grid" id="livedemoGrid">
+    <div class="ld-card" data-feed="crypto">
+      <div class="ld-card-top"><span class="ld-card-label">Bitcoin</span><span class="ld-card-src">binance</span></div>
+      <div class="ld-card-val" data-field="btc">loading</div>
+      <div class="ld-card-meta" data-field="btc_chg">&nbsp;</div>
+    </div>
+    <div class="ld-card" data-feed="crypto">
+      <div class="ld-card-top"><span class="ld-card-label">Ethereum</span><span class="ld-card-src">binance</span></div>
+      <div class="ld-card-val" data-field="eth">loading</div>
+      <div class="ld-card-meta" data-field="eth_chg">&nbsp;</div>
+    </div>
+    <div class="ld-card" data-feed="weather">
+      <div class="ld-card-top"><span class="ld-card-label">New York</span><span class="ld-card-src">open-meteo</span></div>
+      <div class="ld-card-val" data-field="nyc_temp">loading</div>
+      <div class="ld-card-meta" data-field="nyc_desc">&nbsp;</div>
+    </div>
+    <div class="ld-card" data-feed="weather">
+      <div class="ld-card-top"><span class="ld-card-label">Tokyo</span><span class="ld-card-src">open-meteo</span></div>
+      <div class="ld-card-val" data-field="tokyo_temp">loading</div>
+      <div class="ld-card-meta" data-field="tokyo_desc">&nbsp;</div>
+    </div>
+  </div>
+  <div class="livedemo-foot">
+    <span class="ld-latency" id="ldLatency">measuring latency</span>
+    <span class="ld-stamp" id="ldStamp"></span>
+  </div>
 </section>
 
 <!-- ABOUT -->
@@ -762,6 +823,56 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
     <span class="ft-tagline">「Give AI eyes.」</span>
   </div>
 </footer>
+
+<script>
+// LIVE DEMO — real feeds pulled from Pulse, same-origin, no key (free preview cats)
+(function(){
+  const grid=document.getElementById('livedemoGrid');
+  if(!grid)return;
+  const latEl=document.getElementById('ldLatency');
+  const stampEl=document.getElementById('ldStamp');
+  const prev={};
+  function setVal(field,text,dirText,dir){
+    const vEl=grid.querySelector(`[data-field="${field}"]`);
+    if(vEl){
+      if(prev[field]!==undefined&&prev[field]!==text){
+        const card=vEl.closest('.ld-card');
+        card.classList.add('flash');
+        setTimeout(()=>card.classList.remove('flash'),600);
+      }
+      prev[field]=text;
+      vEl.textContent=text;
+    }
+  }
+  function setMeta(field,text,dir){
+    const mEl=grid.querySelector(`[data-field="${field}"]`);
+    if(mEl){mEl.textContent=text;mEl.classList.remove('up','down');if(dir==='up')mEl.classList.add('up');if(dir==='down')mEl.classList.add('down');}
+  }
+  async function pull(){
+    try{
+      const t0=performance.now();
+      const [cRes,wRes]=await Promise.all([
+        fetch('/data/feed/crypto',{cache:'no-store'}),
+        fetch('/data/feed/weather',{cache:'no-store'})
+      ]);
+      const lat=Math.round(performance.now()-t0);
+      const c=await cRes.json(), w=await wRes.json();
+      const btc=c.data?.prices?.bitcoin, eth=c.data?.prices?.ethereum;
+      if(btc){setVal('btc','$'+btc.price_usd.toLocaleString(undefined,{maximumFractionDigits:0}));setMeta('btc_chg',(btc.change_24h>=0?'+':'')+btc.change_24h+'% 24h',btc.change_24h>=0?'up':'down');}
+      if(eth){setVal('eth','$'+eth.price_usd.toLocaleString(undefined,{maximumFractionDigits:0}));setMeta('eth_chg',(eth.change_24h>=0?'+':'')+eth.change_24h+'% 24h',eth.change_24h>=0?'up':'down');}
+      const nyc=w.data?.cities?.['New York'], tok=w.data?.cities?.['Tokyo'];
+      if(nyc){setVal('nyc_temp',nyc.temp_c+'\u00b0C');setMeta('nyc_desc',nyc.humidity_pct+'% humidity, '+nyc.wind_kmh+' km/h wind');}
+      if(tok){setVal('tokyo_temp',tok.temp_c+'\u00b0C');setMeta('tokyo_desc',tok.humidity_pct+'% humidity, '+tok.wind_kmh+' km/h wind');}
+      if(latEl)latEl.textContent='delivered in '+lat+'ms';
+      if(stampEl)stampEl.textContent='updated '+new Date().toUTCString().replace('GMT','UTC');
+    }catch(e){
+      if(latEl)latEl.textContent='feed unreachable';
+    }
+  }
+  pull();
+  setInterval(pull,15000);
+})();
+</script>
 
 <script>
 // NAV SCROLL
