@@ -1482,7 +1482,7 @@ async def get_feed(category: str, request: Request, db=Depends(get_db)):
             raise HTTPException(401, "Invalid API key")
     elif session_token:
         try:
-            payload = jwt.decode(session_token, JWT_SECRET, algorithms=["HS256"])
+            payload = jwt.decode(session_token, SECRET_KEY, algorithms=[ALGORITHM])
             uid = payload.get("sub")
             if uid:
                 async with db.execute("SELECT * FROM users WHERE id=?", (uid,)) as cur:
