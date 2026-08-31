@@ -137,8 +137,11 @@ async def get_current_user(request: Request, db=Depends(get_db)):
 # ── Lifespan ──────────────────────────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    import asyncio
     await init_db()
+    warmer = asyncio.create_task(_warm_cache_loop())
     yield
+    warmer.cancel()
 
 app = FastAPI(title="Pulse Auth + Data", lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True,
@@ -344,6 +347,31 @@ async def _cached(feed_id: str, ttl: int, fetch_fn):
         if entry:
             return entry["data"]
         return {"error": str(e)}
+
+
+async def _warm_cache_loop():
+    """Background heartbeat: keep every feed's cache warm so the FIRST agent
+    request lands on the cached path (single-digit ms), never the cold fetch.
+    Same model as Chainlink nodes pulling on a heartbeat, not on demand."""
+    import asyncio
+    # Small stagger on boot so we don't hammer every source at once
+    await asyncio.sleep(2)
+    while True:
+        soonest = 60.0
+        for feed_id, (fetch_fn, ttl) in list(FEED_MAP.items()):
+            entry = _cache.get(feed_id)
+            age = time.time() - entry["fetched_at"] if entry else 1e9
+            # Refresh at 80% of TTL so it's always fresh before it expires
+            if age >= ttl * 0.8:
+                try:
+                    data = await fetch_fn()
+                    _cache[feed_id] = {"data": data, "fetched_at": time.time()}
+                except Exception:
+                    pass  # keep stale entry; next pass retries
+                await asyncio.sleep(0.3)  # gentle spacing between sources
+            else:
+                soonest = min(soonest, ttl * 0.8 - age)
+        await asyncio.sleep(max(5.0, min(soonest, 60.0)))
 
 async def _get(url, headers=None, timeout=10):
     async with httpx.AsyncClient(timeout=timeout, follow_redirects=True,
