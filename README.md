@@ -143,5 +143,5 @@ python3 -c "from pulse import PulseClient; c = PulseClient('http://localhost:707
 
 **Track:** AI Infrastructure / Agent Tooling
 **Deadline:** Aug 31, 2026 18:00 UTC
-**Live demo:** https://pulse.itachi.dev
+**Live demo:** https://pulse.94.72.105.176.sslip.io
 **Contact:** itachi_r3birth@proton.me
