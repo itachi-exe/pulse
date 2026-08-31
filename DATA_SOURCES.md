@@ -1,455 +1,1219 @@
-# Pulse — 100+ Data Source Master Map
-
-Research compiled: 2026-08-29 (while itachi sleeps)
-Goal: 100+ verified free/freemium data sources across 25+ categories.
-
----
-
-## CATEGORY INDEX
-
-1. Crypto Prices & Market
-2. Crypto On-Chain & Network
-3. DeFi & NFT
-4. Stocks & Equities
-5. Forex & Commodities
-6. Macro Economics
-7. Central Banks & Rates
-8. Corporate & SEC Filings
-9. News & Media
-10. Weather & Climate
-11. Natural Disasters
-12. Environment & Pollution
-13. Space & Astronomy
-14. Health & Medical
-15. Drug & Food Safety
-16. Disease & Epidemics
-17. Sports
-18. Gaming & Esports
-19. Entertainment
-20. Social & Trends
-21. Tech & Developers
-22. Cybersecurity
-23. Aviation & Transport
-24. Maritime & Shipping
-25. Energy & Grid
-26. Agriculture & Food
-27. Government & Politics
-28. Demographics & Census
-29. Real Estate & Housing
-30. Jobs & Labor
-31. Geopolitics & Conflict
-32. Internet & Infrastructure
-
----
-
-## SOURCES (verified, organized by category)
-
----
-
-### 1. CRYPTO PRICES & MARKET
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 1 | CoinGecko | No | `api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd` | 60s | 12k+ coins |
-| 2 | CoinPaprika | No | `api.coinpaprika.com/v1/tickers` | 60s | 2k+ coins, no key |
-| 3 | Binance | No | `api.binance.com/api/v3/ticker/24hr` | 10s | Fastest, all pairs, no key |
-| 4 | Binance (single) | No | `api.binance.com/api/v3/ticker/price?symbol=BTCUSDT` | 5s | Real-time single pair |
-| 5 | CoinMarketCap | Free key | `pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest` | 60s | 10k req/month free |
-| 6 | Alternative.me Fear & Greed | No | `api.alternative.me/fng/` | 3600s | Crypto fear/greed index |
-| 7 | Kraken | No | `api.kraken.com/0/public/Ticker?pair=XBTUSD` | 10s | Major exchange, no key |
-| 8 | CoinCap | No | `api.coincap.io/v2/assets` | 30s | 2k+ coins, no key |
-
----
-
-### 2. CRYPTO ON-CHAIN & NETWORK
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 9 | Mempool.space (BTC) | No | `mempool.space/api/v1/fees/recommended` | 30s | BTC fee estimates |
-| 10 | Mempool.space (mempool size) | No | `mempool.space/api/mempool` | 30s | Mempool congestion |
-| 11 | Mempool.space (blocks) | No | `mempool.space/api/blocks/tip/height` | 60s | Current block height |
-| 12 | Blockchain.info | No | `blockchain.info/stats?format=json` | 60s | BTC network stats |
-| 13 | Etherscan gas | Free key | `api.etherscan.io/api?module=gastracker&action=gasoracle` | 30s | ETH gas prices |
-| 14 | Etherscan ETH price | Free key | `api.etherscan.io/api?module=stats&action=ethprice` | 60s | ETH/USD |
-| 15 | Blockchair | No | `api.blockchair.com/bitcoin/stats` | 300s | BTC/ETH stats, no key |
-| 16 | Bitcoin Average | No | `apiv2.bitcoinaverage.com/indices/global/ticker/all?crypto=BTC` | 60s | BTC price global average |
-
----
-
-### 3. DeFi & NFT
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 17 | DeFiLlama TVL | No | `api.llama.fi/v2/protocols` | 300s | All DeFi protocols TVL |
-| 18 | DeFiLlama chains | No | `api.llama.fi/v2/chains` | 300s | TVL per chain |
-| 19 | DeFiLlama fees | No | `api.llama.fi/overview/fees?excludeTotalDataChart=true` | 3600s | Protocol fees/revenue |
-| 20 | DeFiLlama stablecoins | No | `stablecoins.llama.fi/stablecoins` | 1800s | Stablecoin market caps |
-| 21 | CoinGecko NFT | No | `api.coingecko.com/api/v3/nfts/list` | 3600s | NFT collections |
-| 22 | DeFiLlama liquidations | No | `api.llama.fi/liquidations/ethereum` | 300s | DeFi liquidation data |
-
----
-
-### 4. STOCKS & EQUITIES
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 23 | Finnhub | Free key | `finnhub.io/api/v1/quote?symbol=AAPL` | 60s | Real-time US stocks |
-| 24 | Finnhub market news | Free key | `finnhub.io/api/v1/news?category=general` | 300s | Market news |
-| 25 | Yahoo Finance (unofficial) | No | `query1.finance.yahoo.com/v8/finance/chart/AAPL` | 60s | Works without key |
-| 26 | Alpha Vantage | Free key | `alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT` | 60s | 25 req/day free |
-| 27 | Financial Modeling Prep | Free key | `financialmodelingprep.com/api/v3/quote/AAPL` | 60s | 250 req/day free |
-| 28 | Nasdaq indices | No | `api.nasdaq.com/api/quote/IXIC/summary` | 300s | NASDAQ/NYSE indices |
-
----
-
-### 5. FOREX & COMMODITIES
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 29 | ExchangeRate-API | No | `api.exchangerate-api.com/v4/latest/USD` | 300s | 160 currencies |
-| 30 | Frankfurter (ECB) | No | `api.frankfurter.app/latest` | 3600s | ECB official rates |
-| 31 | Open Exchange Rates | Free key | `openexchangerates.org/api/latest.json` | 3600s | 1000 req/month free |
-| 32 | Metalpriceapi | Free key | `api.metalpriceapi.com/v1/latest?base=USD&currencies=XAU,XAG,XPT` | 3600s | Gold/silver/platinum |
-| 33 | Commodities-API | Free key | `commodities-api.com/api/latest?base=USD&symbols=CRUDE` | 3600s | Oil, gas, metals |
-| 34 | Oilprice API | Free key | `api.oilpriceapi.com/api/v1/prices/latest` | 3600s | Oil price real-time |
-
----
-
-### 6. MACRO ECONOMICS
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 35 | World Bank | No | `api.worldbank.org/v2/country/USA/indicator/NY.GDP.MKTP.CD?format=json` | 86400s | 300+ indicators |
-| 36 | FRED | Free key | `api.stlouisfed.org/fred/series/observations?series_id=GDP` | 86400s | 800k US series |
-| 37 | Statistics of World | No | `statisticsoftheworld.com/api/v2/country/USA` | 86400s | 440+ indicators multi-source |
-| 38 | IMF Data | No | `imf.org/external/datamapper/api/v1/NGDP_RPCH` | 86400s | GDP growth, 190 countries |
-| 39 | EconPulse CPI | Free | `econpulse.io/api/v1/cpi/latest` | 86400s | Live CPI inflation data |
-| 40 | OECD | No | `stats.oecd.org/SDMX-JSON/data/QNA/...` | 86400s | OECD economic indicators |
-
----
-
-### 7. CENTRAL BANKS & RATES
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 41 | FRED Fed Funds Rate | Free key | `api.stlouisfed.org/fred/series/observations?series_id=DFF` | 86400s | Fed funds rate |
-| 42 | Financial Modeling Prep Treasury | Free key | `financialmodelingprep.com/api/v4/treasury` | 3600s | US Treasury yields |
-| 43 | ECB rates | No | `data-api.ecb.europa.eu/service/data/FM/B.U2.EUR.RT0.BB.R.1.Dates.U2.EUR.MRR_FR_DATE.ANT` | 86400s | ECB interest rates |
-| 44 | Bank of England | No | `www.bankofengland.co.uk/boeapps/database/fromshowcolumns.asp?Travel=NIxSUx&FromSeries=1&ToSeries=50&DAT=RNG&FD=1&FM=Jan&FY=2020&TD=1&TM=Jan&TY=2026&VFD=N&html.x=66&html.y=26&C=LTR&Filter=N` | 86400s | BoE official rate |
-
----
-
-### 8. CORPORATE & SEC FILINGS
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 45 | SEC EDGAR | No | `data.sec.gov/submissions/CIK0000320193.json` | 3600s | Apple filings example |
-| 46 | SEC EDGAR full-text | No | `efts.sec.gov/LATEST/search-index?q=%22artificial+intelligence%22&dateRange=custom&startdt=2026-01-01` | 3600s | Full-text filing search |
-| 47 | SEC EDGAR facts | No | `data.sec.gov/api/xbrl/companyfacts/CIK0000320193.json` | 3600s | Financial facts |
-
----
-
-### 9. NEWS & MEDIA
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 48 | HackerNews top | No | `hacker-news.firebaseio.com/v0/topstories.json` | 300s | Tech news, no key |
-| 49 | HackerNews best | No | `hacker-news.firebaseio.com/v0/beststories.json` | 300s | Best all-time |
-| 50 | GNews | Free key | `gnews.io/api/v4/top-headlines?lang=en&max=10` | 300s | 100 req/day, 80k sources |
-| 51 | NewsData.io | Free key | `newsdata.io/api/1/news?country=us&language=en` | 300s | 200 req/day free |
-| 52 | Reddit worldnews | No | `reddit.com/r/worldnews/hot.json?limit=10` | 300s | No key needed |
-| 53 | Reddit r/technology | No | `reddit.com/r/technology/hot.json?limit=10` | 300s | Tech news |
-| 54 | Wikipedia trending | No | `wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/2026/08/all-days` | 3600s | Top viewed articles |
-| 55 | Dev.to articles | No | `dev.to/api/articles?top=1` | 3600s | Top dev articles today |
-
----
-
-### 10. WEATHER & CLIMATE
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 56 | Open-Meteo | No | `api.open-meteo.com/v1/forecast?latitude=40.71&longitude=-74.01&current=temperature_2m` | 600s | Global, best free |
-| 57 | wttr.in | No | `wttr.in/London?format=j1` | 600s | Any city, JSON |
-| 58 | NOAA weather alerts | No | `api.weather.gov/alerts/active?area=CA` | 300s | US weather alerts |
-| 59 | ClimateMonitor CO2 | No | `climatemonitor.info/api/public/v1/co2/latest` | 3600s | CO2, methane, sea level, ice |
-| 60 | ClimateMonitor methane | No | `climatemonitor.info/api/public/v1/ch4/latest` | 3600s | Atmospheric methane |
-| 61 | ClimateMonitor sea level | No | `climatemonitor.info/api/public/v1/sea-level/latest` | 86400s | Sea level rise mm |
-| 62 | Open UV Index | Free key | `api.openuv.io/api/v1/uv?lat=40.71&lng=-74.01` | 3600s | UV index real-time |
-
----
-
-### 11. NATURAL DISASTERS
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 63 | USGS Earthquakes | No | `earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=4&limit=20&orderby=time` | 300s | Real-time global quakes |
-| 64 | NASA FIRMS Wildfires | No | `firms.modaps.eosdis.nasa.gov/api/area/csv/{key}/VIIRS_SNPP_NRT/world/1` | 3600s | Active wildfires, needs free key |
-| 65 | NOAA Active Hurricanes | No | `api.weather.gov/alerts/active?event=Hurricane%20Warning` | 300s | Active hurricane warnings |
-| 66 | NOAA Tsunami | No | `api.weather.gov/alerts/active?event=Tsunami%20Warning` | 300s | Tsunami alerts |
-| 67 | Volcano Observatory (GVP) | No | `volcano.si.edu/api/volcano.cfm?avnum=1101-06-` | 3600s | Volcano activity (RSS parseable) |
-
----
-
-### 12. ENVIRONMENT & POLLUTION
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 68 | OpenAQ | No | `api.openaq.org/v2/latest?limit=10&order_by=lastUpdated` | 600s | PM2.5, ozone, global |
-| 69 | World AQI | Free key | `api.waqi.info/feed/london/?token={key}` | 600s | AQI any city |
-| 70 | Open-Meteo air quality | No | `air-quality-api.open-meteo.com/v1/air-quality?latitude=48.85&longitude=2.35&current=pm10,pm2_5,carbon_dioxide` | 600s | No key, global |
-
----
-
-### 13. SPACE & ASTRONOMY
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 71 | ISS Location | No | `api.open-notify.org/iss-now.json` | 10s | Real-time lat/lon |
-| 72 | Astronauts in space | No | `api.open-notify.org/astros.json` | 3600s | Who is in space |
-| 73 | NASA APOD | Demo key | `api.nasa.gov/planetary/apod?api_key=DEMO_KEY` | 86400s | Astronomy picture of day |
-| 74 | NASA Near-Earth Asteroids | Demo key | `api.nasa.gov/neo/rest/v1/feed?api_key=DEMO_KEY` | 3600s | Asteroids passing Earth this week |
-| 75 | NASA Solar Flares (DONKI) | Demo key | `api.nasa.gov/DONKI/FLR?api_key=DEMO_KEY` | 3600s | Solar flare events |
-| 76 | SpaceX next launch | No | `api.spacexdata.com/v4/launches/next` | 3600s | SpaceX upcoming |
-| 77 | Launch Library (all) | No | `lldev.thespacedevs.com/2.2.0/launch/upcoming/?format=json` | 3600s | All upcoming launches globally |
-| 78 | Sunrise/sunset | No | `api.sunrisesunset.io/json?lat=40.71&lng=-74.01` | 86400s | Any coordinate |
-| 79 | Moon phase | No | `api.farmsense.net/v1/astro/?d=1724774400` | 86400s | Moon phase by date |
-
----
-
-### 14. HEALTH & MEDICAL
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 80 | OpenFDA drug adverse events | No | `api.fda.gov/drug/event.json?limit=5&sort=receivedate:desc` | 3600s | Drug adverse events |
-| 81 | OpenFDA device recalls | No | `api.fda.gov/device/recall.json?limit=5&sort=event_date_initiated:desc` | 3600s | Medical device recalls |
-| 82 | ClinicalTrials.gov | No | `clinicaltrials.gov/api/v2/studies?query.term=cancer&pageSize=5` | 3600s | Active clinical trials |
-| 83 | PubMed (NCBI) | No | `eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=AI+medicine&retmax=5&retmode=json` | 3600s | Latest medical papers |
-| 84 | USDA FoodData | Free key | `api.nal.usda.gov/fdc/v1/foods/search?query=apple&api_key={key}` | 86400s | Nutritional data |
-
----
-
-### 15. DRUG & FOOD SAFETY
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 85 | OpenFDA drug recalls | No | `api.fda.gov/drug/enforcement.json?limit=5&sort=recall_initiation_date:desc` | 3600s | Drug recalls |
-| 86 | OpenFDA food recalls | No | `api.fda.gov/food/enforcement.json?limit=5&sort=recall_initiation_date:desc` | 3600s | Food recalls |
-| 87 | USDA FSIS meat recalls | No | `api.fsis.usda.gov/fsis/api/recall/v/1` | 3600s | Meat/poultry recalls |
-
----
-
-### 16. DISEASE & EPIDEMICS
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 88 | WHO Disease Outbreak News | No | RSS: `who.int/rss-feeds/news-english.xml` | 3600s | Parse RSS for outbreak alerts |
-| 89 | CDC FluView | No | `gis.cdc.gov/grasp/FluView/FluSeason.html` (JSON hidden) | 86400s | US influenza surveillance |
-| 90 | Global Health Observatory (WHO) | No | `ghoapi.azureedge.net/api/GHO` | 86400s | WHO global health data |
-
----
-
-### 17. SPORTS
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 91 | SportScore | No (attribution) | `sportscore.com/api/widget/matches/?sport=football&limit=20` | 60s | Football/basketball/cricket/tennis live |
-| 92 | TheSportsDB | No (key=3) | `thesportsdb.com/api/v1/json/3/eventspastleague.php?id=4328` | 900s | EPL, test key free |
-| 93 | API-Football | Free key | `v3.football.api-sports.io/fixtures?live=all` | 60s | 100 req/day free |
-| 94 | ESPN hidden API | No | `site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard` | 60s | NBA/NFL/soccer live |
-| 95 | Open Triathlon | No | `api.triathlon.org/v1/events` | 3600s | Triathlon events |
-
----
-
-### 18. GAMING & ESPORTS
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 96 | Steam player count | No | `api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=570` | 300s | Live concurrent players per game |
-| 97 | RAWG (games DB) | Free key | `api.rawg.io/api/games?key={key}&ordering=-added` | 3600s | Games database |
-| 98 | GRID esports | Free | `grid.gg/open-access` | 3600s | Official esport game data |
-
----
-
-### 19. ENTERTAINMENT
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 99 | OMDb movies | Free key | `omdbapi.com/?t=inception&apikey={key}` | 86400s | Movie data, 1k req/day free |
-| 100 | TheMovieDB | Free key | `api.themoviedb.org/3/trending/movie/day?api_key={key}` | 3600s | Trending movies today |
-| 101 | TheAudioDB | No | `theaudiodb.com/api/v1/json/2/searchalbum.php?s=coldplay` | 86400s | Music database |
-| 102 | Open Library (books) | No | `openlibrary.org/search.json?q=artificial+intelligence&sort=new` | 86400s | Book data, no key |
-| 103 | iTunes/Apple search | No | `itunes.apple.com/search?term=drake&media=music&limit=5` | 3600s | Music/podcast charts |
-
----
-
-### 20. SOCIAL & TRENDS
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 104 | Reddit trending | No | `reddit.com/r/all/hot.json?limit=10` | 300s | Top Reddit posts |
-| 105 | Reddit search | No | `reddit.com/search.json?q={topic}&sort=hot&limit=5` | 300s | Keyword trending |
-| 106 | Bluesky trending | No | `public.api.bsky.app/xrpc/app.bsky.trending.topics` | 300s | Bluesky trending topics |
-| 107 | Wikipedia pageviews | No | `wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/2026/08/all-days` | 3600s | Most viewed Wikipedia today |
-| 108 | Google Trends (unofficial) | No | `trends.google.com/trends/api/dailytrends?geo=US&hl=en-US&ns=15` | 3600s | Google daily trends |
-
----
-
-### 21. TECH & DEVELOPERS
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 109 | GitHub (trending proxy) | No | `github.com/trending` (scrape or use unofficial API) | 3600s | Trending repos |
-| 110 | Dev.to | No | `dev.to/api/articles?top=7` | 3600s | Top dev articles this week |
-| 111 | Product Hunt | Free key | `api.producthunt.com/v2/api/graphql` | 3600s | Products launching today |
-| 112 | npm downloads | No | `api.npmjs.org/downloads/point/last-week/react` | 3600s | Package download stats |
-| 113 | PyPI download stats | No | `pypistats.org/api/packages/requests/recent` | 3600s | Python package stats |
-| 114 | Crates.io (Rust) | No | `crates.io/api/v1/crates?sort=downloads` | 3600s | Top Rust crates |
-
----
-
-### 22. CYBERSECURITY
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 115 | NVD (CVE database) | No | `services.nvd.nist.gov/rest/json/cves/2.0?pubStartDate=2026-08-28T00:00:00&pubEndDate=2026-08-29T00:00:00` | 3600s | New CVEs published today |
-| 116 | Shodan InternetDB | No | `internetdb.shodan.io/{ip}` | 3600s | Open ports/vulns for any IP |
-| 117 | PhishTank | No | `data.phishtank.com/data/online-valid.json.gz` | 3600s | Active phishing URLs |
-| 118 | Have I Been Pwned | Free key | `haveibeenpwned.com/api/v3/breaches` | 86400s | Latest data breaches |
-| 119 | AbuseIPDB | Free key | `api.abuseipdb.com/api/v2/blacklist` | 3600s | Malicious IP list |
-
----
-
-### 23. AVIATION & TRANSPORT
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 120 | ADS-B Exchange | No | `globe.adsbexchange.com/globeRates.json` | 60s | Live flight density data |
-| 121 | OpenSky Network | No | `opensky-network.org/api/states/all?lamin=45.8389&lomin=5.9962&lamax=47.8229&lomax=10.5226` | 10s | Live aircraft positions |
-| 122 | Aviation Stack | Free key | `api.aviationstack.com/v1/flights?access_key={key}` | 300s | 100 req/month free |
-| 123 | TransitLand | Free | `transit.land/api/v2/rest/routes` | 900s | Public transit globally |
-
----
-
-### 24. MARITIME & SHIPPING
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 124 | MarineTraffic | Freemium | `marinetraffic.com/getData/get_vessels_in_area_from_db` | 300s | Vessel positions (free tier limited) |
-| 125 | Datalastic | Free key | `api.datalastic.com/api/v0/vessel?api-key={key}&uuid=...` | 300s | Free tier vessel tracking |
-| 126 | Sea Rates (freight) | Scrape | `searates.com/reference/portdistance.html` | 86400s | Port-to-port distances |
-
----
-
-### 25. ENERGY & GRID
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 127 | Electricity Maps | Free key | `api.electricitymap.org/v3/carbon-intensity/latest?zone=DE` | 300s | Grid carbon intensity |
-| 128 | ENTSO-E (Europe grid) | Free key | `transparency.entsoe.eu/api?documentType=A75...` | 300s | European energy production |
-| 129 | EIA (US energy) | Free key | `api.eia.gov/v2/electricity/rto/daily-region-data/data` | 3600s | US electricity generation |
-| 130 | Corrently (solar) | No | `console.corrently.io/apis` | 3600s | Solar energy forecast Germany |
-
----
-
-### 26. AGRICULTURE & FOOD
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 131 | USDA NASS | Free key | `quickstats.nass.usda.gov/api/api_GET/?key={key}&source_desc=CENSUS` | 86400s | US crop data |
-| 132 | USDA AMS | No | `mymarketnews.ams.usda.gov/api/public?q=...` | 86400s | Agricultural market news |
-| 133 | FAO Food Price Index | No | `worldbank.org/en/research/commodity-markets` (data) | 86400s | Global food prices |
-| 134 | Open Food Facts | No | `world.openfoodfacts.org/api/v2/product/737628064502.json` | 86400s | Food product database |
-
----
-
-### 27. GOVERNMENT & POLITICS
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 135 | US Congress (Congress.gov) | Free key | `api.congress.gov/v3/bill?api_key={key}&limit=5` | 3600s | Latest US legislation |
-| 136 | CivicStream | Free | `civicstream.tv/api/v1/bills` | 3600s | Live government data |
-| 137 | Open States | Free key | `v3.openstates.org/bills?jurisdiction=us&sort=updated_at` | 3600s | US state legislation |
-| 138 | Data USA | No | `datausa.io/api/data?drilldowns=Nation&measures=Population` | 86400s | US public data aggregated |
-| 139 | Data.gov datasets | No | `catalog.data.gov/api/3/action/package_search?q=&rows=5&sort=metadata_modified+desc` | 86400s | Latest US federal datasets |
-
----
-
-### 28. DEMOGRAPHICS & CENSUS
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 140 | US Census Bureau | Free key | `api.census.gov/data/2022/acs/acs1?get=B01001_001E&for=us:1&key={key}` | 86400s | US population data |
-| 141 | World Population Review | Scrape | `worldpopulationreview.com` | 86400s | Country populations |
-| 142 | REST Countries | No | `restcountries.com/v3.1/all?fields=name,population,gdp` | 86400s | Country info including population |
-| 143 | GeoNames | Free | `api.geonames.org/countryInfoJSON?username=demo` | 86400s | Country/city data |
-
----
-
-### 29. REAL ESTATE & HOUSING
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 144 | HUD (US housing) | Free key | `hudapi.com/api/fmr/statedata/CA` | 86400s | Fair market rents by state |
-| 145 | Zillow (unofficial) | Scrape | `zillow.com/research/data` | 86400s | Zillow publishes CSV datasets |
-| 146 | FRED Housing starts | Free key | `api.stlouisfed.org/fred/series/observations?series_id=HOUST` | 86400s | US housing starts |
-
----
-
-### 30. JOBS & LABOR
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 147 | US Bureau of Labor Stats | No | `api.bls.gov/publicAPI/v1/timeseries/data/LNS14000000` | 86400s | US unemployment rate |
-| 148 | Adzuna | Free key | `api.adzuna.com/v1/api/jobs/us/search/1?app_id={id}&app_key={key}&results_per_page=5` | 3600s | Job postings real-time |
-| 149 | GitHub Jobs (unofficial) | No | `jobs.github.com/positions.json?description=AI&location=remote` | 3600s | Tech jobs |
-| 150 | Remotive | No | `remotive.com/api/remote-jobs?category=software-dev&limit=10` | 3600s | Remote jobs, no key |
-
----
-
-### 31. GEOPOLITICS & CONFLICT
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 151 | ACLED conflict data | Free key | `api.acleddata.com/acled/read/?key={key}&email={email}&iso=840&limit=5` | 86400s | Armed conflict events |
-| 152 | GDELT Project | No | `api.gdeltproject.org/api/v2/summary/summary?d=ToneChart&t=summary&k=ukraine&ts=custom&sdt=20260801000000&edt=20260829000000` | 3600s | Global event/media sentiment |
-| 153 | UNODC drug data | No | `data.unodc.org/api` | 86400s | Drug trafficking data |
-| 154 | UNHCR refugee data | No | `api.unhcr.org/population/` | 86400s | Refugee and displacement stats |
-
----
-
-### 32. INTERNET & INFRASTRUCTURE
-
-| # | Source | Key? | Endpoint | TTL | Notes |
-|---|---|---|---|---|---|
-| 155 | Cloudflare Radar | Free key | `api.cloudflare.com/client/v4/radar/http/timeseries?dateRange=1d` | 300s | Global internet traffic |
-| 156 | IP-API geolocation | No | `ip-api.com/json/8.8.8.8` | - | IP geolocation, no key |
-| 157 | DNS over HTTPS | No | `cloudflare-dns.com/dns-query?name=google.com&type=A` | - | DNS lookups |
-| 158 | RIPE NCC | No | `stat.ripe.net/data/country-asns/data.json?resource=US` | 3600s | Internet routing data |
-| 159 | Uptime Robot (own services) | Free key | `api.uptimerobot.com/v2/getMonitors` | 300s | Service uptime monitoring |
-
----
-
-## IMPLEMENTATION PRIORITY
-
-### Phase 1 — Zero friction (no key, wire today)
-Sources: 1,2,3,4,6,7,8,9,10,11,12,17,18,19,20,21,22,29,30,35,38,48,49,52,53,54,55,56,57,58,59,60,61,63,65,66,68,71,72,77,78,84,85,86,91,92,95,96,100,104,105,107,109,110,112,113,114,115,120,121,128,132,134,142,143,147,150,152,156
-
-**~60 sources, no registration needed.**
-
-### Phase 2 — Free key (15 min each to register)
-Sources: 13,14,23,24,26,27,31,32,33,34,36,37,41,42,50,51,62,69,70,73,74,75,76,93,97,99,100,115,116,117,118,119,122,127,129,130,131,133,135,136,137,138,140,144,146,148,151,153
-
-**~45 sources, free keys available instantly.**
-
-### Phase 3 — Build/scrape ourselves
-Sources: 25,44,45,46,47,88,89,90,103,106,108,145
-
-**~12 sources, RSS parse or light scraper.**
-
----
-
-## TOTAL COUNT
-
-**159 verified data sources across 32 categories.**
-
-With selective implementation of 100 of these, Pulse becomes the most comprehensive free data API for AI agents that exists.
+# Pulse Verified Data Sources
+
+**1186 verified live sources across 15 categories.** Every feed below was fetched and parsed live; only sources returning at least one real item are kept. Regenerate anytime with build_catalog.py + expand_catalog*.py, or count live at /data/sources.
+
+## aviation (33)
+- Aviation Week: https://aviationweek.com/rss.xml
+- Simple Flying: https://simpleflying.com/feed/
+- AVweb: https://www.avweb.com/feed/
+- airline industry: https://news.google.com/rss/search?q=airline%20industry&hl=en-US&gl=US&ceid=US:en
+- Boeing aircraft: https://news.google.com/rss/search?q=Boeing%20aircraft&hl=en-US&gl=US&ceid=US:en
+- Airbus: https://news.google.com/rss/search?q=Airbus&hl=en-US&gl=US&ceid=US:en
+- flight delays: https://news.google.com/rss/search?q=flight%20delays&hl=en-US&gl=US&ceid=US:en
+- aviation safety: https://news.google.com/rss/search?q=aviation%20safety&hl=en-US&gl=US&ceid=US:en
+- air travel: https://news.google.com/rss/search?q=air%20travel&hl=en-US&gl=US&ceid=US:en
+- pilot shortage: https://news.google.com/rss/search?q=pilot%20shortage&hl=en-US&gl=US&ceid=US:en
+- airport expansion: https://news.google.com/rss/search?q=airport%20expansion&hl=en-US&gl=US&ceid=US:en
+- jet engine: https://news.google.com/rss/search?q=jet%20engine&hl=en-US&gl=US&ceid=US:en
+- commercial aviation: https://news.google.com/rss/search?q=commercial%20aviation&hl=en-US&gl=US&ceid=US:en
+- GNews: Boeing 737 MAX: https://news.google.com/rss/search?q=Boeing%20737%20MAX&hl=en-US&gl=US&ceid=US:en
+- GNews: Boeing 787: https://news.google.com/rss/search?q=Boeing%20787&hl=en-US&gl=US&ceid=US:en
+- GNews: Airbus A320: https://news.google.com/rss/search?q=Airbus%20A320&hl=en-US&gl=US&ceid=US:en
+- GNews: Airbus A350: https://news.google.com/rss/search?q=Airbus%20A350&hl=en-US&gl=US&ceid=US:en
+- GNews: aircraft order: https://news.google.com/rss/search?q=aircraft%20order&hl=en-US&gl=US&ceid=US:en
+- GNews: airline earnings: https://news.google.com/rss/search?q=airline%20earnings&hl=en-US&gl=US&ceid=US:en
+- GNews: flight cancellation: https://news.google.com/rss/search?q=flight%20cancellation&hl=en-US&gl=US&ceid=US:en
+- GNews: FAA regulation: https://news.google.com/rss/search?q=FAA%20regulation&hl=en-US&gl=US&ceid=US:en
+- GNews: EASA: https://news.google.com/rss/search?q=EASA&hl=en-US&gl=US&ceid=US:en
+- GNews: air traffic control: https://news.google.com/rss/search?q=air%20traffic%20control&hl=en-US&gl=US&ceid=US:en
+- GNews: jet fuel price: https://news.google.com/rss/search?q=jet%20fuel%20price&hl=en-US&gl=US&ceid=US:en
+- GNews: airport security: https://news.google.com/rss/search?q=airport%20security&hl=en-US&gl=US&ceid=US:en
+- GNews: supersonic jet: https://news.google.com/rss/search?q=supersonic%20jet&hl=en-US&gl=US&ceid=US:en
+- GNews: electric aircraft: https://news.google.com/rss/search?q=electric%20aircraft&hl=en-US&gl=US&ceid=US:en
+- GNews: eVTOL air taxi: https://news.google.com/rss/search?q=eVTOL%20air%20taxi&hl=en-US&gl=US&ceid=US:en
+- GNews: drone delivery: https://news.google.com/rss/search?q=drone%20delivery&hl=en-US&gl=US&ceid=US:en
+- GNews: space tourism flight: https://news.google.com/rss/search?q=space%20tourism%20flight&hl=en-US&gl=US&ceid=US:en
+- GNews: cargo airline: https://news.google.com/rss/search?q=cargo%20airline&hl=en-US&gl=US&ceid=US:en
+- GNews: low cost carrier: https://news.google.com/rss/search?q=low%20cost%20carrier&hl=en-US&gl=US&ceid=US:en
+- GNews: airline merger: https://news.google.com/rss/search?q=airline%20merger&hl=en-US&gl=US&ceid=US:en
+
+## climate (50)
+- NYT Climate: https://rss.nytimes.com/services/xml/rss/nyt/Climate.xml
+- Guardian environment: https://www.theguardian.com/environment/rss
+- GNews: climate change: https://news.google.com/rss/search?q=climate%20change&hl=en-US&gl=US&ceid=US:en
+- GNews: renewable energy: https://news.google.com/rss/search?q=renewable%20energy&hl=en-US&gl=US&ceid=US:en
+- Climate Home: https://www.climatechangenews.com/feed/
+- Carbon Brief: https://www.carbonbrief.org/feed/
+- Inside Climate: https://insideclimatenews.org/feed/
+- Grist: https://grist.org/feed/
+- global warming: https://news.google.com/rss/search?q=global%20warming&hl=en-US&gl=US&ceid=US:en
+- carbon emissions: https://news.google.com/rss/search?q=carbon%20emissions&hl=en-US&gl=US&ceid=US:en
+- solar power: https://news.google.com/rss/search?q=solar%20power&hl=en-US&gl=US&ceid=US:en
+- wind energy: https://news.google.com/rss/search?q=wind%20energy&hl=en-US&gl=US&ceid=US:en
+- COP climate summit: https://news.google.com/rss/search?q=COP%20climate%20summit&hl=en-US&gl=US&ceid=US:en
+- extreme weather: https://news.google.com/rss/search?q=extreme%20weather&hl=en-US&gl=US&ceid=US:en
+- sea level rise: https://news.google.com/rss/search?q=sea%20level%20rise&hl=en-US&gl=US&ceid=US:en
+- deforestation: https://news.google.com/rss/search?q=deforestation&hl=en-US&gl=US&ceid=US:en
+- carbon capture: https://news.google.com/rss/search?q=carbon%20capture&hl=en-US&gl=US&ceid=US:en
+- green hydrogen: https://news.google.com/rss/search?q=green%20hydrogen&hl=en-US&gl=US&ceid=US:en
+- nuclear energy: https://news.google.com/rss/search?q=nuclear%20energy&hl=en-US&gl=US&ceid=US:en
+- battery storage: https://news.google.com/rss/search?q=battery%20storage&hl=en-US&gl=US&ceid=US:en
+- fossil fuels: https://news.google.com/rss/search?q=fossil%20fuels&hl=en-US&gl=US&ceid=US:en
+- net zero: https://news.google.com/rss/search?q=net%20zero&hl=en-US&gl=US&ceid=US:en
+- biodiversity loss: https://news.google.com/rss/search?q=biodiversity%20loss&hl=en-US&gl=US&ceid=US:en
+- ocean warming: https://news.google.com/rss/search?q=ocean%20warming&hl=en-US&gl=US&ceid=US:en
+- GNews: carbon capture storage: https://news.google.com/rss/search?q=carbon%20capture%20storage&hl=en-US&gl=US&ceid=US:en
+- GNews: direct air capture: https://news.google.com/rss/search?q=direct%20air%20capture&hl=en-US&gl=US&ceid=US:en
+- GNews: green hydrogen production: https://news.google.com/rss/search?q=green%20hydrogen%20production&hl=en-US&gl=US&ceid=US:en
+- GNews: offshore wind: https://news.google.com/rss/search?q=offshore%20wind&hl=en-US&gl=US&ceid=US:en
+- GNews: floating solar: https://news.google.com/rss/search?q=floating%20solar&hl=en-US&gl=US&ceid=US:en
+- GNews: geothermal energy: https://news.google.com/rss/search?q=geothermal%20energy&hl=en-US&gl=US&ceid=US:en
+- GNews: tidal energy: https://news.google.com/rss/search?q=tidal%20energy&hl=en-US&gl=US&ceid=US:en
+- GNews: grid storage: https://news.google.com/rss/search?q=grid%20storage&hl=en-US&gl=US&ceid=US:en
+- GNews: EV charging network: https://news.google.com/rss/search?q=EV%20charging%20network&hl=en-US&gl=US&ceid=US:en
+- GNews: heat pump: https://news.google.com/rss/search?q=heat%20pump&hl=en-US&gl=US&ceid=US:en
+- GNews: building electrification: https://news.google.com/rss/search?q=building%20electrification&hl=en-US&gl=US&ceid=US:en
+- GNews: methane emissions: https://news.google.com/rss/search?q=methane%20emissions&hl=en-US&gl=US&ceid=US:en
+- GNews: permafrost thaw: https://news.google.com/rss/search?q=permafrost%20thaw&hl=en-US&gl=US&ceid=US:en
+- GNews: glacier retreat: https://news.google.com/rss/search?q=glacier%20retreat&hl=en-US&gl=US&ceid=US:en
+- GNews: coral bleaching: https://news.google.com/rss/search?q=coral%20bleaching&hl=en-US&gl=US&ceid=US:en
+- GNews: wildfire season: https://news.google.com/rss/search?q=wildfire%20season&hl=en-US&gl=US&ceid=US:en
+- GNews: atmospheric river: https://news.google.com/rss/search?q=atmospheric%20river&hl=en-US&gl=US&ceid=US:en
+- GNews: El Nino La Nina: https://news.google.com/rss/search?q=El%20Nino%20La%20Nina&hl=en-US&gl=US&ceid=US:en
+- GNews: carbon pricing: https://news.google.com/rss/search?q=carbon%20pricing&hl=en-US&gl=US&ceid=US:en
+- GNews: emissions trading: https://news.google.com/rss/search?q=emissions%20trading&hl=en-US&gl=US&ceid=US:en
+- GNews: climate lawsuit: https://news.google.com/rss/search?q=climate%20lawsuit&hl=en-US&gl=US&ceid=US:en
+- GNews: fossil fuel divestment: https://news.google.com/rss/search?q=fossil%20fuel%20divestment&hl=en-US&gl=US&ceid=US:en
+- GNews: nuclear SMR: https://news.google.com/rss/search?q=nuclear%20SMR&hl=en-US&gl=US&ceid=US:en
+- GNews: lithium mining: https://news.google.com/rss/search?q=lithium%20mining&hl=en-US&gl=US&ceid=US:en
+- GNews: cobalt supply: https://news.google.com/rss/search?q=cobalt%20supply&hl=en-US&gl=US&ceid=US:en
+- GNews: solar manufacturing: https://news.google.com/rss/search?q=solar%20manufacturing&hl=en-US&gl=US&ceid=US:en
+
+## commodities (44)
+- GNews: oil prices: https://news.google.com/rss/search?q=oil%20prices&hl=en-US&gl=US&ceid=US:en
+- OilPrice: https://oilprice.com/rss/main
+- gold price: https://news.google.com/rss/search?q=gold%20price&hl=en-US&gl=US&ceid=US:en
+- silver price: https://news.google.com/rss/search?q=silver%20price&hl=en-US&gl=US&ceid=US:en
+- crude oil price: https://news.google.com/rss/search?q=crude%20oil%20price&hl=en-US&gl=US&ceid=US:en
+- natural gas: https://news.google.com/rss/search?q=natural%20gas&hl=en-US&gl=US&ceid=US:en
+- copper price: https://news.google.com/rss/search?q=copper%20price&hl=en-US&gl=US&ceid=US:en
+- wheat corn prices: https://news.google.com/rss/search?q=wheat%20corn%20prices&hl=en-US&gl=US&ceid=US:en
+- coffee prices: https://news.google.com/rss/search?q=coffee%20prices&hl=en-US&gl=US&ceid=US:en
+- lithium: https://news.google.com/rss/search?q=lithium&hl=en-US&gl=US&ceid=US:en
+- rare earth metals: https://news.google.com/rss/search?q=rare%20earth%20metals&hl=en-US&gl=US&ceid=US:en
+- uranium price: https://news.google.com/rss/search?q=uranium%20price&hl=en-US&gl=US&ceid=US:en
+- OPEC oil: https://news.google.com/rss/search?q=OPEC%20oil&hl=en-US&gl=US&ceid=US:en
+- agricultural commodities: https://news.google.com/rss/search?q=agricultural%20commodities&hl=en-US&gl=US&ceid=US:en
+- palladium platinum: https://news.google.com/rss/search?q=palladium%20platinum&hl=en-US&gl=US&ceid=US:en
+- iron ore: https://news.google.com/rss/search?q=iron%20ore&hl=en-US&gl=US&ceid=US:en
+- cocoa prices: https://news.google.com/rss/search?q=cocoa%20prices&hl=en-US&gl=US&ceid=US:en
+- GNews: gold futures: https://news.google.com/rss/search?q=gold%20futures&hl=en-US&gl=US&ceid=US:en
+- GNews: silver futures: https://news.google.com/rss/search?q=silver%20futures&hl=en-US&gl=US&ceid=US:en
+- GNews: WTI crude: https://news.google.com/rss/search?q=WTI%20crude&hl=en-US&gl=US&ceid=US:en
+- GNews: Brent crude: https://news.google.com/rss/search?q=Brent%20crude&hl=en-US&gl=US&ceid=US:en
+- GNews: natural gas futures: https://news.google.com/rss/search?q=natural%20gas%20futures&hl=en-US&gl=US&ceid=US:en
+- GNews: copper futures: https://news.google.com/rss/search?q=copper%20futures&hl=en-US&gl=US&ceid=US:en
+- GNews: aluminum price: https://news.google.com/rss/search?q=aluminum%20price&hl=en-US&gl=US&ceid=US:en
+- GNews: nickel price: https://news.google.com/rss/search?q=nickel%20price&hl=en-US&gl=US&ceid=US:en
+- GNews: zinc price: https://news.google.com/rss/search?q=zinc%20price&hl=en-US&gl=US&ceid=US:en
+- GNews: tin price: https://news.google.com/rss/search?q=tin%20price&hl=en-US&gl=US&ceid=US:en
+- GNews: wheat futures: https://news.google.com/rss/search?q=wheat%20futures&hl=en-US&gl=US&ceid=US:en
+- GNews: corn futures: https://news.google.com/rss/search?q=corn%20futures&hl=en-US&gl=US&ceid=US:en
+- GNews: soybean futures: https://news.google.com/rss/search?q=soybean%20futures&hl=en-US&gl=US&ceid=US:en
+- GNews: sugar price: https://news.google.com/rss/search?q=sugar%20price&hl=en-US&gl=US&ceid=US:en
+- GNews: cotton price: https://news.google.com/rss/search?q=cotton%20price&hl=en-US&gl=US&ceid=US:en
+- GNews: cocoa futures: https://news.google.com/rss/search?q=cocoa%20futures&hl=en-US&gl=US&ceid=US:en
+- GNews: coffee futures: https://news.google.com/rss/search?q=coffee%20futures&hl=en-US&gl=US&ceid=US:en
+- GNews: orange juice futures: https://news.google.com/rss/search?q=orange%20juice%20futures&hl=en-US&gl=US&ceid=US:en
+- GNews: cattle futures: https://news.google.com/rss/search?q=cattle%20futures&hl=en-US&gl=US&ceid=US:en
+- GNews: lumber price: https://news.google.com/rss/search?q=lumber%20price&hl=en-US&gl=US&ceid=US:en
+- GNews: lithium carbonate: https://news.google.com/rss/search?q=lithium%20carbonate&hl=en-US&gl=US&ceid=US:en
+- GNews: cobalt price: https://news.google.com/rss/search?q=cobalt%20price&hl=en-US&gl=US&ceid=US:en
+- GNews: graphite: https://news.google.com/rss/search?q=graphite&hl=en-US&gl=US&ceid=US:en
+- GNews: uranium spot: https://news.google.com/rss/search?q=uranium%20spot&hl=en-US&gl=US&ceid=US:en
+- GNews: platinum futures: https://news.google.com/rss/search?q=platinum%20futures&hl=en-US&gl=US&ceid=US:en
+- GNews: palladium price: https://news.google.com/rss/search?q=palladium%20price&hl=en-US&gl=US&ceid=US:en
+- GNews: iron ore price: https://news.google.com/rss/search?q=iron%20ore%20price&hl=en-US&gl=US&ceid=US:en
+
+## crypto (52)
+- GNews: cryptocurrency: https://news.google.com/rss/search?q=cryptocurrency&hl=en-US&gl=US&ceid=US:en
+- CoinDesk: https://www.coindesk.com/arc/outboundfeeds/rss/
+- Cointelegraph: https://cointelegraph.com/rss
+- Decrypt: https://decrypt.co/feed
+- The Block: https://www.theblock.co/rss.xml
+- Bitcoin: https://news.google.com/rss/search?q=Bitcoin%20crypto&hl=en-US&gl=US&ceid=US:en
+- Ethereum: https://news.google.com/rss/search?q=Ethereum%20crypto&hl=en-US&gl=US&ceid=US:en
+- Solana: https://news.google.com/rss/search?q=Solana%20crypto&hl=en-US&gl=US&ceid=US:en
+- XRP Ripple: https://news.google.com/rss/search?q=XRP%20Ripple%20crypto&hl=en-US&gl=US&ceid=US:en
+- Cardano: https://news.google.com/rss/search?q=Cardano%20crypto&hl=en-US&gl=US&ceid=US:en
+- Dogecoin: https://news.google.com/rss/search?q=Dogecoin%20crypto&hl=en-US&gl=US&ceid=US:en
+- Polygon: https://news.google.com/rss/search?q=Polygon%20crypto&hl=en-US&gl=US&ceid=US:en
+- Avalanche: https://news.google.com/rss/search?q=Avalanche%20crypto&hl=en-US&gl=US&ceid=US:en
+- Chainlink: https://news.google.com/rss/search?q=Chainlink%20crypto&hl=en-US&gl=US&ceid=US:en
+- Polkadot: https://news.google.com/rss/search?q=Polkadot%20crypto&hl=en-US&gl=US&ceid=US:en
+- Litecoin: https://news.google.com/rss/search?q=Litecoin%20crypto&hl=en-US&gl=US&ceid=US:en
+- Uniswap: https://news.google.com/rss/search?q=Uniswap%20crypto&hl=en-US&gl=US&ceid=US:en
+- Cosmos: https://news.google.com/rss/search?q=Cosmos%20crypto&hl=en-US&gl=US&ceid=US:en
+- Stellar: https://news.google.com/rss/search?q=Stellar%20crypto&hl=en-US&gl=US&ceid=US:en
+- Monero: https://news.google.com/rss/search?q=Monero%20crypto&hl=en-US&gl=US&ceid=US:en
+- Aave: https://news.google.com/rss/search?q=Aave%20crypto&hl=en-US&gl=US&ceid=US:en
+- Arbitrum: https://news.google.com/rss/search?q=Arbitrum%20crypto&hl=en-US&gl=US&ceid=US:en
+- Optimism: https://news.google.com/rss/search?q=Optimism%20crypto&hl=en-US&gl=US&ceid=US:en
+- Sui blockchain: https://news.google.com/rss/search?q=Sui%20blockchain%20crypto&hl=en-US&gl=US&ceid=US:en
+- Aptos: https://news.google.com/rss/search?q=Aptos%20crypto&hl=en-US&gl=US&ceid=US:en
+- Toncoin: https://news.google.com/rss/search?q=Toncoin%20crypto&hl=en-US&gl=US&ceid=US:en
+- Shiba Inu: https://news.google.com/rss/search?q=Shiba%20Inu%20crypto&hl=en-US&gl=US&ceid=US:en
+- Pepe coin: https://news.google.com/rss/search?q=Pepe%20coin%20crypto&hl=en-US&gl=US&ceid=US:en
+- Bitcoin Cash: https://news.google.com/rss/search?q=Bitcoin%20Cash%20crypto&hl=en-US&gl=US&ceid=US:en
+- Filecoin: https://news.google.com/rss/search?q=Filecoin%20crypto&hl=en-US&gl=US&ceid=US:en
+- Injective: https://news.google.com/rss/search?q=Injective%20crypto&hl=en-US&gl=US&ceid=US:en
+- Sei network: https://news.google.com/rss/search?q=Sei%20network%20crypto&hl=en-US&gl=US&ceid=US:en
+- Celestia: https://news.google.com/rss/search?q=Celestia%20crypto&hl=en-US&gl=US&ceid=US:en
+- Bitcoin ETF: https://news.google.com/rss/search?q=Bitcoin%20ETF&hl=en-US&gl=US&ceid=US:en
+- Ethereum staking: https://news.google.com/rss/search?q=Ethereum%20staking&hl=en-US&gl=US&ceid=US:en
+- crypto regulation SEC: https://news.google.com/rss/search?q=crypto%20regulation%20SEC&hl=en-US&gl=US&ceid=US:en
+- stablecoin: https://news.google.com/rss/search?q=stablecoin&hl=en-US&gl=US&ceid=US:en
+- DeFi protocol: https://news.google.com/rss/search?q=DeFi%20protocol&hl=en-US&gl=US&ceid=US:en
+- NFT market: https://news.google.com/rss/search?q=NFT%20market&hl=en-US&gl=US&ceid=US:en
+- crypto hack exploit: https://news.google.com/rss/search?q=crypto%20hack%20exploit&hl=en-US&gl=US&ceid=US:en
+- Coinbase Binance: https://news.google.com/rss/search?q=Coinbase%20Binance&hl=en-US&gl=US&ceid=US:en
+- crypto mining: https://news.google.com/rss/search?q=crypto%20mining&hl=en-US&gl=US&ceid=US:en
+- Bitcoin halving: https://news.google.com/rss/search?q=Bitcoin%20halving&hl=en-US&gl=US&ceid=US:en
+- Layer 2 scaling: https://news.google.com/rss/search?q=Layer%202%20scaling&hl=en-US&gl=US&ceid=US:en
+- crypto adoption: https://news.google.com/rss/search?q=crypto%20adoption&hl=en-US&gl=US&ceid=US:en
+- central bank digital currency: https://news.google.com/rss/search?q=central%20bank%20digital%20currency&hl=en-US&gl=US&ceid=US:en
+- Tether USDT: https://news.google.com/rss/search?q=Tether%20USDT&hl=en-US&gl=US&ceid=US:en
+- tokenization real world assets: https://news.google.com/rss/search?q=tokenization%20real%20world%20assets&hl=en-US&gl=US&ceid=US:en
+- r/ethereum: https://www.reddit.com/r/ethereum/.rss
+- SE ethereum/bitcoin: https://ethereum.stackexchange.com/feeds/tag/bitcoin
+- SE bitcoin/ethereum: https://bitcoin.stackexchange.com/feeds/tag/ethereum
+- SE bitcoin/wallet: https://bitcoin.stackexchange.com/feeds/tag/wallet
+
+## cybersecurity (70)
+- GNews: cybersecurity: https://news.google.com/rss/search?q=cybersecurity&hl=en-US&gl=US&ceid=US:en
+- GNews: data breach: https://news.google.com/rss/search?q=data%20breach&hl=en-US&gl=US&ceid=US:en
+- CISA Advisories: https://www.cisa.gov/cybersecurity-advisories/all.xml
+- The Hacker News: https://feeds.feedburner.com/TheHackersNews
+- BleepingComputer: https://www.bleepingcomputer.com/feed/
+- Krebs on Security: https://krebsonsecurity.com/feed/
+- Dark Reading: https://www.darkreading.com/rss.xml
+- Threatpost: https://threatpost.com/feed/
+- SecurityWeek: https://feeds.feedburner.com/securityweek
+- ransomware attack: https://news.google.com/rss/search?q=ransomware%20attack&hl=en-US&gl=US&ceid=US:en
+- zero-day vulnerability: https://news.google.com/rss/search?q=zero-day%20vulnerability&hl=en-US&gl=US&ceid=US:en
+- phishing campaign: https://news.google.com/rss/search?q=phishing%20campaign&hl=en-US&gl=US&ceid=US:en
+- malware: https://news.google.com/rss/search?q=malware&hl=en-US&gl=US&ceid=US:en
+- DDoS attack: https://news.google.com/rss/search?q=DDoS%20attack&hl=en-US&gl=US&ceid=US:en
+- supply chain attack: https://news.google.com/rss/search?q=supply%20chain%20attack&hl=en-US&gl=US&ceid=US:en
+- critical infrastructure security: https://news.google.com/rss/search?q=critical%20infrastructure%20security&hl=en-US&gl=US&ceid=US:en
+- nation-state hackers: https://news.google.com/rss/search?q=nation-state%20hackers&hl=en-US&gl=US&ceid=US:en
+- CVE vulnerability: https://news.google.com/rss/search?q=CVE%20vulnerability&hl=en-US&gl=US&ceid=US:en
+- APT group: https://news.google.com/rss/search?q=APT%20group&hl=en-US&gl=US&ceid=US:en
+- cloud security: https://news.google.com/rss/search?q=cloud%20security&hl=en-US&gl=US&ceid=US:en
+- endpoint security: https://news.google.com/rss/search?q=endpoint%20security&hl=en-US&gl=US&ceid=US:en
+- identity theft: https://news.google.com/rss/search?q=identity%20theft&hl=en-US&gl=US&ceid=US:en
+- cyber espionage: https://news.google.com/rss/search?q=cyber%20espionage&hl=en-US&gl=US&ceid=US:en
+- dark web: https://news.google.com/rss/search?q=dark%20web&hl=en-US&gl=US&ceid=US:en
+- cryptojacking: https://news.google.com/rss/search?q=cryptojacking&hl=en-US&gl=US&ceid=US:en
+- software supply chain: https://news.google.com/rss/search?q=software%20supply%20chain&hl=en-US&gl=US&ceid=US:en
+- OT ICS security: https://news.google.com/rss/search?q=OT%20ICS%20security&hl=en-US&gl=US&ceid=US:en
+- password breach: https://news.google.com/rss/search?q=password%20breach&hl=en-US&gl=US&ceid=US:en
+- GNews: Microsoft patch Tuesday: https://news.google.com/rss/search?q=Microsoft%20patch%20Tuesday&hl=en-US&gl=US&ceid=US:en
+- GNews: Windows vulnerability: https://news.google.com/rss/search?q=Windows%20vulnerability&hl=en-US&gl=US&ceid=US:en
+- GNews: Linux kernel security: https://news.google.com/rss/search?q=Linux%20kernel%20security&hl=en-US&gl=US&ceid=US:en
+- GNews: Android security patch: https://news.google.com/rss/search?q=Android%20security%20patch&hl=en-US&gl=US&ceid=US:en
+- GNews: iOS security: https://news.google.com/rss/search?q=iOS%20security&hl=en-US&gl=US&ceid=US:en
+- GNews: Cisco vulnerability: https://news.google.com/rss/search?q=Cisco%20vulnerability&hl=en-US&gl=US&ceid=US:en
+- GNews: Fortinet VPN: https://news.google.com/rss/search?q=Fortinet%20VPN&hl=en-US&gl=US&ceid=US:en
+- GNews: Palo Alto firewall: https://news.google.com/rss/search?q=Palo%20Alto%20firewall&hl=en-US&gl=US&ceid=US:en
+- GNews: VMware exploit: https://news.google.com/rss/search?q=VMware%20exploit&hl=en-US&gl=US&ceid=US:en
+- GNews: Citrix bleed: https://news.google.com/rss/search?q=Citrix%20bleed&hl=en-US&gl=US&ceid=US:en
+- GNews: MOVEit breach: https://news.google.com/rss/search?q=MOVEit%20breach&hl=en-US&gl=US&ceid=US:en
+- GNews: Okta breach: https://news.google.com/rss/search?q=Okta%20breach&hl=en-US&gl=US&ceid=US:en
+- GNews: LastPass breach: https://news.google.com/rss/search?q=LastPass%20breach&hl=en-US&gl=US&ceid=US:en
+- GNews: SolarWinds: https://news.google.com/rss/search?q=SolarWinds&hl=en-US&gl=US&ceid=US:en
+- GNews: Log4j: https://news.google.com/rss/search?q=Log4j&hl=en-US&gl=US&ceid=US:en
+- GNews: ransomware gang LockBit: https://news.google.com/rss/search?q=ransomware%20gang%20LockBit&hl=en-US&gl=US&ceid=US:en
+- GNews: BlackCat ransomware: https://news.google.com/rss/search?q=BlackCat%20ransomware&hl=en-US&gl=US&ceid=US:en
+- GNews: Clop ransomware: https://news.google.com/rss/search?q=Clop%20ransomware&hl=en-US&gl=US&ceid=US:en
+- GNews: North Korea Lazarus: https://news.google.com/rss/search?q=North%20Korea%20Lazarus&hl=en-US&gl=US&ceid=US:en
+- GNews: Chinese APT: https://news.google.com/rss/search?q=Chinese%20APT&hl=en-US&gl=US&ceid=US:en
+- GNews: Russian hackers: https://news.google.com/rss/search?q=Russian%20hackers&hl=en-US&gl=US&ceid=US:en
+- GNews: Iranian hackers: https://news.google.com/rss/search?q=Iranian%20hackers&hl=en-US&gl=US&ceid=US:en
+- GNews: credential stuffing: https://news.google.com/rss/search?q=credential%20stuffing&hl=en-US&gl=US&ceid=US:en
+- GNews: business email compromise: https://news.google.com/rss/search?q=business%20email%20compromise&hl=en-US&gl=US&ceid=US:en
+- GNews: SIM swapping: https://news.google.com/rss/search?q=SIM%20swapping&hl=en-US&gl=US&ceid=US:en
+- GNews: deepfake fraud: https://news.google.com/rss/search?q=deepfake%20fraud&hl=en-US&gl=US&ceid=US:en
+- GNews: AI phishing: https://news.google.com/rss/search?q=AI%20phishing&hl=en-US&gl=US&ceid=US:en
+- GNews: cloud misconfiguration: https://news.google.com/rss/search?q=cloud%20misconfiguration&hl=en-US&gl=US&ceid=US:en
+- GNews: Kubernetes security: https://news.google.com/rss/search?q=Kubernetes%20security&hl=en-US&gl=US&ceid=US:en
+- GNews: container security: https://news.google.com/rss/search?q=container%20security&hl=en-US&gl=US&ceid=US:en
+- GNews: API security: https://news.google.com/rss/search?q=API%20security&hl=en-US&gl=US&ceid=US:en
+- GNews: OAuth vulnerability: https://news.google.com/rss/search?q=OAuth%20vulnerability&hl=en-US&gl=US&ceid=US:en
+- GNews: supply chain npm: https://news.google.com/rss/search?q=supply%20chain%20npm&hl=en-US&gl=US&ceid=US:en
+- GNews: PyPI malware: https://news.google.com/rss/search?q=PyPI%20malware&hl=en-US&gl=US&ceid=US:en
+- GNews: open source vulnerability: https://news.google.com/rss/search?q=open%20source%20vulnerability&hl=en-US&gl=US&ceid=US:en
+- SE security/encryption: https://security.stackexchange.com/feeds/tag/encryption
+- SE security/authentication: https://security.stackexchange.com/feeds/tag/authentication
+- SE security/network: https://security.stackexchange.com/feeds/tag/network
+- SE security/malware: https://security.stackexchange.com/feeds/tag/malware
+- SE security/penetration-test: https://security.stackexchange.com/feeds/tag/penetration-test
+- SE security/tls: https://security.stackexchange.com/feeds/tag/tls
+- SE security/vpn: https://security.stackexchange.com/feeds/tag/vpn
+
+## disasters (37)
+- GNews: earthquake: https://news.google.com/rss/search?q=earthquake&hl=en-US&gl=US&ceid=US:en
+- GNews: hurricane: https://news.google.com/rss/search?q=hurricane&hl=en-US&gl=US&ceid=US:en
+- GNews: wildfire: https://news.google.com/rss/search?q=wildfire&hl=en-US&gl=US&ceid=US:en
+- USGS Quakes M2.5: https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.atom
+- USGS Quakes M4.5: https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.atom
+- flooding: https://news.google.com/rss/search?q=flooding&hl=en-US&gl=US&ceid=US:en
+- tornado: https://news.google.com/rss/search?q=tornado&hl=en-US&gl=US&ceid=US:en
+- volcano eruption: https://news.google.com/rss/search?q=volcano%20eruption&hl=en-US&gl=US&ceid=US:en
+- tsunami: https://news.google.com/rss/search?q=tsunami&hl=en-US&gl=US&ceid=US:en
+- drought: https://news.google.com/rss/search?q=drought&hl=en-US&gl=US&ceid=US:en
+- landslide: https://news.google.com/rss/search?q=landslide&hl=en-US&gl=US&ceid=US:en
+- typhoon: https://news.google.com/rss/search?q=typhoon&hl=en-US&gl=US&ceid=US:en
+- severe storm: https://news.google.com/rss/search?q=severe%20storm&hl=en-US&gl=US&ceid=US:en
+- heat wave: https://news.google.com/rss/search?q=heat%20wave&hl=en-US&gl=US&ceid=US:en
+- cyclone: https://news.google.com/rss/search?q=cyclone&hl=en-US&gl=US&ceid=US:en
+- natural disaster: https://news.google.com/rss/search?q=natural%20disaster&hl=en-US&gl=US&ceid=US:en
+- evacuation emergency: https://news.google.com/rss/search?q=evacuation%20emergency&hl=en-US&gl=US&ceid=US:en
+- GNews: California wildfire: https://news.google.com/rss/search?q=California%20wildfire&hl=en-US&gl=US&ceid=US:en
+- GNews: Japan earthquake: https://news.google.com/rss/search?q=Japan%20earthquake&hl=en-US&gl=US&ceid=US:en
+- GNews: Turkey earthquake: https://news.google.com/rss/search?q=Turkey%20earthquake&hl=en-US&gl=US&ceid=US:en
+- GNews: Philippines typhoon: https://news.google.com/rss/search?q=Philippines%20typhoon&hl=en-US&gl=US&ceid=US:en
+- GNews: India flooding: https://news.google.com/rss/search?q=India%20flooding&hl=en-US&gl=US&ceid=US:en
+- GNews: Australia bushfire: https://news.google.com/rss/search?q=Australia%20bushfire&hl=en-US&gl=US&ceid=US:en
+- GNews: Atlantic hurricane: https://news.google.com/rss/search?q=Atlantic%20hurricane&hl=en-US&gl=US&ceid=US:en
+- GNews: Pacific typhoon: https://news.google.com/rss/search?q=Pacific%20typhoon&hl=en-US&gl=US&ceid=US:en
+- GNews: Indonesia volcano: https://news.google.com/rss/search?q=Indonesia%20volcano&hl=en-US&gl=US&ceid=US:en
+- GNews: Iceland volcano: https://news.google.com/rss/search?q=Iceland%20volcano&hl=en-US&gl=US&ceid=US:en
+- GNews: Italy earthquake: https://news.google.com/rss/search?q=Italy%20earthquake&hl=en-US&gl=US&ceid=US:en
+- GNews: Nepal earthquake: https://news.google.com/rss/search?q=Nepal%20earthquake&hl=en-US&gl=US&ceid=US:en
+- GNews: Chile earthquake: https://news.google.com/rss/search?q=Chile%20earthquake&hl=en-US&gl=US&ceid=US:en
+- GNews: Mexico earthquake: https://news.google.com/rss/search?q=Mexico%20earthquake&hl=en-US&gl=US&ceid=US:en
+- GNews: US tornado: https://news.google.com/rss/search?q=US%20tornado&hl=en-US&gl=US&ceid=US:en
+- GNews: Europe heatwave: https://news.google.com/rss/search?q=Europe%20heatwave&hl=en-US&gl=US&ceid=US:en
+- GNews: African drought: https://news.google.com/rss/search?q=African%20drought&hl=en-US&gl=US&ceid=US:en
+- GNews: Bangladesh cyclone: https://news.google.com/rss/search?q=Bangladesh%20cyclone&hl=en-US&gl=US&ceid=US:en
+- GNews: landslide disaster: https://news.google.com/rss/search?q=landslide%20disaster&hl=en-US&gl=US&ceid=US:en
+- GNews: dam failure: https://news.google.com/rss/search?q=dam%20failure&hl=en-US&gl=US&ceid=US:en
+
+## finance (205)
+- NYT Business: https://rss.nytimes.com/services/xml/rss/nyt/Business.xml
+- NYT Economy: https://rss.nytimes.com/services/xml/rss/nyt/Economy.xml
+- NYT DealBook: https://rss.nytimes.com/services/xml/rss/nyt/DealBook.xml
+- Guardian business: https://www.theguardian.com/business/rss
+- Guardian money: https://www.theguardian.com/money/rss
+- BBC news/business: https://feeds.bbci.co.uk/news/business/rss.xml
+- StackExchange economics: https://economics.stackexchange.com/feeds
+- StackExchange money: https://money.stackexchange.com/feeds
+- StackExchange quant: https://quant.stackexchange.com/feeds
+- Google News BUSINESS: https://news.google.com/rss/headlines/section/topic/BUSINESS?hl=en-US&gl=US&ceid=US:en
+- GNews: stock market: https://news.google.com/rss/search?q=stock%20market&hl=en-US&gl=US&ceid=US:en
+- GNews: inflation: https://news.google.com/rss/search?q=inflation&hl=en-US&gl=US&ceid=US:en
+- GNews: interest rates: https://news.google.com/rss/search?q=interest%20rates&hl=en-US&gl=US&ceid=US:en
+- SEC Press: https://www.sec.gov/news/pressreleases.rss
+- Federal Reserve: https://www.federalreserve.gov/feeds/press_all.xml
+- CNBC Top: https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114
+- CNBC Finance: https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000664
+- MarketWatch: https://feeds.content.dowjones.io/public/rss/mw_topstories
+- Yahoo Finance: https://finance.yahoo.com/news/rssindex
+- Investing.com: https://www.investing.com/rss/news.rss
+- The Economist: https://www.economist.com/finance-and-economics/rss.xml
+- FT Companies: https://www.ft.com/companies?format=rss
+- Bloomberg Markets: https://feeds.bloomberg.com/markets/news.rss
+- Apple stock: https://news.google.com/rss/search?q=Apple%20stock&hl=en-US&gl=US&ceid=US:en
+- Microsoft stock: https://news.google.com/rss/search?q=Microsoft%20stock&hl=en-US&gl=US&ceid=US:en
+- Nvidia stock: https://news.google.com/rss/search?q=Nvidia%20stock&hl=en-US&gl=US&ceid=US:en
+- Amazon stock: https://news.google.com/rss/search?q=Amazon%20stock&hl=en-US&gl=US&ceid=US:en
+- Alphabet Google stock: https://news.google.com/rss/search?q=Alphabet%20Google%20stock&hl=en-US&gl=US&ceid=US:en
+- Meta Platforms stock: https://news.google.com/rss/search?q=Meta%20Platforms%20stock&hl=en-US&gl=US&ceid=US:en
+- Tesla stock: https://news.google.com/rss/search?q=Tesla%20stock&hl=en-US&gl=US&ceid=US:en
+- Berkshire Hathaway stock: https://news.google.com/rss/search?q=Berkshire%20Hathaway%20stock&hl=en-US&gl=US&ceid=US:en
+- Eli Lilly stock: https://news.google.com/rss/search?q=Eli%20Lilly%20stock&hl=en-US&gl=US&ceid=US:en
+- JPMorgan Chase stock: https://news.google.com/rss/search?q=JPMorgan%20Chase%20stock&hl=en-US&gl=US&ceid=US:en
+- Visa stock: https://news.google.com/rss/search?q=Visa%20stock&hl=en-US&gl=US&ceid=US:en
+- UnitedHealth stock: https://news.google.com/rss/search?q=UnitedHealth%20stock&hl=en-US&gl=US&ceid=US:en
+- Exxon Mobil stock: https://news.google.com/rss/search?q=Exxon%20Mobil%20stock&hl=en-US&gl=US&ceid=US:en
+- Mastercard stock: https://news.google.com/rss/search?q=Mastercard%20stock&hl=en-US&gl=US&ceid=US:en
+- Johnson & Johnson stock: https://news.google.com/rss/search?q=Johnson%20%26%20Johnson%20stock&hl=en-US&gl=US&ceid=US:en
+- Broadcom stock: https://news.google.com/rss/search?q=Broadcom%20stock&hl=en-US&gl=US&ceid=US:en
+- Procter Gamble stock: https://news.google.com/rss/search?q=Procter%20Gamble%20stock&hl=en-US&gl=US&ceid=US:en
+- Home Depot stock: https://news.google.com/rss/search?q=Home%20Depot%20stock&hl=en-US&gl=US&ceid=US:en
+- Costco stock: https://news.google.com/rss/search?q=Costco%20stock&hl=en-US&gl=US&ceid=US:en
+- AbbVie stock: https://news.google.com/rss/search?q=AbbVie%20stock&hl=en-US&gl=US&ceid=US:en
+- Merck stock: https://news.google.com/rss/search?q=Merck%20stock&hl=en-US&gl=US&ceid=US:en
+- Chevron stock: https://news.google.com/rss/search?q=Chevron%20stock&hl=en-US&gl=US&ceid=US:en
+- Adobe stock: https://news.google.com/rss/search?q=Adobe%20stock&hl=en-US&gl=US&ceid=US:en
+- Salesforce stock: https://news.google.com/rss/search?q=Salesforce%20stock&hl=en-US&gl=US&ceid=US:en
+- Coca-Cola stock: https://news.google.com/rss/search?q=Coca-Cola%20stock&hl=en-US&gl=US&ceid=US:en
+- PepsiCo stock: https://news.google.com/rss/search?q=PepsiCo%20stock&hl=en-US&gl=US&ceid=US:en
+- Bank of America stock: https://news.google.com/rss/search?q=Bank%20of%20America%20stock&hl=en-US&gl=US&ceid=US:en
+- Netflix stock: https://news.google.com/rss/search?q=Netflix%20stock&hl=en-US&gl=US&ceid=US:en
+- Walmart stock: https://news.google.com/rss/search?q=Walmart%20stock&hl=en-US&gl=US&ceid=US:en
+- McDonalds stock: https://news.google.com/rss/search?q=McDonalds%20stock&hl=en-US&gl=US&ceid=US:en
+- Oracle stock: https://news.google.com/rss/search?q=Oracle%20stock&hl=en-US&gl=US&ceid=US:en
+- Accenture stock: https://news.google.com/rss/search?q=Accenture%20stock&hl=en-US&gl=US&ceid=US:en
+- Cisco stock: https://news.google.com/rss/search?q=Cisco%20stock&hl=en-US&gl=US&ceid=US:en
+- Thermo Fisher stock: https://news.google.com/rss/search?q=Thermo%20Fisher%20stock&hl=en-US&gl=US&ceid=US:en
+- AMD stock: https://news.google.com/rss/search?q=AMD%20stock&hl=en-US&gl=US&ceid=US:en
+- Intel stock: https://news.google.com/rss/search?q=Intel%20stock&hl=en-US&gl=US&ceid=US:en
+- Qualcomm stock: https://news.google.com/rss/search?q=Qualcomm%20stock&hl=en-US&gl=US&ceid=US:en
+- Texas Instruments stock: https://news.google.com/rss/search?q=Texas%20Instruments%20stock&hl=en-US&gl=US&ceid=US:en
+- IBM stock: https://news.google.com/rss/search?q=IBM%20stock&hl=en-US&gl=US&ceid=US:en
+- Walt Disney stock: https://news.google.com/rss/search?q=Walt%20Disney%20stock&hl=en-US&gl=US&ceid=US:en
+- Verizon stock: https://news.google.com/rss/search?q=Verizon%20stock&hl=en-US&gl=US&ceid=US:en
+- Comcast stock: https://news.google.com/rss/search?q=Comcast%20stock&hl=en-US&gl=US&ceid=US:en
+- Pfizer stock: https://news.google.com/rss/search?q=Pfizer%20stock&hl=en-US&gl=US&ceid=US:en
+- Nike stock: https://news.google.com/rss/search?q=Nike%20stock&hl=en-US&gl=US&ceid=US:en
+- Wells Fargo stock: https://news.google.com/rss/search?q=Wells%20Fargo%20stock&hl=en-US&gl=US&ceid=US:en
+- Boeing stock: https://news.google.com/rss/search?q=Boeing%20stock&hl=en-US&gl=US&ceid=US:en
+- Goldman Sachs stock: https://news.google.com/rss/search?q=Goldman%20Sachs%20stock&hl=en-US&gl=US&ceid=US:en
+- Morgan Stanley stock: https://news.google.com/rss/search?q=Morgan%20Stanley%20stock&hl=en-US&gl=US&ceid=US:en
+- Caterpillar stock: https://news.google.com/rss/search?q=Caterpillar%20stock&hl=en-US&gl=US&ceid=US:en
+- American Express stock: https://news.google.com/rss/search?q=American%20Express%20stock&hl=en-US&gl=US&ceid=US:en
+- Starbucks stock: https://news.google.com/rss/search?q=Starbucks%20stock&hl=en-US&gl=US&ceid=US:en
+- Uber stock: https://news.google.com/rss/search?q=Uber%20stock&hl=en-US&gl=US&ceid=US:en
+- Airbnb stock: https://news.google.com/rss/search?q=Airbnb%20stock&hl=en-US&gl=US&ceid=US:en
+- PayPal stock: https://news.google.com/rss/search?q=PayPal%20stock&hl=en-US&gl=US&ceid=US:en
+- Block Square stock: https://news.google.com/rss/search?q=Block%20Square%20stock&hl=en-US&gl=US&ceid=US:en
+- Palantir stock: https://news.google.com/rss/search?q=Palantir%20stock&hl=en-US&gl=US&ceid=US:en
+- Snowflake stock: https://news.google.com/rss/search?q=Snowflake%20stock&hl=en-US&gl=US&ceid=US:en
+- ServiceNow stock: https://news.google.com/rss/search?q=ServiceNow%20stock&hl=en-US&gl=US&ceid=US:en
+- Shopify stock: https://news.google.com/rss/search?q=Shopify%20stock&hl=en-US&gl=US&ceid=US:en
+- Spotify stock: https://news.google.com/rss/search?q=Spotify%20stock&hl=en-US&gl=US&ceid=US:en
+- Zoom stock: https://news.google.com/rss/search?q=Zoom%20stock&hl=en-US&gl=US&ceid=US:en
+- Twilio stock: https://news.google.com/rss/search?q=Twilio%20stock&hl=en-US&gl=US&ceid=US:en
+- Datadog stock: https://news.google.com/rss/search?q=Datadog%20stock&hl=en-US&gl=US&ceid=US:en
+- CrowdStrike stock: https://news.google.com/rss/search?q=CrowdStrike%20stock&hl=en-US&gl=US&ceid=US:en
+- Cloudflare stock: https://news.google.com/rss/search?q=Cloudflare%20stock&hl=en-US&gl=US&ceid=US:en
+- MongoDB stock: https://news.google.com/rss/search?q=MongoDB%20stock&hl=en-US&gl=US&ceid=US:en
+- Coinbase stock: https://news.google.com/rss/search?q=Coinbase%20stock&hl=en-US&gl=US&ceid=US:en
+- Robinhood stock: https://news.google.com/rss/search?q=Robinhood%20stock&hl=en-US&gl=US&ceid=US:en
+- SoFi stock: https://news.google.com/rss/search?q=SoFi%20stock&hl=en-US&gl=US&ceid=US:en
+- Micron stock: https://news.google.com/rss/search?q=Micron%20stock&hl=en-US&gl=US&ceid=US:en
+- Applied Materials stock: https://news.google.com/rss/search?q=Applied%20Materials%20stock&hl=en-US&gl=US&ceid=US:en
+- Lam Research stock: https://news.google.com/rss/search?q=Lam%20Research%20stock&hl=en-US&gl=US&ceid=US:en
+- ASML stock: https://news.google.com/rss/search?q=ASML%20stock&hl=en-US&gl=US&ceid=US:en
+- TSMC stock: https://news.google.com/rss/search?q=TSMC%20stock&hl=en-US&gl=US&ceid=US:en
+- Arm Holdings stock: https://news.google.com/rss/search?q=Arm%20Holdings%20stock&hl=en-US&gl=US&ceid=US:en
+- Dell stock: https://news.google.com/rss/search?q=Dell%20stock&hl=en-US&gl=US&ceid=US:en
+- HP stock: https://news.google.com/rss/search?q=HP%20stock&hl=en-US&gl=US&ceid=US:en
+- Lenovo stock: https://news.google.com/rss/search?q=Lenovo%20stock&hl=en-US&gl=US&ceid=US:en
+- Sony stock: https://news.google.com/rss/search?q=Sony%20stock&hl=en-US&gl=US&ceid=US:en
+- Samsung Electronics stock: https://news.google.com/rss/search?q=Samsung%20Electronics%20stock&hl=en-US&gl=US&ceid=US:en
+- Toyota stock: https://news.google.com/rss/search?q=Toyota%20stock&hl=en-US&gl=US&ceid=US:en
+- Volkswagen stock: https://news.google.com/rss/search?q=Volkswagen%20stock&hl=en-US&gl=US&ceid=US:en
+- Ford Motor stock: https://news.google.com/rss/search?q=Ford%20Motor%20stock&hl=en-US&gl=US&ceid=US:en
+- General Motors stock: https://news.google.com/rss/search?q=General%20Motors%20stock&hl=en-US&gl=US&ceid=US:en
+- Rivian stock: https://news.google.com/rss/search?q=Rivian%20stock&hl=en-US&gl=US&ceid=US:en
+- Lucid Motors stock: https://news.google.com/rss/search?q=Lucid%20Motors%20stock&hl=en-US&gl=US&ceid=US:en
+- Ferrari stock: https://news.google.com/rss/search?q=Ferrari%20stock&hl=en-US&gl=US&ceid=US:en
+- Stellantis stock: https://news.google.com/rss/search?q=Stellantis%20stock&hl=en-US&gl=US&ceid=US:en
+- BP stock: https://news.google.com/rss/search?q=BP%20stock&hl=en-US&gl=US&ceid=US:en
+- Shell stock: https://news.google.com/rss/search?q=Shell%20stock&hl=en-US&gl=US&ceid=US:en
+- TotalEnergies stock: https://news.google.com/rss/search?q=TotalEnergies%20stock&hl=en-US&gl=US&ceid=US:en
+- ConocoPhillips stock: https://news.google.com/rss/search?q=ConocoPhillips%20stock&hl=en-US&gl=US&ceid=US:en
+- Schlumberger stock: https://news.google.com/rss/search?q=Schlumberger%20stock&hl=en-US&gl=US&ceid=US:en
+- Halliburton stock: https://news.google.com/rss/search?q=Halliburton%20stock&hl=en-US&gl=US&ceid=US:en
+- S&P 500: https://news.google.com/rss/search?q=S%26P%20500&hl=en-US&gl=US&ceid=US:en
+- Nasdaq: https://news.google.com/rss/search?q=Nasdaq&hl=en-US&gl=US&ceid=US:en
+- Dow Jones: https://news.google.com/rss/search?q=Dow%20Jones&hl=en-US&gl=US&ceid=US:en
+- Federal Reserve interest rates: https://news.google.com/rss/search?q=Federal%20Reserve%20interest%20rates&hl=en-US&gl=US&ceid=US:en
+- US inflation: https://news.google.com/rss/search?q=US%20inflation&hl=en-US&gl=US&ceid=US:en
+- bond yields: https://news.google.com/rss/search?q=bond%20yields&hl=en-US&gl=US&ceid=US:en
+- US dollar index: https://news.google.com/rss/search?q=US%20dollar%20index&hl=en-US&gl=US&ceid=US:en
+- earnings season: https://news.google.com/rss/search?q=earnings%20season&hl=en-US&gl=US&ceid=US:en
+- IPO market: https://news.google.com/rss/search?q=IPO%20market&hl=en-US&gl=US&ceid=US:en
+- private equity: https://news.google.com/rss/search?q=private%20equity&hl=en-US&gl=US&ceid=US:en
+- hedge funds: https://news.google.com/rss/search?q=hedge%20funds&hl=en-US&gl=US&ceid=US:en
+- corporate bonds: https://news.google.com/rss/search?q=corporate%20bonds&hl=en-US&gl=US&ceid=US:en
+- mortgage rates: https://news.google.com/rss/search?q=mortgage%20rates&hl=en-US&gl=US&ceid=US:en
+- housing market: https://news.google.com/rss/search?q=housing%20market&hl=en-US&gl=US&ceid=US:en
+- consumer spending: https://news.google.com/rss/search?q=consumer%20spending&hl=en-US&gl=US&ceid=US:en
+- jobs report: https://news.google.com/rss/search?q=jobs%20report&hl=en-US&gl=US&ceid=US:en
+- GDP growth: https://news.google.com/rss/search?q=GDP%20growth&hl=en-US&gl=US&ceid=US:en
+- recession forecast: https://news.google.com/rss/search?q=recession%20forecast&hl=en-US&gl=US&ceid=US:en
+- European Central Bank: https://news.google.com/rss/search?q=European%20Central%20Bank&hl=en-US&gl=US&ceid=US:en
+- Bank of Japan: https://news.google.com/rss/search?q=Bank%20of%20Japan&hl=en-US&gl=US&ceid=US:en
+- emerging markets: https://news.google.com/rss/search?q=emerging%20markets&hl=en-US&gl=US&ceid=US:en
+- currency markets: https://news.google.com/rss/search?q=currency%20markets&hl=en-US&gl=US&ceid=US:en
+- commodities market: https://news.google.com/rss/search?q=commodities%20market&hl=en-US&gl=US&ceid=US:en
+- dividend stocks: https://news.google.com/rss/search?q=dividend%20stocks&hl=en-US&gl=US&ceid=US:en
+- stock buybacks: https://news.google.com/rss/search?q=stock%20buybacks&hl=en-US&gl=US&ceid=US:en
+- venture capital funding: https://news.google.com/rss/search?q=venture%20capital%20funding&hl=en-US&gl=US&ceid=US:en
+- SPAC: https://news.google.com/rss/search?q=SPAC&hl=en-US&gl=US&ceid=US:en
+- short selling: https://news.google.com/rss/search?q=short%20selling&hl=en-US&gl=US&ceid=US:en
+- options trading: https://news.google.com/rss/search?q=options%20trading&hl=en-US&gl=US&ceid=US:en
+- GNews: FTSE 100: https://news.google.com/rss/search?q=FTSE%20100&hl=en-US&gl=US&ceid=US:en
+- GNews: DAX index: https://news.google.com/rss/search?q=DAX%20index&hl=en-US&gl=US&ceid=US:en
+- GNews: Nikkei 225: https://news.google.com/rss/search?q=Nikkei%20225&hl=en-US&gl=US&ceid=US:en
+- GNews: Hang Seng: https://news.google.com/rss/search?q=Hang%20Seng&hl=en-US&gl=US&ceid=US:en
+- GNews: CAC 40: https://news.google.com/rss/search?q=CAC%2040&hl=en-US&gl=US&ceid=US:en
+- GNews: Sensex: https://news.google.com/rss/search?q=Sensex&hl=en-US&gl=US&ceid=US:en
+- GNews: ASX 200: https://news.google.com/rss/search?q=ASX%20200&hl=en-US&gl=US&ceid=US:en
+- GNews: TSX index: https://news.google.com/rss/search?q=TSX%20index&hl=en-US&gl=US&ceid=US:en
+- GNews: KOSPI: https://news.google.com/rss/search?q=KOSPI&hl=en-US&gl=US&ceid=US:en
+- GNews: Shanghai Composite: https://news.google.com/rss/search?q=Shanghai%20Composite&hl=en-US&gl=US&ceid=US:en
+- GNews: VIX volatility: https://news.google.com/rss/search?q=VIX%20volatility&hl=en-US&gl=US&ceid=US:en
+- GNews: gold ETF: https://news.google.com/rss/search?q=gold%20ETF&hl=en-US&gl=US&ceid=US:en
+- GNews: Treasury bonds: https://news.google.com/rss/search?q=Treasury%20bonds&hl=en-US&gl=US&ceid=US:en
+- GNews: junk bonds: https://news.google.com/rss/search?q=junk%20bonds&hl=en-US&gl=US&ceid=US:en
+- GNews: municipal bonds: https://news.google.com/rss/search?q=municipal%20bonds&hl=en-US&gl=US&ceid=US:en
+- GNews: EUR USD: https://news.google.com/rss/search?q=EUR%20USD&hl=en-US&gl=US&ceid=US:en
+- GNews: GBP USD: https://news.google.com/rss/search?q=GBP%20USD&hl=en-US&gl=US&ceid=US:en
+- GNews: USD JPY: https://news.google.com/rss/search?q=USD%20JPY&hl=en-US&gl=US&ceid=US:en
+- GNews: USD CNY: https://news.google.com/rss/search?q=USD%20CNY&hl=en-US&gl=US&ceid=US:en
+- GNews: Swiss franc: https://news.google.com/rss/search?q=Swiss%20franc&hl=en-US&gl=US&ceid=US:en
+- GNews: emerging market debt: https://news.google.com/rss/search?q=emerging%20market%20debt&hl=en-US&gl=US&ceid=US:en
+- GNews: REIT: https://news.google.com/rss/search?q=REIT&hl=en-US&gl=US&ceid=US:en
+- GNews: utility stocks: https://news.google.com/rss/search?q=utility%20stocks&hl=en-US&gl=US&ceid=US:en
+- GNews: energy stocks: https://news.google.com/rss/search?q=energy%20stocks&hl=en-US&gl=US&ceid=US:en
+- GNews: bank stocks: https://news.google.com/rss/search?q=bank%20stocks&hl=en-US&gl=US&ceid=US:en
+- GNews: semiconductor stocks: https://news.google.com/rss/search?q=semiconductor%20stocks&hl=en-US&gl=US&ceid=US:en
+- GNews: biotech stocks: https://news.google.com/rss/search?q=biotech%20stocks&hl=en-US&gl=US&ceid=US:en
+- GNews: airline stocks: https://news.google.com/rss/search?q=airline%20stocks&hl=en-US&gl=US&ceid=US:en
+- GNews: retail stocks: https://news.google.com/rss/search?q=retail%20stocks&hl=en-US&gl=US&ceid=US:en
+- GNews: defense stocks: https://news.google.com/rss/search?q=defense%20stocks&hl=en-US&gl=US&ceid=US:en
+- GNews: auto stocks: https://news.google.com/rss/search?q=auto%20stocks&hl=en-US&gl=US&ceid=US:en
+- GNews: insurance stocks: https://news.google.com/rss/search?q=insurance%20stocks&hl=en-US&gl=US&ceid=US:en
+- GNews: pharma stocks: https://news.google.com/rss/search?q=pharma%20stocks&hl=en-US&gl=US&ceid=US:en
+- GNews: consumer staples: https://news.google.com/rss/search?q=consumer%20staples&hl=en-US&gl=US&ceid=US:en
+- GNews: industrial stocks: https://news.google.com/rss/search?q=industrial%20stocks&hl=en-US&gl=US&ceid=US:en
+- GNews: materials sector: https://news.google.com/rss/search?q=materials%20sector&hl=en-US&gl=US&ceid=US:en
+- GNews: real estate stocks: https://news.google.com/rss/search?q=real%20estate%20stocks&hl=en-US&gl=US&ceid=US:en
+- GNews: small cap stocks: https://news.google.com/rss/search?q=small%20cap%20stocks&hl=en-US&gl=US&ceid=US:en
+- GNews: value stocks: https://news.google.com/rss/search?q=value%20stocks&hl=en-US&gl=US&ceid=US:en
+- GNews: growth stocks: https://news.google.com/rss/search?q=growth%20stocks&hl=en-US&gl=US&ceid=US:en
+- GNews: momentum stocks: https://news.google.com/rss/search?q=momentum%20stocks&hl=en-US&gl=US&ceid=US:en
+- GNews: quarterly earnings: https://news.google.com/rss/search?q=quarterly%20earnings&hl=en-US&gl=US&ceid=US:en
+- GNews: analyst ratings: https://news.google.com/rss/search?q=analyst%20ratings&hl=en-US&gl=US&ceid=US:en
+- GNews: stock split: https://news.google.com/rss/search?q=stock%20split&hl=en-US&gl=US&ceid=US:en
+- GNews: insider trading: https://news.google.com/rss/search?q=insider%20trading&hl=en-US&gl=US&ceid=US:en
+- GNews: activist investor: https://news.google.com/rss/search?q=activist%20investor&hl=en-US&gl=US&ceid=US:en
+- GNews: credit rating: https://news.google.com/rss/search?q=credit%20rating&hl=en-US&gl=US&ceid=US:en
+- GNews: corporate debt: https://news.google.com/rss/search?q=corporate%20debt&hl=en-US&gl=US&ceid=US:en
+- GNews: sovereign debt: https://news.google.com/rss/search?q=sovereign%20debt&hl=en-US&gl=US&ceid=US:en
+- GNews: yield curve: https://news.google.com/rss/search?q=yield%20curve&hl=en-US&gl=US&ceid=US:en
+- GNews: quantitative tightening: https://news.google.com/rss/search?q=quantitative%20tightening&hl=en-US&gl=US&ceid=US:en
+- GNews: money supply: https://news.google.com/rss/search?q=money%20supply&hl=en-US&gl=US&ceid=US:en
+- GNews: retail sales data: https://news.google.com/rss/search?q=retail%20sales%20data&hl=en-US&gl=US&ceid=US:en
+- GNews: manufacturing PMI: https://news.google.com/rss/search?q=manufacturing%20PMI&hl=en-US&gl=US&ceid=US:en
+- GNews: services PMI: https://news.google.com/rss/search?q=services%20PMI&hl=en-US&gl=US&ceid=US:en
+- GNews: consumer confidence: https://news.google.com/rss/search?q=consumer%20confidence&hl=en-US&gl=US&ceid=US:en
+- GNews: durable goods orders: https://news.google.com/rss/search?q=durable%20goods%20orders&hl=en-US&gl=US&ceid=US:en
+- GNews: trade deficit: https://news.google.com/rss/search?q=trade%20deficit&hl=en-US&gl=US&ceid=US:en
+- GNews: budget deficit: https://news.google.com/rss/search?q=budget%20deficit&hl=en-US&gl=US&ceid=US:en
+
+## gaming (48)
+- Guardian games: https://www.theguardian.com/games/rss
+- Polygon: https://www.polygon.com/rss/index.xml
+- Eurogamer: https://www.eurogamer.net/feed
+- IGN: https://feeds.ign.com/ign/all
+- Kotaku: https://kotaku.com/rss
+- PC Gamer: https://www.pcgamer.com/rss/
+- Rock Paper Shotgun: https://www.rockpapershotgun.com/feed
+- video game release: https://news.google.com/rss/search?q=video%20game%20release&hl=en-US&gl=US&ceid=US:en
+- PlayStation 5: https://news.google.com/rss/search?q=PlayStation%205&hl=en-US&gl=US&ceid=US:en
+- Xbox Series: https://news.google.com/rss/search?q=Xbox%20Series&hl=en-US&gl=US&ceid=US:en
+- Nintendo Switch: https://news.google.com/rss/search?q=Nintendo%20Switch&hl=en-US&gl=US&ceid=US:en
+- Steam PC gaming: https://news.google.com/rss/search?q=Steam%20PC%20gaming&hl=en-US&gl=US&ceid=US:en
+- esports: https://news.google.com/rss/search?q=esports&hl=en-US&gl=US&ceid=US:en
+- game industry layoffs: https://news.google.com/rss/search?q=game%20industry%20layoffs&hl=en-US&gl=US&ceid=US:en
+- indie games: https://news.google.com/rss/search?q=indie%20games&hl=en-US&gl=US&ceid=US:en
+- GTA 6: https://news.google.com/rss/search?q=GTA%206&hl=en-US&gl=US&ceid=US:en
+- Call of Duty: https://news.google.com/rss/search?q=Call%20of%20Duty&hl=en-US&gl=US&ceid=US:en
+- game console sales: https://news.google.com/rss/search?q=game%20console%20sales&hl=en-US&gl=US&ceid=US:en
+- cloud gaming: https://news.google.com/rss/search?q=cloud%20gaming&hl=en-US&gl=US&ceid=US:en
+- VR gaming: https://news.google.com/rss/search?q=VR%20gaming&hl=en-US&gl=US&ceid=US:en
+- mobile gaming: https://news.google.com/rss/search?q=mobile%20gaming&hl=en-US&gl=US&ceid=US:en
+- game awards: https://news.google.com/rss/search?q=game%20awards&hl=en-US&gl=US&ceid=US:en
+- GNews: GTA 6 Rockstar: https://news.google.com/rss/search?q=GTA%206%20Rockstar&hl=en-US&gl=US&ceid=US:en
+- GNews: Call of Duty 2025: https://news.google.com/rss/search?q=Call%20of%20Duty%202025&hl=en-US&gl=US&ceid=US:en
+- GNews: EA Sports FC: https://news.google.com/rss/search?q=EA%20Sports%20FC&hl=en-US&gl=US&ceid=US:en
+- GNews: Fortnite: https://news.google.com/rss/search?q=Fortnite&hl=en-US&gl=US&ceid=US:en
+- GNews: Valorant: https://news.google.com/rss/search?q=Valorant&hl=en-US&gl=US&ceid=US:en
+- GNews: League of Legends: https://news.google.com/rss/search?q=League%20of%20Legends&hl=en-US&gl=US&ceid=US:en
+- GNews: Counter-Strike 2: https://news.google.com/rss/search?q=Counter-Strike%202&hl=en-US&gl=US&ceid=US:en
+- GNews: Elden Ring DLC: https://news.google.com/rss/search?q=Elden%20Ring%20DLC&hl=en-US&gl=US&ceid=US:en
+- GNews: Baldur's Gate 3: https://news.google.com/rss/search?q=Baldur's%20Gate%203&hl=en-US&gl=US&ceid=US:en
+- GNews: Cyberpunk 2077: https://news.google.com/rss/search?q=Cyberpunk%202077&hl=en-US&gl=US&ceid=US:en
+- GNews: Starfield: https://news.google.com/rss/search?q=Starfield&hl=en-US&gl=US&ceid=US:en
+- GNews: Zelda: https://news.google.com/rss/search?q=Zelda&hl=en-US&gl=US&ceid=US:en
+- GNews: Mario: https://news.google.com/rss/search?q=Mario&hl=en-US&gl=US&ceid=US:en
+- GNews: Pokemon game: https://news.google.com/rss/search?q=Pokemon%20game&hl=en-US&gl=US&ceid=US:en
+- GNews: Diablo 4: https://news.google.com/rss/search?q=Diablo%204&hl=en-US&gl=US&ceid=US:en
+- GNews: World of Warcraft: https://news.google.com/rss/search?q=World%20of%20Warcraft&hl=en-US&gl=US&ceid=US:en
+- GNews: Final Fantasy: https://news.google.com/rss/search?q=Final%20Fantasy&hl=en-US&gl=US&ceid=US:en
+- GNews: PlayStation 6: https://news.google.com/rss/search?q=PlayStation%206&hl=en-US&gl=US&ceid=US:en
+- GNews: Xbox Game Pass: https://news.google.com/rss/search?q=Xbox%20Game%20Pass&hl=en-US&gl=US&ceid=US:en
+- GNews: Steam Deck: https://news.google.com/rss/search?q=Steam%20Deck&hl=en-US&gl=US&ceid=US:en
+- GNews: Nintendo Switch 2: https://news.google.com/rss/search?q=Nintendo%20Switch%202&hl=en-US&gl=US&ceid=US:en
+- GNews: Epic Games Store: https://news.google.com/rss/search?q=Epic%20Games%20Store&hl=en-US&gl=US&ceid=US:en
+- GNews: game studio acquisition: https://news.google.com/rss/search?q=game%20studio%20acquisition&hl=en-US&gl=US&ceid=US:en
+- GNews: Microsoft Activision: https://news.google.com/rss/search?q=Microsoft%20Activision&hl=en-US&gl=US&ceid=US:en
+- GNews: esports tournament: https://news.google.com/rss/search?q=esports%20tournament&hl=en-US&gl=US&ceid=US:en
+- GNews: Twitch streaming: https://news.google.com/rss/search?q=Twitch%20streaming&hl=en-US&gl=US&ceid=US:en
+
+## medical (87)
+- NYT Health: https://rss.nytimes.com/services/xml/rss/nyt/Health.xml
+- NYT Well: https://rss.nytimes.com/services/xml/rss/nyt/Well.xml
+- Guardian world/coronavirus-outbreak: https://www.theguardian.com/world/coronavirus-outbreak/rss
+- Guardian society/health: https://www.theguardian.com/society/health/rss
+- BBC news/health: https://feeds.bbci.co.uk/news/health/rss.xml
+- Google News HEALTH: https://news.google.com/rss/headlines/section/topic/HEALTH?hl=en-US&gl=US&ceid=US:en
+- GNews: public health: https://news.google.com/rss/search?q=public%20health&hl=en-US&gl=US&ceid=US:en
+- GNews: vaccine: https://news.google.com/rss/search?q=vaccine&hl=en-US&gl=US&ceid=US:en
+- WHO News: https://www.who.int/rss-feeds/news-english.xml
+- STAT News: https://www.statnews.com/feed/
+- MedicalXpress: https://medicalxpress.com/rss-feed/
+- Kaiser Health: https://kffhealthnews.org/feed/
+- COVID-19: https://news.google.com/rss/search?q=COVID-19&hl=en-US&gl=US&ceid=US:en
+- influenza outbreak: https://news.google.com/rss/search?q=influenza%20outbreak&hl=en-US&gl=US&ceid=US:en
+- measles outbreak: https://news.google.com/rss/search?q=measles%20outbreak&hl=en-US&gl=US&ceid=US:en
+- cancer research: https://news.google.com/rss/search?q=cancer%20research&hl=en-US&gl=US&ceid=US:en
+- Alzheimer's disease: https://news.google.com/rss/search?q=Alzheimer's%20disease&hl=en-US&gl=US&ceid=US:en
+- diabetes: https://news.google.com/rss/search?q=diabetes&hl=en-US&gl=US&ceid=US:en
+- obesity: https://news.google.com/rss/search?q=obesity&hl=en-US&gl=US&ceid=US:en
+- mental health: https://news.google.com/rss/search?q=mental%20health&hl=en-US&gl=US&ceid=US:en
+- vaccine development: https://news.google.com/rss/search?q=vaccine%20development&hl=en-US&gl=US&ceid=US:en
+- FDA drug approval: https://news.google.com/rss/search?q=FDA%20drug%20approval&hl=en-US&gl=US&ceid=US:en
+- clinical trial: https://news.google.com/rss/search?q=clinical%20trial&hl=en-US&gl=US&ceid=US:en
+- gene therapy: https://news.google.com/rss/search?q=gene%20therapy&hl=en-US&gl=US&ceid=US:en
+- CRISPR: https://news.google.com/rss/search?q=CRISPR&hl=en-US&gl=US&ceid=US:en
+- antibiotic resistance: https://news.google.com/rss/search?q=antibiotic%20resistance&hl=en-US&gl=US&ceid=US:en
+- public health emergency: https://news.google.com/rss/search?q=public%20health%20emergency&hl=en-US&gl=US&ceid=US:en
+- WHO health alert: https://news.google.com/rss/search?q=WHO%20health%20alert&hl=en-US&gl=US&ceid=US:en
+- heart disease: https://news.google.com/rss/search?q=heart%20disease&hl=en-US&gl=US&ceid=US:en
+- stroke: https://news.google.com/rss/search?q=stroke&hl=en-US&gl=US&ceid=US:en
+- opioid crisis: https://news.google.com/rss/search?q=opioid%20crisis&hl=en-US&gl=US&ceid=US:en
+- maternal health: https://news.google.com/rss/search?q=maternal%20health&hl=en-US&gl=US&ceid=US:en
+- pandemic preparedness: https://news.google.com/rss/search?q=pandemic%20preparedness&hl=en-US&gl=US&ceid=US:en
+- Ebola: https://news.google.com/rss/search?q=Ebola&hl=en-US&gl=US&ceid=US:en
+- malaria: https://news.google.com/rss/search?q=malaria&hl=en-US&gl=US&ceid=US:en
+- tuberculosis: https://news.google.com/rss/search?q=tuberculosis&hl=en-US&gl=US&ceid=US:en
+- HIV AIDS: https://news.google.com/rss/search?q=HIV%20AIDS&hl=en-US&gl=US&ceid=US:en
+- monkeypox mpox: https://news.google.com/rss/search?q=monkeypox%20mpox&hl=en-US&gl=US&ceid=US:en
+- avian flu H5N1: https://news.google.com/rss/search?q=avian%20flu%20H5N1&hl=en-US&gl=US&ceid=US:en
+- drug shortage: https://news.google.com/rss/search?q=drug%20shortage&hl=en-US&gl=US&ceid=US:en
+- medical device recall: https://news.google.com/rss/search?q=medical%20device%20recall&hl=en-US&gl=US&ceid=US:en
+- telemedicine: https://news.google.com/rss/search?q=telemedicine&hl=en-US&gl=US&ceid=US:en
+- obesity drug Ozempic: https://news.google.com/rss/search?q=obesity%20drug%20Ozempic&hl=en-US&gl=US&ceid=US:en
+- longevity research: https://news.google.com/rss/search?q=longevity%20research&hl=en-US&gl=US&ceid=US:en
+- GNews: RSV virus: https://news.google.com/rss/search?q=RSV%20virus&hl=en-US&gl=US&ceid=US:en
+- GNews: dengue fever: https://news.google.com/rss/search?q=dengue%20fever&hl=en-US&gl=US&ceid=US:en
+- GNews: cholera outbreak: https://news.google.com/rss/search?q=cholera%20outbreak&hl=en-US&gl=US&ceid=US:en
+- GNews: polio: https://news.google.com/rss/search?q=polio&hl=en-US&gl=US&ceid=US:en
+- GNews: hepatitis: https://news.google.com/rss/search?q=hepatitis&hl=en-US&gl=US&ceid=US:en
+- GNews: sepsis: https://news.google.com/rss/search?q=sepsis&hl=en-US&gl=US&ceid=US:en
+- GNews: antimicrobial resistance: https://news.google.com/rss/search?q=antimicrobial%20resistance&hl=en-US&gl=US&ceid=US:en
+- GNews: rare disease: https://news.google.com/rss/search?q=rare%20disease&hl=en-US&gl=US&ceid=US:en
+- GNews: organ transplant: https://news.google.com/rss/search?q=organ%20transplant&hl=en-US&gl=US&ceid=US:en
+- GNews: stem cell therapy: https://news.google.com/rss/search?q=stem%20cell%20therapy&hl=en-US&gl=US&ceid=US:en
+- GNews: immunotherapy: https://news.google.com/rss/search?q=immunotherapy&hl=en-US&gl=US&ceid=US:en
+- GNews: mRNA vaccine: https://news.google.com/rss/search?q=mRNA%20vaccine&hl=en-US&gl=US&ceid=US:en
+- GNews: GLP-1 drugs: https://news.google.com/rss/search?q=GLP-1%20drugs&hl=en-US&gl=US&ceid=US:en
+- GNews: weight loss surgery: https://news.google.com/rss/search?q=weight%20loss%20surgery&hl=en-US&gl=US&ceid=US:en
+- GNews: Parkinson's disease: https://news.google.com/rss/search?q=Parkinson's%20disease&hl=en-US&gl=US&ceid=US:en
+- GNews: multiple sclerosis: https://news.google.com/rss/search?q=multiple%20sclerosis&hl=en-US&gl=US&ceid=US:en
+- GNews: autism research: https://news.google.com/rss/search?q=autism%20research&hl=en-US&gl=US&ceid=US:en
+- GNews: ADHD: https://news.google.com/rss/search?q=ADHD&hl=en-US&gl=US&ceid=US:en
+- GNews: depression treatment: https://news.google.com/rss/search?q=depression%20treatment&hl=en-US&gl=US&ceid=US:en
+- GNews: anxiety disorder: https://news.google.com/rss/search?q=anxiety%20disorder&hl=en-US&gl=US&ceid=US:en
+- GNews: chronic pain: https://news.google.com/rss/search?q=chronic%20pain&hl=en-US&gl=US&ceid=US:en
+- GNews: arthritis: https://news.google.com/rss/search?q=arthritis&hl=en-US&gl=US&ceid=US:en
+- GNews: kidney disease: https://news.google.com/rss/search?q=kidney%20disease&hl=en-US&gl=US&ceid=US:en
+- GNews: liver disease: https://news.google.com/rss/search?q=liver%20disease&hl=en-US&gl=US&ceid=US:en
+- GNews: lung cancer: https://news.google.com/rss/search?q=lung%20cancer&hl=en-US&gl=US&ceid=US:en
+- GNews: breast cancer: https://news.google.com/rss/search?q=breast%20cancer&hl=en-US&gl=US&ceid=US:en
+- GNews: prostate cancer: https://news.google.com/rss/search?q=prostate%20cancer&hl=en-US&gl=US&ceid=US:en
+- GNews: colon cancer: https://news.google.com/rss/search?q=colon%20cancer&hl=en-US&gl=US&ceid=US:en
+- GNews: leukemia: https://news.google.com/rss/search?q=leukemia&hl=en-US&gl=US&ceid=US:en
+- GNews: pediatric health: https://news.google.com/rss/search?q=pediatric%20health&hl=en-US&gl=US&ceid=US:en
+- GNews: geriatric care: https://news.google.com/rss/search?q=geriatric%20care&hl=en-US&gl=US&ceid=US:en
+- GNews: womens health: https://news.google.com/rss/search?q=womens%20health&hl=en-US&gl=US&ceid=US:en
+- GNews: reproductive health: https://news.google.com/rss/search?q=reproductive%20health&hl=en-US&gl=US&ceid=US:en
+- GNews: nutrition science: https://news.google.com/rss/search?q=nutrition%20science&hl=en-US&gl=US&ceid=US:en
+- GNews: gut microbiome: https://news.google.com/rss/search?q=gut%20microbiome&hl=en-US&gl=US&ceid=US:en
+- GNews: sleep medicine: https://news.google.com/rss/search?q=sleep%20medicine&hl=en-US&gl=US&ceid=US:en
+- GNews: vaccine hesitancy: https://news.google.com/rss/search?q=vaccine%20hesitancy&hl=en-US&gl=US&ceid=US:en
+- GNews: health insurance policy: https://news.google.com/rss/search?q=health%20insurance%20policy&hl=en-US&gl=US&ceid=US:en
+- GNews: Medicare: https://news.google.com/rss/search?q=Medicare&hl=en-US&gl=US&ceid=US:en
+- GNews: hospital staffing: https://news.google.com/rss/search?q=hospital%20staffing&hl=en-US&gl=US&ceid=US:en
+- GNews: nursing shortage: https://news.google.com/rss/search?q=nursing%20shortage&hl=en-US&gl=US&ceid=US:en
+- GNews: medical AI diagnostics: https://news.google.com/rss/search?q=medical%20AI%20diagnostics&hl=en-US&gl=US&ceid=US:en
+- GNews: wearable health monitor: https://news.google.com/rss/search?q=wearable%20health%20monitor&hl=en-US&gl=US&ceid=US:en
+
+## news (154)
+- NYT HomePage: https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml
+- NYT World: https://rss.nytimes.com/services/xml/rss/nyt/World.xml
+- NYT Africa: https://rss.nytimes.com/services/xml/rss/nyt/Africa.xml
+- NYT Americas: https://rss.nytimes.com/services/xml/rss/nyt/Americas.xml
+- NYT AsiaPacific: https://rss.nytimes.com/services/xml/rss/nyt/AsiaPacific.xml
+- NYT Europe: https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml
+- NYT MiddleEast: https://rss.nytimes.com/services/xml/rss/nyt/MiddleEast.xml
+- NYT US: https://rss.nytimes.com/services/xml/rss/nyt/US.xml
+- NYT Upshot: https://rss.nytimes.com/services/xml/rss/nyt/Upshot.xml
+- NYT NYRegion: https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml
+- NYT EnergyEnvironment: https://rss.nytimes.com/services/xml/rss/nyt/EnergyEnvironment.xml
+- NYT SmallBusiness: https://rss.nytimes.com/services/xml/rss/nyt/SmallBusiness.xml
+- NYT MediaandAdvertising: https://rss.nytimes.com/services/xml/rss/nyt/MediaandAdvertising.xml
+- NYT YourMoney: https://rss.nytimes.com/services/xml/rss/nyt/YourMoney.xml
+- NYT Baseball: https://rss.nytimes.com/services/xml/rss/nyt/Baseball.xml
+- NYT CollegeBasketball: https://rss.nytimes.com/services/xml/rss/nyt/CollegeBasketball.xml
+- NYT CollegeFootball: https://rss.nytimes.com/services/xml/rss/nyt/CollegeFootball.xml
+- NYT Golf: https://rss.nytimes.com/services/xml/rss/nyt/Golf.xml
+- NYT Hockey: https://rss.nytimes.com/services/xml/rss/nyt/Hockey.xml
+- NYT ProBasketball: https://rss.nytimes.com/services/xml/rss/nyt/ProBasketball.xml
+- NYT ProFootball: https://rss.nytimes.com/services/xml/rss/nyt/ProFootball.xml
+- NYT Soccer: https://rss.nytimes.com/services/xml/rss/nyt/Soccer.xml
+- NYT Tennis: https://rss.nytimes.com/services/xml/rss/nyt/Tennis.xml
+- NYT Arts: https://rss.nytimes.com/services/xml/rss/nyt/Arts.xml
+- NYT ArtandDesign: https://rss.nytimes.com/services/xml/rss/nyt/ArtandDesign.xml
+- NYT Books: https://rss.nytimes.com/services/xml/rss/nyt/Books.xml
+- NYT Dance: https://rss.nytimes.com/services/xml/rss/nyt/Dance.xml
+- NYT Movies: https://rss.nytimes.com/services/xml/rss/nyt/Movies.xml
+- NYT Music: https://rss.nytimes.com/services/xml/rss/nyt/Music.xml
+- NYT Television: https://rss.nytimes.com/services/xml/rss/nyt/Television.xml
+- NYT Theater: https://rss.nytimes.com/services/xml/rss/nyt/Theater.xml
+- NYT Travel: https://rss.nytimes.com/services/xml/rss/nyt/Travel.xml
+- NYT Jobs: https://rss.nytimes.com/services/xml/rss/nyt/Jobs.xml
+- NYT RealEstate: https://rss.nytimes.com/services/xml/rss/nyt/RealEstate.xml
+- NYT Automobiles: https://rss.nytimes.com/services/xml/rss/nyt/Automobiles.xml
+- Guardian world: https://www.theguardian.com/world/rss
+- Guardian us-news: https://www.theguardian.com/us-news/rss
+- Guardian uk-news: https://www.theguardian.com/uk-news/rss
+- Guardian global-development: https://www.theguardian.com/global-development/rss
+- Guardian artanddesign: https://www.theguardian.com/artanddesign/rss
+- Guardian books: https://www.theguardian.com/books/rss
+- Guardian film: https://www.theguardian.com/film/rss
+- Guardian music: https://www.theguardian.com/music/rss
+- Guardian education: https://www.theguardian.com/education/rss
+- Guardian cities: https://www.theguardian.com/cities/rss
+- Guardian inequality: https://www.theguardian.com/inequality/rss
+- BBC news/world: https://feeds.bbci.co.uk/news/world/rss.xml
+- BBC news/world/africa: https://feeds.bbci.co.uk/news/world/africa/rss.xml
+- BBC news/world/asia: https://feeds.bbci.co.uk/news/world/asia/rss.xml
+- BBC news/world/europe: https://feeds.bbci.co.uk/news/world/europe/rss.xml
+- BBC news/world/us_and_canada: https://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml
+- BBC news/world/latin_america: https://feeds.bbci.co.uk/news/world/latin_america/rss.xml
+- BBC news/world/middle_east: https://feeds.bbci.co.uk/news/world/middle_east/rss.xml
+- BBC news/education: https://feeds.bbci.co.uk/news/education/rss.xml
+- BBC news/entertainment_and_arts: https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml
+- Google News WORLD: https://news.google.com/rss/headlines/section/topic/WORLD?hl=en-US&gl=US&ceid=US:en
+- Google News NATION: https://news.google.com/rss/headlines/section/topic/NATION?hl=en-US&gl=US&ceid=US:en
+- Google News ENTERTAINMENT: https://news.google.com/rss/headlines/section/topic/ENTERTAINMENT?hl=en-US&gl=US&ceid=US:en
+- GNews: artificial intelligence: https://news.google.com/rss/search?q=artificial%20intelligence&hl=en-US&gl=US&ceid=US:en
+- GNews: semiconductors: https://news.google.com/rss/search?q=semiconductors&hl=en-US&gl=US&ceid=US:en
+- GNews: electric vehicles: https://news.google.com/rss/search?q=electric%20vehicles&hl=en-US&gl=US&ceid=US:en
+- GNews: biotechnology: https://news.google.com/rss/search?q=biotechnology&hl=en-US&gl=US&ceid=US:en
+- GNews: quantum computing: https://news.google.com/rss/search?q=quantum%20computing&hl=en-US&gl=US&ceid=US:en
+- GNews: supply chain: https://news.google.com/rss/search?q=supply%20chain&hl=en-US&gl=US&ceid=US:en
+- GNews: merger acquisition: https://news.google.com/rss/search?q=merger%20acquisition&hl=en-US&gl=US&ceid=US:en
+- GNews: IPO: https://news.google.com/rss/search?q=IPO&hl=en-US&gl=US&ceid=US:en
+- GNews: layoffs: https://news.google.com/rss/search?q=layoffs&hl=en-US&gl=US&ceid=US:en
+- UN News: https://news.un.org/feed/subscribe/en/news/all/rss.xml
+- Al Jazeera: https://www.aljazeera.com/xml/rss/all.xml
+- NPR News: https://feeds.npr.org/1001/rss.xml
+- Axios: https://api.axios.com/feed/
+- Deutsche Welle: https://rss.dw.com/xml/rss-en-all
+- France 24: https://www.france24.com/en/rss
+- SCMP: https://www.scmp.com/rss/91/feed
+- Times of India: https://timesofindia.indiatimes.com/rssfeeds/296589292.cms
+- United States news: https://news.google.com/rss/search?q=United%20States&hl=en-US&gl=US&ceid=US:en
+- China news: https://news.google.com/rss/search?q=China&hl=en-US&gl=US&ceid=US:en
+- India news: https://news.google.com/rss/search?q=India&hl=en-US&gl=US&ceid=US:en
+- Japan news: https://news.google.com/rss/search?q=Japan&hl=en-US&gl=US&ceid=US:en
+- Germany news: https://news.google.com/rss/search?q=Germany&hl=en-US&gl=US&ceid=US:en
+- United Kingdom news: https://news.google.com/rss/search?q=United%20Kingdom&hl=en-US&gl=US&ceid=US:en
+- France news: https://news.google.com/rss/search?q=France&hl=en-US&gl=US&ceid=US:en
+- Italy news: https://news.google.com/rss/search?q=Italy&hl=en-US&gl=US&ceid=US:en
+- Canada news: https://news.google.com/rss/search?q=Canada&hl=en-US&gl=US&ceid=US:en
+- Brazil news: https://news.google.com/rss/search?q=Brazil&hl=en-US&gl=US&ceid=US:en
+- Russia news: https://news.google.com/rss/search?q=Russia&hl=en-US&gl=US&ceid=US:en
+- Australia news: https://news.google.com/rss/search?q=Australia&hl=en-US&gl=US&ceid=US:en
+- Mexico news: https://news.google.com/rss/search?q=Mexico&hl=en-US&gl=US&ceid=US:en
+- Indonesia news: https://news.google.com/rss/search?q=Indonesia&hl=en-US&gl=US&ceid=US:en
+- Saudi Arabia news: https://news.google.com/rss/search?q=Saudi%20Arabia&hl=en-US&gl=US&ceid=US:en
+- Turkey news: https://news.google.com/rss/search?q=Turkey&hl=en-US&gl=US&ceid=US:en
+- Netherlands news: https://news.google.com/rss/search?q=Netherlands&hl=en-US&gl=US&ceid=US:en
+- Switzerland news: https://news.google.com/rss/search?q=Switzerland&hl=en-US&gl=US&ceid=US:en
+- Spain news: https://news.google.com/rss/search?q=Spain&hl=en-US&gl=US&ceid=US:en
+- South Korea news: https://news.google.com/rss/search?q=South%20Korea&hl=en-US&gl=US&ceid=US:en
+- Nigeria news: https://news.google.com/rss/search?q=Nigeria&hl=en-US&gl=US&ceid=US:en
+- Egypt news: https://news.google.com/rss/search?q=Egypt&hl=en-US&gl=US&ceid=US:en
+- Argentina news: https://news.google.com/rss/search?q=Argentina&hl=en-US&gl=US&ceid=US:en
+- South Africa news: https://news.google.com/rss/search?q=South%20Africa&hl=en-US&gl=US&ceid=US:en
+- Poland news: https://news.google.com/rss/search?q=Poland&hl=en-US&gl=US&ceid=US:en
+- Sweden news: https://news.google.com/rss/search?q=Sweden&hl=en-US&gl=US&ceid=US:en
+- Norway news: https://news.google.com/rss/search?q=Norway&hl=en-US&gl=US&ceid=US:en
+- Israel news: https://news.google.com/rss/search?q=Israel&hl=en-US&gl=US&ceid=US:en
+- Ukraine news: https://news.google.com/rss/search?q=Ukraine&hl=en-US&gl=US&ceid=US:en
+- Pakistan news: https://news.google.com/rss/search?q=Pakistan&hl=en-US&gl=US&ceid=US:en
+- Bangladesh news: https://news.google.com/rss/search?q=Bangladesh&hl=en-US&gl=US&ceid=US:en
+- Vietnam news: https://news.google.com/rss/search?q=Vietnam&hl=en-US&gl=US&ceid=US:en
+- Philippines news: https://news.google.com/rss/search?q=Philippines&hl=en-US&gl=US&ceid=US:en
+- Thailand news: https://news.google.com/rss/search?q=Thailand&hl=en-US&gl=US&ceid=US:en
+- Malaysia news: https://news.google.com/rss/search?q=Malaysia&hl=en-US&gl=US&ceid=US:en
+- Singapore news: https://news.google.com/rss/search?q=Singapore&hl=en-US&gl=US&ceid=US:en
+- UAE news: https://news.google.com/rss/search?q=UAE&hl=en-US&gl=US&ceid=US:en
+- Qatar news: https://news.google.com/rss/search?q=Qatar&hl=en-US&gl=US&ceid=US:en
+- Kenya news: https://news.google.com/rss/search?q=Kenya&hl=en-US&gl=US&ceid=US:en
+- Ethiopia news: https://news.google.com/rss/search?q=Ethiopia&hl=en-US&gl=US&ceid=US:en
+- Ghana news: https://news.google.com/rss/search?q=Ghana&hl=en-US&gl=US&ceid=US:en
+- Morocco news: https://news.google.com/rss/search?q=Morocco&hl=en-US&gl=US&ceid=US:en
+- Greece news: https://news.google.com/rss/search?q=Greece&hl=en-US&gl=US&ceid=US:en
+- Portugal news: https://news.google.com/rss/search?q=Portugal&hl=en-US&gl=US&ceid=US:en
+- Ireland news: https://news.google.com/rss/search?q=Ireland&hl=en-US&gl=US&ceid=US:en
+- Denmark news: https://news.google.com/rss/search?q=Denmark&hl=en-US&gl=US&ceid=US:en
+- Finland news: https://news.google.com/rss/search?q=Finland&hl=en-US&gl=US&ceid=US:en
+- Austria news: https://news.google.com/rss/search?q=Austria&hl=en-US&gl=US&ceid=US:en
+- Belgium news: https://news.google.com/rss/search?q=Belgium&hl=en-US&gl=US&ceid=US:en
+- Czech Republic news: https://news.google.com/rss/search?q=Czech%20Republic&hl=en-US&gl=US&ceid=US:en
+- Colombia news: https://news.google.com/rss/search?q=Colombia&hl=en-US&gl=US&ceid=US:en
+- Chile news: https://news.google.com/rss/search?q=Chile&hl=en-US&gl=US&ceid=US:en
+- Peru news: https://news.google.com/rss/search?q=Peru&hl=en-US&gl=US&ceid=US:en
+- Venezuela news: https://news.google.com/rss/search?q=Venezuela&hl=en-US&gl=US&ceid=US:en
+- GNews: London news: https://news.google.com/rss/search?q=London%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Paris news: https://news.google.com/rss/search?q=Paris%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Tokyo news: https://news.google.com/rss/search?q=Tokyo%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: New York news: https://news.google.com/rss/search?q=New%20York%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Los Angeles news: https://news.google.com/rss/search?q=Los%20Angeles%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Berlin news: https://news.google.com/rss/search?q=Berlin%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Dubai news: https://news.google.com/rss/search?q=Dubai%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Singapore news: https://news.google.com/rss/search?q=Singapore%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Hong Kong news: https://news.google.com/rss/search?q=Hong%20Kong%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Mumbai news: https://news.google.com/rss/search?q=Mumbai%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Shanghai news: https://news.google.com/rss/search?q=Shanghai%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Sao Paulo news: https://news.google.com/rss/search?q=Sao%20Paulo%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Lagos news: https://news.google.com/rss/search?q=Lagos%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Cairo news: https://news.google.com/rss/search?q=Cairo%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Istanbul news: https://news.google.com/rss/search?q=Istanbul%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Moscow news: https://news.google.com/rss/search?q=Moscow%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Toronto news: https://news.google.com/rss/search?q=Toronto%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Sydney news: https://news.google.com/rss/search?q=Sydney%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Mexico City news: https://news.google.com/rss/search?q=Mexico%20City%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Jakarta news: https://news.google.com/rss/search?q=Jakarta%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Seoul news: https://news.google.com/rss/search?q=Seoul%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Bangkok news: https://news.google.com/rss/search?q=Bangkok%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Nairobi news: https://news.google.com/rss/search?q=Nairobi%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Johannesburg news: https://news.google.com/rss/search?q=Johannesburg%20news&hl=en-US&gl=US&ceid=US:en
+- GNews: Buenos Aires news: https://news.google.com/rss/search?q=Buenos%20Aires%20news&hl=en-US&gl=US&ceid=US:en
+
+## politics (80)
+- NYT Politics: https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml
+- Guardian politics: https://www.theguardian.com/politics/rss
+- Guardian law: https://www.theguardian.com/law/rss
+- BBC news/politics: https://feeds.bbci.co.uk/news/politics/rss.xml
+- StackExchange politics: https://politics.stackexchange.com/feeds
+- GNews: elections: https://news.google.com/rss/search?q=elections&hl=en-US&gl=US&ceid=US:en
+- EU Commission: https://ec.europa.eu/commission/presscorner/api/rss?language=en
+- Politico: https://rss.politico.com/politics-news.xml
+- The Hill: https://thehill.com/rss/syndicator/19110
+- US elections: https://news.google.com/rss/search?q=US%20elections&hl=en-US&gl=US&ceid=US:en
+- US Congress: https://news.google.com/rss/search?q=US%20Congress&hl=en-US&gl=US&ceid=US:en
+- Supreme Court: https://news.google.com/rss/search?q=Supreme%20Court&hl=en-US&gl=US&ceid=US:en
+- White House policy: https://news.google.com/rss/search?q=White%20House%20policy&hl=en-US&gl=US&ceid=US:en
+- European Union politics: https://news.google.com/rss/search?q=European%20Union%20politics&hl=en-US&gl=US&ceid=US:en
+- UK Parliament: https://news.google.com/rss/search?q=UK%20Parliament&hl=en-US&gl=US&ceid=US:en
+- United Nations: https://news.google.com/rss/search?q=United%20Nations&hl=en-US&gl=US&ceid=US:en
+- NATO: https://news.google.com/rss/search?q=NATO&hl=en-US&gl=US&ceid=US:en
+- US China relations: https://news.google.com/rss/search?q=US%20China%20relations&hl=en-US&gl=US&ceid=US:en
+- Russia Ukraine war: https://news.google.com/rss/search?q=Russia%20Ukraine%20war&hl=en-US&gl=US&ceid=US:en
+- Middle East conflict: https://news.google.com/rss/search?q=Middle%20East%20conflict&hl=en-US&gl=US&ceid=US:en
+- Israel Gaza: https://news.google.com/rss/search?q=Israel%20Gaza&hl=en-US&gl=US&ceid=US:en
+- Iran nuclear: https://news.google.com/rss/search?q=Iran%20nuclear&hl=en-US&gl=US&ceid=US:en
+- North Korea: https://news.google.com/rss/search?q=North%20Korea&hl=en-US&gl=US&ceid=US:en
+- immigration policy: https://news.google.com/rss/search?q=immigration%20policy&hl=en-US&gl=US&ceid=US:en
+- trade tariffs: https://news.google.com/rss/search?q=trade%20tariffs&hl=en-US&gl=US&ceid=US:en
+- climate policy: https://news.google.com/rss/search?q=climate%20policy&hl=en-US&gl=US&ceid=US:en
+- US Senate: https://news.google.com/rss/search?q=US%20Senate&hl=en-US&gl=US&ceid=US:en
+- US House: https://news.google.com/rss/search?q=US%20House&hl=en-US&gl=US&ceid=US:en
+- Brexit: https://news.google.com/rss/search?q=Brexit&hl=en-US&gl=US&ceid=US:en
+- France politics: https://news.google.com/rss/search?q=France%20politics&hl=en-US&gl=US&ceid=US:en
+- Germany politics: https://news.google.com/rss/search?q=Germany%20politics&hl=en-US&gl=US&ceid=US:en
+- India politics: https://news.google.com/rss/search?q=India%20politics&hl=en-US&gl=US&ceid=US:en
+- Brazil politics: https://news.google.com/rss/search?q=Brazil%20politics&hl=en-US&gl=US&ceid=US:en
+- African Union: https://news.google.com/rss/search?q=African%20Union&hl=en-US&gl=US&ceid=US:en
+- G7 summit: https://news.google.com/rss/search?q=G7%20summit&hl=en-US&gl=US&ceid=US:en
+- G20 summit: https://news.google.com/rss/search?q=G20%20summit&hl=en-US&gl=US&ceid=US:en
+- sanctions: https://news.google.com/rss/search?q=sanctions&hl=en-US&gl=US&ceid=US:en
+- diplomacy: https://news.google.com/rss/search?q=diplomacy&hl=en-US&gl=US&ceid=US:en
+- geopolitics: https://news.google.com/rss/search?q=geopolitics&hl=en-US&gl=US&ceid=US:en
+- GNews: Taiwan China tension: https://news.google.com/rss/search?q=Taiwan%20China%20tension&hl=en-US&gl=US&ceid=US:en
+- GNews: South China Sea: https://news.google.com/rss/search?q=South%20China%20Sea&hl=en-US&gl=US&ceid=US:en
+- GNews: Korea peninsula: https://news.google.com/rss/search?q=Korea%20peninsula&hl=en-US&gl=US&ceid=US:en
+- GNews: Afghanistan Taliban: https://news.google.com/rss/search?q=Afghanistan%20Taliban&hl=en-US&gl=US&ceid=US:en
+- GNews: Syria conflict: https://news.google.com/rss/search?q=Syria%20conflict&hl=en-US&gl=US&ceid=US:en
+- GNews: Yemen war: https://news.google.com/rss/search?q=Yemen%20war&hl=en-US&gl=US&ceid=US:en
+- GNews: Sudan conflict: https://news.google.com/rss/search?q=Sudan%20conflict&hl=en-US&gl=US&ceid=US:en
+- GNews: Ethiopia Tigray: https://news.google.com/rss/search?q=Ethiopia%20Tigray&hl=en-US&gl=US&ceid=US:en
+- GNews: Congo conflict: https://news.google.com/rss/search?q=Congo%20conflict&hl=en-US&gl=US&ceid=US:en
+- GNews: Sahel security: https://news.google.com/rss/search?q=Sahel%20security&hl=en-US&gl=US&ceid=US:en
+- GNews: Venezuela crisis: https://news.google.com/rss/search?q=Venezuela%20crisis&hl=en-US&gl=US&ceid=US:en
+- GNews: Haiti crisis: https://news.google.com/rss/search?q=Haiti%20crisis&hl=en-US&gl=US&ceid=US:en
+- GNews: Cuba US relations: https://news.google.com/rss/search?q=Cuba%20US%20relations&hl=en-US&gl=US&ceid=US:en
+- GNews: Balkans: https://news.google.com/rss/search?q=Balkans&hl=en-US&gl=US&ceid=US:en
+- GNews: Caucasus Armenia Azerbaijan: https://news.google.com/rss/search?q=Caucasus%20Armenia%20Azerbaijan&hl=en-US&gl=US&ceid=US:en
+- GNews: Kashmir: https://news.google.com/rss/search?q=Kashmir&hl=en-US&gl=US&ceid=US:en
+- GNews: Myanmar coup: https://news.google.com/rss/search?q=Myanmar%20coup&hl=en-US&gl=US&ceid=US:en
+- GNews: Hong Kong: https://news.google.com/rss/search?q=Hong%20Kong&hl=en-US&gl=US&ceid=US:en
+- GNews: Belarus: https://news.google.com/rss/search?q=Belarus&hl=en-US&gl=US&ceid=US:en
+- GNews: Poland politics: https://news.google.com/rss/search?q=Poland%20politics&hl=en-US&gl=US&ceid=US:en
+- GNews: Hungary EU: https://news.google.com/rss/search?q=Hungary%20EU&hl=en-US&gl=US&ceid=US:en
+- GNews: Italy government: https://news.google.com/rss/search?q=Italy%20government&hl=en-US&gl=US&ceid=US:en
+- GNews: Spain politics: https://news.google.com/rss/search?q=Spain%20politics&hl=en-US&gl=US&ceid=US:en
+- GNews: Scotland independence: https://news.google.com/rss/search?q=Scotland%20independence&hl=en-US&gl=US&ceid=US:en
+- GNews: Catalonia: https://news.google.com/rss/search?q=Catalonia&hl=en-US&gl=US&ceid=US:en
+- GNews: Quebec: https://news.google.com/rss/search?q=Quebec&hl=en-US&gl=US&ceid=US:en
+- GNews: Mexico cartels: https://news.google.com/rss/search?q=Mexico%20cartels&hl=en-US&gl=US&ceid=US:en
+- GNews: Central America migration: https://news.google.com/rss/search?q=Central%20America%20migration&hl=en-US&gl=US&ceid=US:en
+- GNews: BRICS expansion: https://news.google.com/rss/search?q=BRICS%20expansion&hl=en-US&gl=US&ceid=US:en
+- GNews: African Union summit: https://news.google.com/rss/search?q=African%20Union%20summit&hl=en-US&gl=US&ceid=US:en
+- GNews: ASEAN summit: https://news.google.com/rss/search?q=ASEAN%20summit&hl=en-US&gl=US&ceid=US:en
+- GNews: Arab League: https://news.google.com/rss/search?q=Arab%20League&hl=en-US&gl=US&ceid=US:en
+- GNews: OPEC politics: https://news.google.com/rss/search?q=OPEC%20politics&hl=en-US&gl=US&ceid=US:en
+- GNews: UN Security Council: https://news.google.com/rss/search?q=UN%20Security%20Council&hl=en-US&gl=US&ceid=US:en
+- GNews: International Criminal Court: https://news.google.com/rss/search?q=International%20Criminal%20Court&hl=en-US&gl=US&ceid=US:en
+- GNews: war crimes tribunal: https://news.google.com/rss/search?q=war%20crimes%20tribunal&hl=en-US&gl=US&ceid=US:en
+- GNews: nuclear arms control: https://news.google.com/rss/search?q=nuclear%20arms%20control&hl=en-US&gl=US&ceid=US:en
+- GNews: cyber warfare policy: https://news.google.com/rss/search?q=cyber%20warfare%20policy&hl=en-US&gl=US&ceid=US:en
+- GNews: election interference: https://news.google.com/rss/search?q=election%20interference&hl=en-US&gl=US&ceid=US:en
+- GNews: disinformation campaign: https://news.google.com/rss/search?q=disinformation%20campaign&hl=en-US&gl=US&ceid=US:en
+- GNews: press freedom: https://news.google.com/rss/search?q=press%20freedom&hl=en-US&gl=US&ceid=US:en
+
+## science (55)
+- NYT Science: https://rss.nytimes.com/services/xml/rss/nyt/Science.xml
+- Guardian science: https://www.theguardian.com/science/rss
+- BBC news/science_and_environment: https://feeds.bbci.co.uk/news/science_and_environment/rss.xml
+- Google News SCIENCE: https://news.google.com/rss/headlines/section/topic/SCIENCE?hl=en-US&gl=US&ceid=US:en
+- r/science: https://www.reddit.com/r/science/.rss
+- Phys.org: https://phys.org/rss-feed/
+- ScienceDaily: https://www.sciencedaily.com/rss/all.xml
+- New Scientist: https://www.newscientist.com/feed/home/
+- Scientific American: https://www.scientificamerican.com/platform/syndication/rss/
+- Live Science: https://www.livescience.com/feeds/all
+- physics discovery: https://news.google.com/rss/search?q=physics%20discovery&hl=en-US&gl=US&ceid=US:en
+- astronomy telescope: https://news.google.com/rss/search?q=astronomy%20telescope&hl=en-US&gl=US&ceid=US:en
+- black hole: https://news.google.com/rss/search?q=black%20hole&hl=en-US&gl=US&ceid=US:en
+- exoplanet: https://news.google.com/rss/search?q=exoplanet&hl=en-US&gl=US&ceid=US:en
+- climate science: https://news.google.com/rss/search?q=climate%20science&hl=en-US&gl=US&ceid=US:en
+- genetics genome: https://news.google.com/rss/search?q=genetics%20genome&hl=en-US&gl=US&ceid=US:en
+- neuroscience brain: https://news.google.com/rss/search?q=neuroscience%20brain&hl=en-US&gl=US&ceid=US:en
+- paleontology fossil: https://news.google.com/rss/search?q=paleontology%20fossil&hl=en-US&gl=US&ceid=US:en
+- materials science: https://news.google.com/rss/search?q=materials%20science&hl=en-US&gl=US&ceid=US:en
+- fusion energy: https://news.google.com/rss/search?q=fusion%20energy&hl=en-US&gl=US&ceid=US:en
+- particle physics CERN: https://news.google.com/rss/search?q=particle%20physics%20CERN&hl=en-US&gl=US&ceid=US:en
+- marine biology: https://news.google.com/rss/search?q=marine%20biology&hl=en-US&gl=US&ceid=US:en
+- ecology biodiversity: https://news.google.com/rss/search?q=ecology%20biodiversity&hl=en-US&gl=US&ceid=US:en
+- volcano geology: https://news.google.com/rss/search?q=volcano%20geology&hl=en-US&gl=US&ceid=US:en
+- chemistry research: https://news.google.com/rss/search?q=chemistry%20research&hl=en-US&gl=US&ceid=US:en
+- nanotechnology: https://news.google.com/rss/search?q=nanotechnology&hl=en-US&gl=US&ceid=US:en
+- evolution: https://news.google.com/rss/search?q=evolution&hl=en-US&gl=US&ceid=US:en
+- archaeology discovery: https://news.google.com/rss/search?q=archaeology%20discovery&hl=en-US&gl=US&ceid=US:en
+- renewable energy science: https://news.google.com/rss/search?q=renewable%20energy%20science&hl=en-US&gl=US&ceid=US:en
+- battery technology: https://news.google.com/rss/search?q=battery%20technology&hl=en-US&gl=US&ceid=US:en
+- GNews: dark matter: https://news.google.com/rss/search?q=dark%20matter&hl=en-US&gl=US&ceid=US:en
+- GNews: gravitational waves: https://news.google.com/rss/search?q=gravitational%20waves&hl=en-US&gl=US&ceid=US:en
+- GNews: quantum entanglement: https://news.google.com/rss/search?q=quantum%20entanglement&hl=en-US&gl=US&ceid=US:en
+- GNews: superconductor room temperature: https://news.google.com/rss/search?q=superconductor%20room%20temperature&hl=en-US&gl=US&ceid=US:en
+- GNews: nuclear fusion breakthrough: https://news.google.com/rss/search?q=nuclear%20fusion%20breakthrough&hl=en-US&gl=US&ceid=US:en
+- GNews: CRISPR gene editing: https://news.google.com/rss/search?q=CRISPR%20gene%20editing&hl=en-US&gl=US&ceid=US:en
+- GNews: synthetic biology: https://news.google.com/rss/search?q=synthetic%20biology&hl=en-US&gl=US&ceid=US:en
+- GNews: protein folding AlphaFold: https://news.google.com/rss/search?q=protein%20folding%20AlphaFold&hl=en-US&gl=US&ceid=US:en
+- GNews: microbiome research: https://news.google.com/rss/search?q=microbiome%20research&hl=en-US&gl=US&ceid=US:en
+- GNews: coral reef: https://news.google.com/rss/search?q=coral%20reef&hl=en-US&gl=US&ceid=US:en
+- GNews: Antarctic ice: https://news.google.com/rss/search?q=Antarctic%20ice&hl=en-US&gl=US&ceid=US:en
+- GNews: Arctic melting: https://news.google.com/rss/search?q=Arctic%20melting&hl=en-US&gl=US&ceid=US:en
+- GNews: asteroid mining: https://news.google.com/rss/search?q=asteroid%20mining&hl=en-US&gl=US&ceid=US:en
+- GNews: dinosaur discovery: https://news.google.com/rss/search?q=dinosaur%20discovery&hl=en-US&gl=US&ceid=US:en
+- GNews: human origins: https://news.google.com/rss/search?q=human%20origins&hl=en-US&gl=US&ceid=US:en
+- GNews: ancient DNA: https://news.google.com/rss/search?q=ancient%20DNA&hl=en-US&gl=US&ceid=US:en
+- GNews: dark energy: https://news.google.com/rss/search?q=dark%20energy&hl=en-US&gl=US&ceid=US:en
+- GNews: neutrino: https://news.google.com/rss/search?q=neutrino&hl=en-US&gl=US&ceid=US:en
+- GNews: quantum sensor: https://news.google.com/rss/search?q=quantum%20sensor&hl=en-US&gl=US&ceid=US:en
+- GNews: metamaterials: https://news.google.com/rss/search?q=metamaterials&hl=en-US&gl=US&ceid=US:en
+- GNews: graphene: https://news.google.com/rss/search?q=graphene&hl=en-US&gl=US&ceid=US:en
+- GNews: perovskite solar: https://news.google.com/rss/search?q=perovskite%20solar&hl=en-US&gl=US&ceid=US:en
+- GNews: wildlife conservation: https://news.google.com/rss/search?q=wildlife%20conservation&hl=en-US&gl=US&ceid=US:en
+- GNews: insect decline: https://news.google.com/rss/search?q=insect%20decline&hl=en-US&gl=US&ceid=US:en
+- GNews: ocean acidification: https://news.google.com/rss/search?q=ocean%20acidification&hl=en-US&gl=US&ceid=US:en
+
+## space (49)
+- NYT Space: https://rss.nytimes.com/services/xml/rss/nyt/Space.xml
+- GNews: space exploration: https://news.google.com/rss/search?q=space%20exploration&hl=en-US&gl=US&ceid=US:en
+- NASA Breaking: https://www.nasa.gov/rss/dyn/breaking_news.rss
+- NASA Image of Day: https://www.nasa.gov/rss/dyn/lg_image_of_the_day.rss
+- Space.com: https://www.space.com/feeds/all
+- Universe Today: https://www.universetoday.com/feed/
+- NASA mission: https://news.google.com/rss/search?q=NASA%20mission&hl=en-US&gl=US&ceid=US:en
+- SpaceX launch: https://news.google.com/rss/search?q=SpaceX%20launch&hl=en-US&gl=US&ceid=US:en
+- Artemis Moon: https://news.google.com/rss/search?q=Artemis%20Moon&hl=en-US&gl=US&ceid=US:en
+- Mars rover: https://news.google.com/rss/search?q=Mars%20rover&hl=en-US&gl=US&ceid=US:en
+- James Webb telescope: https://news.google.com/rss/search?q=James%20Webb%20telescope&hl=en-US&gl=US&ceid=US:en
+- asteroid: https://news.google.com/rss/search?q=asteroid&hl=en-US&gl=US&ceid=US:en
+- satellite: https://news.google.com/rss/search?q=satellite&hl=en-US&gl=US&ceid=US:en
+- rocket launch: https://news.google.com/rss/search?q=rocket%20launch&hl=en-US&gl=US&ceid=US:en
+- International Space Station: https://news.google.com/rss/search?q=International%20Space%20Station&hl=en-US&gl=US&ceid=US:en
+- Blue Origin: https://news.google.com/rss/search?q=Blue%20Origin&hl=en-US&gl=US&ceid=US:en
+- space debris: https://news.google.com/rss/search?q=space%20debris&hl=en-US&gl=US&ceid=US:en
+- solar flare: https://news.google.com/rss/search?q=solar%20flare&hl=en-US&gl=US&ceid=US:en
+- Starlink: https://news.google.com/rss/search?q=Starlink&hl=en-US&gl=US&ceid=US:en
+- lunar mission: https://news.google.com/rss/search?q=lunar%20mission&hl=en-US&gl=US&ceid=US:en
+- Europa Clipper: https://news.google.com/rss/search?q=Europa%20Clipper&hl=en-US&gl=US&ceid=US:en
+- space tourism: https://news.google.com/rss/search?q=space%20tourism&hl=en-US&gl=US&ceid=US:en
+- Chinese space program: https://news.google.com/rss/search?q=Chinese%20space%20program&hl=en-US&gl=US&ceid=US:en
+- ESA mission: https://news.google.com/rss/search?q=ESA%20mission&hl=en-US&gl=US&ceid=US:en
+- Voyager: https://news.google.com/rss/search?q=Voyager&hl=en-US&gl=US&ceid=US:en
+- exoplanet discovery: https://news.google.com/rss/search?q=exoplanet%20discovery&hl=en-US&gl=US&ceid=US:en
+- GNews: Artemis 2: https://news.google.com/rss/search?q=Artemis%202&hl=en-US&gl=US&ceid=US:en
+- GNews: Starship test: https://news.google.com/rss/search?q=Starship%20test&hl=en-US&gl=US&ceid=US:en
+- GNews: lunar Gateway: https://news.google.com/rss/search?q=lunar%20Gateway&hl=en-US&gl=US&ceid=US:en
+- GNews: Mars sample return: https://news.google.com/rss/search?q=Mars%20sample%20return&hl=en-US&gl=US&ceid=US:en
+- GNews: Dragonfly Titan: https://news.google.com/rss/search?q=Dragonfly%20Titan&hl=en-US&gl=US&ceid=US:en
+- GNews: Chang'e Moon: https://news.google.com/rss/search?q=Chang'e%20Moon&hl=en-US&gl=US&ceid=US:en
+- GNews: Chandrayaan: https://news.google.com/rss/search?q=Chandrayaan&hl=en-US&gl=US&ceid=US:en
+- GNews: Vera Rubin observatory: https://news.google.com/rss/search?q=Vera%20Rubin%20observatory&hl=en-US&gl=US&ceid=US:en
+- GNews: Roman telescope: https://news.google.com/rss/search?q=Roman%20telescope&hl=en-US&gl=US&ceid=US:en
+- GNews: exoplanet atmosphere: https://news.google.com/rss/search?q=exoplanet%20atmosphere&hl=en-US&gl=US&ceid=US:en
+- GNews: habitable zone: https://news.google.com/rss/search?q=habitable%20zone&hl=en-US&gl=US&ceid=US:en
+- GNews: space weather forecast: https://news.google.com/rss/search?q=space%20weather%20forecast&hl=en-US&gl=US&ceid=US:en
+- GNews: geomagnetic storm: https://news.google.com/rss/search?q=geomagnetic%20storm&hl=en-US&gl=US&ceid=US:en
+- GNews: Kessler syndrome: https://news.google.com/rss/search?q=Kessler%20syndrome&hl=en-US&gl=US&ceid=US:en
+- GNews: asteroid deflection DART: https://news.google.com/rss/search?q=asteroid%20deflection%20DART&hl=en-US&gl=US&ceid=US:en
+- GNews: commercial space station: https://news.google.com/rss/search?q=commercial%20space%20station&hl=en-US&gl=US&ceid=US:en
+- GNews: space mining: https://news.google.com/rss/search?q=space%20mining&hl=en-US&gl=US&ceid=US:en
+- GNews: reusable rockets: https://news.google.com/rss/search?q=reusable%20rockets&hl=en-US&gl=US&ceid=US:en
+- GNews: hypersonic: https://news.google.com/rss/search?q=hypersonic&hl=en-US&gl=US&ceid=US:en
+- GNews: satellite internet: https://news.google.com/rss/search?q=satellite%20internet&hl=en-US&gl=US&ceid=US:en
+- GNews: GPS Galileo: https://news.google.com/rss/search?q=GPS%20Galileo&hl=en-US&gl=US&ceid=US:en
+- GNews: space force: https://news.google.com/rss/search?q=space%20force&hl=en-US&gl=US&ceid=US:en
+- GNews: Moon base: https://news.google.com/rss/search?q=Moon%20base&hl=en-US&gl=US&ceid=US:en
+
+## sports (56)
+- Guardian sport: https://www.theguardian.com/sport/rss
+- Guardian football: https://www.theguardian.com/football/rss
+- BBC sport: https://feeds.bbci.co.uk/sport/rss.xml
+- Google News SPORTS: https://news.google.com/rss/headlines/section/topic/SPORTS?hl=en-US&gl=US&ceid=US:en
+- Sky Sports: https://www.skysports.com/rss/12040
+- Premier League: https://news.google.com/rss/search?q=Premier%20League&hl=en-US&gl=US&ceid=US:en
+- Champions League: https://news.google.com/rss/search?q=Champions%20League&hl=en-US&gl=US&ceid=US:en
+- La Liga: https://news.google.com/rss/search?q=La%20Liga&hl=en-US&gl=US&ceid=US:en
+- NBA: https://news.google.com/rss/search?q=NBA&hl=en-US&gl=US&ceid=US:en
+- NFL: https://news.google.com/rss/search?q=NFL&hl=en-US&gl=US&ceid=US:en
+- MLB: https://news.google.com/rss/search?q=MLB&hl=en-US&gl=US&ceid=US:en
+- NHL: https://news.google.com/rss/search?q=NHL&hl=en-US&gl=US&ceid=US:en
+- Formula 1: https://news.google.com/rss/search?q=Formula%201&hl=en-US&gl=US&ceid=US:en
+- tennis Grand Slam: https://news.google.com/rss/search?q=tennis%20Grand%20Slam&hl=en-US&gl=US&ceid=US:en
+- Olympics: https://news.google.com/rss/search?q=Olympics&hl=en-US&gl=US&ceid=US:en
+- World Cup soccer: https://news.google.com/rss/search?q=World%20Cup%20soccer&hl=en-US&gl=US&ceid=US:en
+- cricket: https://news.google.com/rss/search?q=cricket&hl=en-US&gl=US&ceid=US:en
+- golf PGA: https://news.google.com/rss/search?q=golf%20PGA&hl=en-US&gl=US&ceid=US:en
+- UFC MMA: https://news.google.com/rss/search?q=UFC%20MMA&hl=en-US&gl=US&ceid=US:en
+- boxing: https://news.google.com/rss/search?q=boxing&hl=en-US&gl=US&ceid=US:en
+- cycling Tour de France: https://news.google.com/rss/search?q=cycling%20Tour%20de%20France&hl=en-US&gl=US&ceid=US:en
+- rugby: https://news.google.com/rss/search?q=rugby&hl=en-US&gl=US&ceid=US:en
+- Serie A: https://news.google.com/rss/search?q=Serie%20A&hl=en-US&gl=US&ceid=US:en
+- Bundesliga: https://news.google.com/rss/search?q=Bundesliga&hl=en-US&gl=US&ceid=US:en
+- MLS soccer: https://news.google.com/rss/search?q=MLS%20soccer&hl=en-US&gl=US&ceid=US:en
+- GNews: Real Madrid: https://news.google.com/rss/search?q=Real%20Madrid&hl=en-US&gl=US&ceid=US:en
+- GNews: Barcelona: https://news.google.com/rss/search?q=Barcelona&hl=en-US&gl=US&ceid=US:en
+- GNews: Manchester United: https://news.google.com/rss/search?q=Manchester%20United&hl=en-US&gl=US&ceid=US:en
+- GNews: Manchester City: https://news.google.com/rss/search?q=Manchester%20City&hl=en-US&gl=US&ceid=US:en
+- GNews: Liverpool FC: https://news.google.com/rss/search?q=Liverpool%20FC&hl=en-US&gl=US&ceid=US:en
+- GNews: Arsenal FC: https://news.google.com/rss/search?q=Arsenal%20FC&hl=en-US&gl=US&ceid=US:en
+- GNews: Chelsea FC: https://news.google.com/rss/search?q=Chelsea%20FC&hl=en-US&gl=US&ceid=US:en
+- GNews: Bayern Munich: https://news.google.com/rss/search?q=Bayern%20Munich&hl=en-US&gl=US&ceid=US:en
+- GNews: Paris Saint-Germain: https://news.google.com/rss/search?q=Paris%20Saint-Germain&hl=en-US&gl=US&ceid=US:en
+- GNews: Juventus: https://news.google.com/rss/search?q=Juventus&hl=en-US&gl=US&ceid=US:en
+- GNews: Lakers: https://news.google.com/rss/search?q=Lakers&hl=en-US&gl=US&ceid=US:en
+- GNews: Warriors: https://news.google.com/rss/search?q=Warriors&hl=en-US&gl=US&ceid=US:en
+- GNews: Celtics: https://news.google.com/rss/search?q=Celtics&hl=en-US&gl=US&ceid=US:en
+- GNews: Cowboys: https://news.google.com/rss/search?q=Cowboys&hl=en-US&gl=US&ceid=US:en
+- GNews: Patriots: https://news.google.com/rss/search?q=Patriots&hl=en-US&gl=US&ceid=US:en
+- GNews: Chiefs: https://news.google.com/rss/search?q=Chiefs&hl=en-US&gl=US&ceid=US:en
+- GNews: Yankees: https://news.google.com/rss/search?q=Yankees&hl=en-US&gl=US&ceid=US:en
+- GNews: Dodgers: https://news.google.com/rss/search?q=Dodgers&hl=en-US&gl=US&ceid=US:en
+- GNews: Formula 1 Verstappen: https://news.google.com/rss/search?q=Formula%201%20Verstappen&hl=en-US&gl=US&ceid=US:en
+- GNews: Lewis Hamilton: https://news.google.com/rss/search?q=Lewis%20Hamilton&hl=en-US&gl=US&ceid=US:en
+- GNews: Novak Djokovic: https://news.google.com/rss/search?q=Novak%20Djokovic&hl=en-US&gl=US&ceid=US:en
+- GNews: Carlos Alcaraz: https://news.google.com/rss/search?q=Carlos%20Alcaraz&hl=en-US&gl=US&ceid=US:en
+- GNews: LeBron James: https://news.google.com/rss/search?q=LeBron%20James&hl=en-US&gl=US&ceid=US:en
+- GNews: Lionel Messi: https://news.google.com/rss/search?q=Lionel%20Messi&hl=en-US&gl=US&ceid=US:en
+- GNews: Cristiano Ronaldo: https://news.google.com/rss/search?q=Cristiano%20Ronaldo&hl=en-US&gl=US&ceid=US:en
+- GNews: Super Bowl: https://news.google.com/rss/search?q=Super%20Bowl&hl=en-US&gl=US&ceid=US:en
+- GNews: NBA Finals: https://news.google.com/rss/search?q=NBA%20Finals&hl=en-US&gl=US&ceid=US:en
+- GNews: World Series: https://news.google.com/rss/search?q=World%20Series&hl=en-US&gl=US&ceid=US:en
+- GNews: Stanley Cup: https://news.google.com/rss/search?q=Stanley%20Cup&hl=en-US&gl=US&ceid=US:en
+- GNews: Wimbledon: https://news.google.com/rss/search?q=Wimbledon&hl=en-US&gl=US&ceid=US:en
+- GNews: US Open tennis: https://news.google.com/rss/search?q=US%20Open%20tennis&hl=en-US&gl=US&ceid=US:en
+
+## tech (166)
+- NYT Technology: https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml
+- NYT PersonalTech: https://rss.nytimes.com/services/xml/rss/nyt/PersonalTech.xml
+- Guardian technology: https://www.theguardian.com/technology/rss
+- Guardian media: https://www.theguardian.com/media/rss
+- BBC news/technology: https://feeds.bbci.co.uk/news/technology/rss.xml
+- StackExchange stackoverflow: https://stackoverflow.com/feeds
+- StackExchange serverfault: https://serverfault.com/feeds
+- StackExchange superuser: https://superuser.com/feeds
+- StackExchange askubuntu: https://askubuntu.com/feeds
+- StackExchange math: https://math.stackexchange.com/feeds
+- StackExchange stats: https://stats.stackexchange.com/feeds
+- StackExchange physics: https://physics.stackexchange.com/feeds
+- StackExchange chemistry: https://chemistry.stackexchange.com/feeds
+- StackExchange biology: https://biology.stackexchange.com/feeds
+- StackExchange cs: https://cs.stackexchange.com/feeds
+- StackExchange cstheory: https://cstheory.stackexchange.com/feeds
+- StackExchange datascience: https://datascience.stackexchange.com/feeds
+- StackExchange ai: https://ai.stackexchange.com/feeds
+- StackExchange softwareengineering: https://softwareengineering.stackexchange.com/feeds
+- StackExchange codereview: https://codereview.stackexchange.com/feeds
+- StackExchange dba: https://dba.stackexchange.com/feeds
+- StackExchange devops: https://devops.stackexchange.com/feeds
+- StackExchange networkengineering: https://networkengineering.stackexchange.com/feeds
+- StackExchange unix: https://unix.stackexchange.com/feeds
+- StackExchange apple: https://apple.stackexchange.com/feeds
+- StackExchange android: https://android.stackexchange.com/feeds
+- StackExchange webmasters: https://webmasters.stackexchange.com/feeds
+- StackExchange webapps: https://webapps.stackexchange.com/feeds
+- StackExchange wordpress: https://wordpress.stackexchange.com/feeds
+- StackExchange magento: https://magento.stackexchange.com/feeds
+- StackExchange drupal: https://drupal.stackexchange.com/feeds
+- StackExchange sharepoint: https://sharepoint.stackexchange.com/feeds
+- StackExchange salesforce: https://salesforce.stackexchange.com/feeds
+- StackExchange gis: https://gis.stackexchange.com/feeds
+- StackExchange ux: https://ux.stackexchange.com/feeds
+- StackExchange mathoverflow: https://mathoverflow.net/feeds
+- Google News TECHNOLOGY: https://news.google.com/rss/headlines/section/topic/TECHNOLOGY?hl=en-US&gl=US&ceid=US:en
+- TechCrunch: https://techcrunch.com/feed/
+- The Verge: https://www.theverge.com/rss/index.xml
+- Wired: https://www.wired.com/feed/rss
+- Ars Technica: https://feeds.arstechnica.com/arstechnica/index
+- Engadget: https://www.engadget.com/rss.xml
+- MIT Tech Review: https://www.technologyreview.com/feed/
+- VentureBeat: https://venturebeat.com/feed/
+- Hacker News: https://news.ycombinator.com/rss
+- large language models: https://news.google.com/rss/search?q=large%20language%20models&hl=en-US&gl=US&ceid=US:en
+- OpenAI ChatGPT: https://news.google.com/rss/search?q=OpenAI%20ChatGPT&hl=en-US&gl=US&ceid=US:en
+- Google Gemini: https://news.google.com/rss/search?q=Google%20Gemini&hl=en-US&gl=US&ceid=US:en
+- Anthropic Claude: https://news.google.com/rss/search?q=Anthropic%20Claude&hl=en-US&gl=US&ceid=US:en
+- generative AI: https://news.google.com/rss/search?q=generative%20AI&hl=en-US&gl=US&ceid=US:en
+- AI regulation: https://news.google.com/rss/search?q=AI%20regulation&hl=en-US&gl=US&ceid=US:en
+- machine learning research: https://news.google.com/rss/search?q=machine%20learning%20research&hl=en-US&gl=US&ceid=US:en
+- computer vision: https://news.google.com/rss/search?q=computer%20vision&hl=en-US&gl=US&ceid=US:en
+- autonomous vehicles: https://news.google.com/rss/search?q=autonomous%20vehicles&hl=en-US&gl=US&ceid=US:en
+- robotics: https://news.google.com/rss/search?q=robotics&hl=en-US&gl=US&ceid=US:en
+- semiconductor industry: https://news.google.com/rss/search?q=semiconductor%20industry&hl=en-US&gl=US&ceid=US:en
+- cloud computing AWS Azure: https://news.google.com/rss/search?q=cloud%20computing%20AWS%20Azure&hl=en-US&gl=US&ceid=US:en
+- cybersecurity breach: https://news.google.com/rss/search?q=cybersecurity%20breach&hl=en-US&gl=US&ceid=US:en
+- data privacy: https://news.google.com/rss/search?q=data%20privacy&hl=en-US&gl=US&ceid=US:en
+- 5G networks: https://news.google.com/rss/search?q=5G%20networks&hl=en-US&gl=US&ceid=US:en
+- augmented reality: https://news.google.com/rss/search?q=augmented%20reality&hl=en-US&gl=US&ceid=US:en
+- virtual reality: https://news.google.com/rss/search?q=virtual%20reality&hl=en-US&gl=US&ceid=US:en
+- metaverse: https://news.google.com/rss/search?q=metaverse&hl=en-US&gl=US&ceid=US:en
+- Internet of Things: https://news.google.com/rss/search?q=Internet%20of%20Things&hl=en-US&gl=US&ceid=US:en
+- edge computing: https://news.google.com/rss/search?q=edge%20computing&hl=en-US&gl=US&ceid=US:en
+- open source software: https://news.google.com/rss/search?q=open%20source%20software&hl=en-US&gl=US&ceid=US:en
+- developer tools: https://news.google.com/rss/search?q=developer%20tools&hl=en-US&gl=US&ceid=US:en
+- programming languages: https://news.google.com/rss/search?q=programming%20languages&hl=en-US&gl=US&ceid=US:en
+- Rust programming: https://news.google.com/rss/search?q=Rust%20programming&hl=en-US&gl=US&ceid=US:en
+- Python programming: https://news.google.com/rss/search?q=Python%20programming&hl=en-US&gl=US&ceid=US:en
+- Kubernetes: https://news.google.com/rss/search?q=Kubernetes&hl=en-US&gl=US&ceid=US:en
+- serverless: https://news.google.com/rss/search?q=serverless&hl=en-US&gl=US&ceid=US:en
+- DevOps: https://news.google.com/rss/search?q=DevOps&hl=en-US&gl=US&ceid=US:en
+- API economy: https://news.google.com/rss/search?q=API%20economy&hl=en-US&gl=US&ceid=US:en
+- SaaS startups: https://news.google.com/rss/search?q=SaaS%20startups&hl=en-US&gl=US&ceid=US:en
+- tech layoffs: https://news.google.com/rss/search?q=tech%20layoffs&hl=en-US&gl=US&ceid=US:en
+- electric vehicles battery: https://news.google.com/rss/search?q=electric%20vehicles%20battery&hl=en-US&gl=US&ceid=US:en
+- space technology: https://news.google.com/rss/search?q=space%20technology&hl=en-US&gl=US&ceid=US:en
+- biotech startups: https://news.google.com/rss/search?q=biotech%20startups&hl=en-US&gl=US&ceid=US:en
+- fintech: https://news.google.com/rss/search?q=fintech&hl=en-US&gl=US&ceid=US:en
+- chip manufacturing TSMC: https://news.google.com/rss/search?q=chip%20manufacturing%20TSMC&hl=en-US&gl=US&ceid=US:en
+- Nvidia GPU: https://news.google.com/rss/search?q=Nvidia%20GPU&hl=en-US&gl=US&ceid=US:en
+- Apple Vision Pro: https://news.google.com/rss/search?q=Apple%20Vision%20Pro&hl=en-US&gl=US&ceid=US:en
+- SE stackoverflow/python: https://stackoverflow.com/feeds/tag/python
+- SE stackoverflow/javascript: https://stackoverflow.com/feeds/tag/javascript
+- SE stackoverflow/java: https://stackoverflow.com/feeds/tag/java
+- SE stackoverflow/c%23: https://stackoverflow.com/feeds/tag/c%23
+- SE stackoverflow/rust: https://stackoverflow.com/feeds/tag/rust
+- SE stackoverflow/go: https://stackoverflow.com/feeds/tag/go
+- SE stackoverflow/typescript: https://stackoverflow.com/feeds/tag/typescript
+- SE stackoverflow/node.js: https://stackoverflow.com/feeds/tag/node.js
+- SE stackoverflow/docker: https://stackoverflow.com/feeds/tag/docker
+- SE stackoverflow/kubernetes: https://stackoverflow.com/feeds/tag/kubernetes
+- SE stackoverflow/machine-learning: https://stackoverflow.com/feeds/tag/machine-learning
+- SE stackoverflow/tensorflow: https://stackoverflow.com/feeds/tag/tensorflow
+- SE stackoverflow/pytorch: https://stackoverflow.com/feeds/tag/pytorch
+- SE stackoverflow/sql: https://stackoverflow.com/feeds/tag/sql
+- SE stackoverflow/azure: https://stackoverflow.com/feeds/tag/azure
+- SE stackoverflow/linux: https://stackoverflow.com/feeds/tag/linux
+- SE stackoverflow/git: https://stackoverflow.com/feeds/tag/git
+- SE stackoverflow/c%2b%2b: https://stackoverflow.com/feeds/tag/c%2b%2b
+- GNews: React framework: https://news.google.com/rss/search?q=React%20framework&hl=en-US&gl=US&ceid=US:en
+- GNews: Vue.js: https://news.google.com/rss/search?q=Vue.js&hl=en-US&gl=US&ceid=US:en
+- GNews: Angular: https://news.google.com/rss/search?q=Angular&hl=en-US&gl=US&ceid=US:en
+- GNews: Next.js: https://news.google.com/rss/search?q=Next.js&hl=en-US&gl=US&ceid=US:en
+- GNews: Svelte: https://news.google.com/rss/search?q=Svelte&hl=en-US&gl=US&ceid=US:en
+- GNews: Django: https://news.google.com/rss/search?q=Django&hl=en-US&gl=US&ceid=US:en
+- GNews: Flask: https://news.google.com/rss/search?q=Flask&hl=en-US&gl=US&ceid=US:en
+- GNews: FastAPI: https://news.google.com/rss/search?q=FastAPI&hl=en-US&gl=US&ceid=US:en
+- GNews: Spring Boot: https://news.google.com/rss/search?q=Spring%20Boot&hl=en-US&gl=US&ceid=US:en
+- GNews: .NET: https://news.google.com/rss/search?q=.NET&hl=en-US&gl=US&ceid=US:en
+- GNews: Node.js: https://news.google.com/rss/search?q=Node.js&hl=en-US&gl=US&ceid=US:en
+- GNews: Deno: https://news.google.com/rss/search?q=Deno&hl=en-US&gl=US&ceid=US:en
+- GNews: Bun runtime: https://news.google.com/rss/search?q=Bun%20runtime&hl=en-US&gl=US&ceid=US:en
+- GNews: WebAssembly: https://news.google.com/rss/search?q=WebAssembly&hl=en-US&gl=US&ceid=US:en
+- GNews: GraphQL: https://news.google.com/rss/search?q=GraphQL&hl=en-US&gl=US&ceid=US:en
+- GNews: PostgreSQL: https://news.google.com/rss/search?q=PostgreSQL&hl=en-US&gl=US&ceid=US:en
+- GNews: MongoDB: https://news.google.com/rss/search?q=MongoDB&hl=en-US&gl=US&ceid=US:en
+- GNews: Redis: https://news.google.com/rss/search?q=Redis&hl=en-US&gl=US&ceid=US:en
+- GNews: Elasticsearch: https://news.google.com/rss/search?q=Elasticsearch&hl=en-US&gl=US&ceid=US:en
+- GNews: Apache Kafka: https://news.google.com/rss/search?q=Apache%20Kafka&hl=en-US&gl=US&ceid=US:en
+- GNews: Docker containers: https://news.google.com/rss/search?q=Docker%20containers&hl=en-US&gl=US&ceid=US:en
+- GNews: Terraform: https://news.google.com/rss/search?q=Terraform&hl=en-US&gl=US&ceid=US:en
+- GNews: Ansible: https://news.google.com/rss/search?q=Ansible&hl=en-US&gl=US&ceid=US:en
+- GNews: GitHub Copilot: https://news.google.com/rss/search?q=GitHub%20Copilot&hl=en-US&gl=US&ceid=US:en
+- GNews: GitLab: https://news.google.com/rss/search?q=GitLab&hl=en-US&gl=US&ceid=US:en
+- GNews: Jenkins CI: https://news.google.com/rss/search?q=Jenkins%20CI&hl=en-US&gl=US&ceid=US:en
+- GNews: observability: https://news.google.com/rss/search?q=observability&hl=en-US&gl=US&ceid=US:en
+- GNews: vector database: https://news.google.com/rss/search?q=vector%20database&hl=en-US&gl=US&ceid=US:en
+- GNews: RAG retrieval: https://news.google.com/rss/search?q=RAG%20retrieval&hl=en-US&gl=US&ceid=US:en
+- GNews: AI agents: https://news.google.com/rss/search?q=AI%20agents&hl=en-US&gl=US&ceid=US:en
+- GNews: multimodal AI: https://news.google.com/rss/search?q=multimodal%20AI&hl=en-US&gl=US&ceid=US:en
+- GNews: fine-tuning LLM: https://news.google.com/rss/search?q=fine-tuning%20LLM&hl=en-US&gl=US&ceid=US:en
+- GNews: prompt engineering: https://news.google.com/rss/search?q=prompt%20engineering&hl=en-US&gl=US&ceid=US:en
+- GNews: AI chips: https://news.google.com/rss/search?q=AI%20chips&hl=en-US&gl=US&ceid=US:en
+- GNews: neuromorphic computing: https://news.google.com/rss/search?q=neuromorphic%20computing&hl=en-US&gl=US&ceid=US:en
+- GNews: photonic computing: https://news.google.com/rss/search?q=photonic%20computing&hl=en-US&gl=US&ceid=US:en
+- GNews: 6G research: https://news.google.com/rss/search?q=6G%20research&hl=en-US&gl=US&ceid=US:en
+- GNews: brain computer interface: https://news.google.com/rss/search?q=brain%20computer%20interface&hl=en-US&gl=US&ceid=US:en
+- GNews: humanoid robots: https://news.google.com/rss/search?q=humanoid%20robots&hl=en-US&gl=US&ceid=US:en
+- GNews: drone technology: https://news.google.com/rss/search?q=drone%20technology&hl=en-US&gl=US&ceid=US:en
+- GNews: 3D printing: https://news.google.com/rss/search?q=3D%20printing&hl=en-US&gl=US&ceid=US:en
+- GNews: smart glasses: https://news.google.com/rss/search?q=smart%20glasses&hl=en-US&gl=US&ceid=US:en
+- GNews: foldable phones: https://news.google.com/rss/search?q=foldable%20phones&hl=en-US&gl=US&ceid=US:en
+- GNews: wearable technology: https://news.google.com/rss/search?q=wearable%20technology&hl=en-US&gl=US&ceid=US:en
+- GNews: digital twin: https://news.google.com/rss/search?q=digital%20twin&hl=en-US&gl=US&ceid=US:en
+- GNews: blockchain enterprise: https://news.google.com/rss/search?q=blockchain%20enterprise&hl=en-US&gl=US&ceid=US:en
+- GNews: zero knowledge proofs: https://news.google.com/rss/search?q=zero%20knowledge%20proofs&hl=en-US&gl=US&ceid=US:en
+- GNews: homomorphic encryption: https://news.google.com/rss/search?q=homomorphic%20encryption&hl=en-US&gl=US&ceid=US:en
+- GNews: post quantum cryptography: https://news.google.com/rss/search?q=post%20quantum%20cryptography&hl=en-US&gl=US&ceid=US:en
+- GNews: self driving Waymo: https://news.google.com/rss/search?q=self%20driving%20Waymo&hl=en-US&gl=US&ceid=US:en
+- GNews: Tesla FSD: https://news.google.com/rss/search?q=Tesla%20FSD&hl=en-US&gl=US&ceid=US:en
+- GNews: lidar sensors: https://news.google.com/rss/search?q=lidar%20sensors&hl=en-US&gl=US&ceid=US:en
+- GNews: battery recycling: https://news.google.com/rss/search?q=battery%20recycling&hl=en-US&gl=US&ceid=US:en
+- GNews: solid state battery: https://news.google.com/rss/search?q=solid%20state%20battery&hl=en-US&gl=US&ceid=US:en
+- GNews: chip export controls: https://news.google.com/rss/search?q=chip%20export%20controls&hl=en-US&gl=US&ceid=US:en
+- SE datascience/machine-learning: https://datascience.stackexchange.com/feeds/tag/machine-learning
+- SE ai/machine-learning: https://ai.stackexchange.com/feeds/tag/machine-learning
+- SE datascience/deep-learning: https://datascience.stackexchange.com/feeds/tag/deep-learning
+- SE ai/deep-learning: https://ai.stackexchange.com/feeds/tag/deep-learning
+- SE ai/neural-networks: https://ai.stackexchange.com/feeds/tag/neural-networks
+- SE datascience/nlp: https://datascience.stackexchange.com/feeds/tag/nlp
+- SE datascience/reinforcement-learning: https://datascience.stackexchange.com/feeds/tag/reinforcement-learning
+- SE ai/reinforcement-learning: https://ai.stackexchange.com/feeds/tag/reinforcement-learning
+- SE datascience/computer-vision: https://datascience.stackexchange.com/feeds/tag/computer-vision
+- SE ai/computer-vision: https://ai.stackexchange.com/feeds/tag/computer-vision
