@@ -2,10 +2,10 @@
 """
 Pulse Auth + Data Service — port 7072
 Auth: signup, login, Google OAuth, API keys, category prefs.
-Data: 20 categories, 80+ free sources, no-key Phase 1 fully wired.
+Data: 23 categories, 1,000+ verified free sources, no-key Phase 1 fully wired.
 """
 
-import asyncio, hashlib, os, secrets, time, uuid, xml.etree.ElementTree as ET
+import asyncio, hashlib, json, os, secrets, time, uuid, xml.etree.ElementTree as ET
 import re, html
 from contextlib import asynccontextmanager
 from datetime import datetime, timedelta, timezone
@@ -97,6 +97,7 @@ CATEGORIES = {
     "aviation":      {"label": "Aviation & Transport",    "icon": "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5'/></svg>",  "desc": "Live aircraft via OpenSky Network, flight density"},
     "jobs":          {"label": "Jobs & Labor",            "icon": "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z'/></svg>",  "desc": "Remote jobs (Remotive), US unemployment rate (BLS)"},
     "commodities":   {"label": "Commodities",             "icon": "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 2.25c0 2.278-3.694 4.125-8.25 4.125S3.75 10.903 3.75 8.625m16.5 2.25c0 2.278-3.694 4.125-8.25 4.125S3.75 13.153 3.75 10.875'/></svg>",  "desc": "Gold, silver, oil, gas — free exchange data"},
+    "regulatory":    {"label": "Regulatory & Legal",      "icon": "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3v18m-7 0h14M5 7h14M7 7l-3 7a3 3 0 006 0L7 7zm10 0l-3 7a3 3 0 006 0l-3-7z'/></svg>",  "desc": "SEC, CFTC, FCA, ESMA, EU law, court opinions, with hash-sealed daily snapshots"},
 }
 
 # ── DB ────────────────────────────────────────────────────────────────────────
@@ -1503,6 +1504,65 @@ async def fetch_commodities():
 # ─────────────────────────────────────────────────────────────────────────────
 # FEED MAP
 # ─────────────────────────────────────────────────────────────────────────────
+# 23. REGULATORY & LEGAL — official regulator, legislature and court feeds.
+# Every item is sealed with sha256, and each fetch is stored as a dated
+# snapshot so anyone can later prove what the feed said on a given day.
+# ─────────────────────────────────────────────────────────────────────────────
+REGULATORY_FEEDS = list(VERIFIED_FEEDS.get("regulatory", []))
+
+def _reg_item_hash(a: dict) -> str:
+    canon = json.dumps({k: a.get(k, "") for k in ("feed", "title", "url", "published")},
+                       sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(canon.encode()).hexdigest()
+
+def _reg_digest(hashes: list[str]) -> str:
+    return hashlib.sha256("".join(sorted(hashes)).encode()).hexdigest()
+
+async def _reg_store_snapshot(items: list[dict], digest: str, fetched_at: str):
+    day = fetched_at[:10]
+    async with aiosqlite.connect(DB_PATH) as db:
+        await db.execute("""CREATE TABLE IF NOT EXISTS reg_items (
+            hash TEXT PRIMARY KEY, day TEXT NOT NULL, first_seen TEXT NOT NULL, item TEXT NOT NULL)""")
+        await db.execute("""CREATE TABLE IF NOT EXISTS reg_snapshots (
+            fetched_at TEXT PRIMARY KEY, day TEXT NOT NULL, digest TEXT NOT NULL, hashes TEXT NOT NULL)""")
+        for it in items:
+            await db.execute("INSERT OR IGNORE INTO reg_items(hash, day, first_seen, item) VALUES (?,?,?,?)",
+                             (it["sha256"], day, fetched_at, json.dumps({k: v for k, v in it.items() if k != "sha256"}, ensure_ascii=False)))
+        await db.execute("INSERT OR IGNORE INTO reg_snapshots(fetched_at, day, digest, hashes) VALUES (?,?,?,?)",
+                         (fetched_at, day, digest, json.dumps([i["sha256"] for i in items])))
+        await db.commit()
+
+async def fetch_regulatory():
+    raw = await _multi_rss(REGULATORY_FEEDS, limit_per_feed=3, total=10_000)
+    # Round-robin across feeds so courts, EU law and regulators all show up,
+    # instead of the first feeds in the list filling the whole cap.
+    by_feed: dict[str, list] = {}
+    for a in raw:
+        by_feed.setdefault(a["feed"], []).append(a)
+    articles, rnd = [], 0
+    while len(articles) < 80 and any(len(v) > rnd for v in by_feed.values()):
+        for v in by_feed.values():
+            if len(v) > rnd and len(articles) < 80:
+                articles.append(v[rnd])
+        rnd += 1
+    for a in articles:
+        a["sha256"] = _reg_item_hash(a)
+    fetched_at = datetime.now(timezone.utc).isoformat()
+    digest = _reg_digest([a["sha256"] for a in articles])
+    try:
+        await _reg_store_snapshot(articles, digest, fetched_at)
+    except Exception:
+        pass
+    return {
+        "articles": articles,
+        "source_count": len(REGULATORY_FEEDS),
+        "snapshot": {"fetched_at": fetched_at, "digest": digest, "items": len(articles),
+                     "verify": f"/data/regulatory/snapshot/{fetched_at[:10]}"},
+        "note": "Each article carries sha256(feed,title,url,published). digest = sha256 of the sorted item hashes.",
+    }
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 FEED_MAP = {
     "crypto":        (fetch_crypto,       60),
     "onchain":       (fetch_onchain,      30),
@@ -1526,6 +1586,7 @@ FEED_MAP = {
     "aviation":      (fetch_aviation,     60),
     "jobs":          (fetch_jobs,         3600),
     "commodities":   (fetch_commodities,  120),
+    "regulatory":    (fetch_regulatory,   600),
 }
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1586,7 +1647,7 @@ async def get_feed(category: str, request: Request, db=Depends(get_db)):
     else:
         # Unauthenticated: free public preview for the landing-page live demo.
         # Read-only, non-commercial categories only. Full catalog needs a key.
-        FREE_PREVIEW = ("crypto", "weather", "medical", "politics", "news", "science", "disasters")
+        FREE_PREVIEW = ("crypto", "weather", "medical", "politics", "news", "science", "disasters", "regulatory")
         if category not in FREE_PREVIEW:
             raise HTTPException(401, "API key required. Sign up at pulse.dev")
 
@@ -1600,7 +1661,8 @@ async def get_feed(category: str, request: Request, db=Depends(get_db)):
     pool_arts, pool_batch_labels, pool_size = await _cached(
         f"__pool__{category}", ttl, lambda c=category: _pool_batch(c)
     )
-    if isinstance(data, dict) and pool_arts:
+    # Regulatory skips enrichment: its articles must match the sealed snapshot exactly.
+    if category != "regulatory" and isinstance(data, dict) and pool_arts:
         existing = data.get("articles")
         if isinstance(existing, list):
             seen = {(a.get("title") or "")[:60].lower() for a in existing}
@@ -1644,6 +1706,48 @@ async def public_sources_category(category: str):
         "category": category,
         "count": len(pool),
         "sources": [{"name": lbl, "url": url} for lbl, url in pool],
+    }
+
+@app.get("/data/regulatory/snapshots")
+async def reg_snapshots(limit: int = 30):
+    async with aiosqlite.connect(DB_PATH) as db:
+        try:
+            async with db.execute("SELECT day, COUNT(*), MAX(fetched_at) FROM reg_snapshots GROUP BY day ORDER BY day DESC LIMIT ?", (min(limit, 365),)) as cur:
+                rows = await cur.fetchall()
+        except Exception:
+            rows = []
+    return {"days": [{"day": d, "snapshots": n, "latest": l} for d, n, l in rows]}
+
+@app.get("/data/regulatory/snapshot/{day}")
+async def reg_snapshot(day: str):
+    """Return the latest snapshot for a day, every item in it, and a fresh
+    recomputation of every hash so the caller can see nothing was altered."""
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", day):
+        raise HTTPException(400, "day must be YYYY-MM-DD")
+    async with aiosqlite.connect(DB_PATH) as db:
+        try:
+            async with db.execute("SELECT fetched_at, digest, hashes FROM reg_snapshots WHERE day=? ORDER BY fetched_at DESC LIMIT 1", (day,)) as cur:
+                snap = await cur.fetchone()
+        except Exception:
+            snap = None
+        if not snap:
+            raise HTTPException(404, f"No regulatory snapshot for {day}")
+        fetched_at, digest, hashes = snap[0], snap[1], json.loads(snap[2])
+        items, broken = [], []
+        for h in hashes:
+            async with db.execute("SELECT item FROM reg_items WHERE hash=?", (h,)) as cur:
+                row = await cur.fetchone()
+            if not row:
+                broken.append(h); continue
+            it = json.loads(row[0])
+            if _reg_item_hash(it) != h:
+                broken.append(h)
+            items.append({**it, "sha256": h})
+    recomputed = _reg_digest(hashes)
+    return {
+        "day": day, "fetched_at": fetched_at, "digest": digest,
+        "verified": recomputed == digest and not broken,
+        "broken_items": broken, "items": items,
     }
 
 @app.get("/data/categories")

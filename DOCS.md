@@ -2,7 +2,7 @@
 
 **The real-time truth layer for AI agents.**
 
-Pulse gives your AI live, verified facts the instant it asks. No stale training data, no blind web scraping, no hallucinated numbers. One HTTP call returns structured, source-attributed data pulled continuously from **1,000+ free live sources** across 22 categories.
+Pulse gives your AI live, verified facts the instant it asks. No stale training data, no blind web scraping, no hallucinated numbers. One HTTP call returns structured, source-attributed data pulled continuously from **1,000+ free live sources** across 23 categories.
 
 ---
 
@@ -62,7 +62,7 @@ curl "$PULSE_BASE/data/feed/medical"
 
 You get back live health headlines from WHO and other medical sources, each with a title, URL, timestamp, and source name. That is the entire integration: one GET request.
 
-For the full catalog (all 22 categories), [generate an API key](#authentication) and pass it as a header.
+For the full catalog (all 23 categories), [generate an API key](#authentication) and pass it as a header.
 
 ---
 
@@ -116,9 +116,11 @@ Base URL: `$PULSE_BASE`
 | Method | Path | Auth | Description |
 |---|---|---|---|
 | `GET` | `/data/feed/{category}` | key / cookie / preview | Live feed for one category. |
-| `GET` | `/data/categories` | none | Metadata for all 22 categories (label, icon, description). |
+| `GET` | `/data/categories` | none | Metadata for all 23 categories (label, icon, description). |
 | `GET` | `/data/sources` | none | Count of verified live sources, broken down by category. |
 | `GET` | `/data/sources/{category}` | none | Every verified source URL for one category. |
+| `GET` | `/data/regulatory/snapshots` | none | Days with sealed regulatory snapshots. |
+| `GET` | `/data/regulatory/snapshot/{YYYY-MM-DD}` | none | That day's snapshot, every item, and a fresh hash check (`verified: true/false`). |
 | `GET` | `/health` | none | Service status, category count, verified source count. |
 
 ### Auth & keys
@@ -162,7 +164,7 @@ Base URL: `$PULSE_BASE`
   "cached": true,
   "ttl_seconds": 120,
   "feeds_available": 87,
-  "total_verified_sources": 1186,
+  "total_verified_sources": 1221,
   "timestamp": "2026-08-31T12:00:00.000000+00:00"
 }
 ```
@@ -183,14 +185,14 @@ Base URL: `$PULSE_BASE`
 
 ## Categories
 
-22 live categories:
+23 live categories:
 
 ```
 crypto      onchain     defi        finance     economics
 news        weather     climate     air         disasters
 space       science     medical     tech        cybersecurity
 sports      gaming      social      politics    aviation
-jobs        commodities
+jobs        commodities regulatory
 ```
 
 Get live metadata and per-category source counts:
@@ -200,6 +202,21 @@ curl "$PULSE_BASE/data/categories"          # labels + descriptions
 curl "$PULSE_BASE/data/sources"             # verified counts per category
 curl "$PULSE_BASE/data/sources/medical"     # every source URL for one category
 ```
+
+---
+
+## Regulatory & Legal
+
+`GET /data/feed/regulatory` (no key needed) returns 38 official and verified sources: SEC, CFTC and Treasury via the Federal Register, the Federal Reserve, OCC, FTC, DOJ, FCA, ESMA, ECB, EDPB, EUR-Lex, the European Commission, UK legislation, US bills and public laws, and court opinions from the Supreme Court, 2nd, 9th and DC Circuits.
+
+Every article carries `sha256` over its feed, title, URL and publish date. Every fetch is stored as a dated snapshot with a `digest` (sha256 of the sorted item hashes). To prove what the feed said on a given day:
+
+```bash
+curl "$PULSE_BASE/data/regulatory/snapshot/2026-10-28"
+# { "verified": true, "digest": "...", "broken_items": [], "items": [...] }
+```
+
+If any stored item is edited after the fact, `verified` turns false and `broken_items` names it.
 
 ---
 
@@ -348,7 +365,7 @@ Pulse uses a **background heartbeat warmer**, not on-demand fetching. Every cate
 | `401 Invalid API key` | Key missing or wrong on a non-preview category. | Pass a valid `X-Pulse-Key`. |
 | `401 API key required` | Unauthenticated request to a non-preview category. | Use a preview category or add a key. |
 | `403 Category disabled` | Category turned off in your account settings. | Re-enable via `POST /auth/categories`. |
-| `404 Unknown category` | Category name not in the 22-category set. | Check `GET /data/categories`. |
+| `404 Unknown category` | Category name not in the 23-category set. | Check `GET /data/categories`. |
 
 Errors are plain JSON: `{"detail": "..."}`.
 
