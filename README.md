@@ -5,7 +5,7 @@
 **The live regulatory feed for AI agents, with proof.**
 One API call returns what regulators and courts published today. Every item is sealed, and every day is anchored on-chain.
 
-[**Live →**](https://getpulsedata.online) &nbsp;·&nbsp; [Dashboard](https://getpulsedata.online/dashboard?feed=regulatory) &nbsp;·&nbsp; [Try the feed](https://getpulsedata.online/data/feed/regulatory) &nbsp;·&nbsp; 0G Galileo
+[**Live →**](https://getpulsedata.online) &nbsp;·&nbsp; [Dashboard](https://getpulsedata.online/dashboard?feed=regulatory) &nbsp;·&nbsp; [Try the feed](https://getpulsedata.online/data/feed/regulatory) &nbsp;·&nbsp; [Demo (92s)](media/pulse_bli_demo.mp4)
 
 </div>
 
