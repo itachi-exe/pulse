@@ -1,0 +1,25 @@
+{
+ "voice": "en-GB-SoniaNeural",
+ "rate": "+2%",
+ "gap": 0.45,
+ "beats": [
+  {"id": "b1", "kind": "footage", "scene": "hook",
+   "narration": "Ask an AI agent what the SEC did this week. It will guess, from training data that is months old. In compliance, a guess is a liability."},
+  {"id": "b2", "kind": "footage", "scene": "landing",
+   "narration": "Pulse is a live data layer for AI agents. Twelve hundred verified sources, twenty-three categories, one API."},
+  {"id": "b3", "kind": "footage", "scene": "curl",
+   "narration": "Its Regulatory and Legal feed pulls thirty-eight sources. Twenty-four are primary: the SEC, the Federal Reserve, the FCA, ESMA, EUR-Lex, and the federal courts. No key needed."},
+  {"id": "b4", "kind": "footage", "scene": "dashboard",
+   "narration": "In the dashboard, pick Regulatory and Legal, and you read today's headlines, each linked to the original document."},
+  {"id": "b5", "kind": "footage", "scene": "seal",
+   "narration": "Every item is fingerprinted the moment it arrives. Each day rolls up into one digest, and that digest is written on chain."},
+  {"id": "b6", "kind": "footage", "scene": "verify",
+   "narration": "You do not have to trust us. This script uses only the Python standard library. It downloads the day, recomputes every hash, and reads the transaction straight from the chain. Verified."},
+  {"id": "b7", "kind": "footage", "scene": "tamper",
+   "narration": "Now the worst case. Edit one headline in our database, then rewrite every hash to cover it up. Our own data looks clean. The chain disagrees, and the check fails."},
+  {"id": "b8", "kind": "footage", "scene": "agents",
+   "narration": "Agents plug in through the REST API, the MCP server, or the Python SDK. Compliance teams get a record they can prove."},
+  {"id": "b9", "kind": "footage", "scene": "end",
+   "narration": "Pulse. The regulatory feed for AI agents, with proof. Live now at getpulsedata dot online."}
+ ]
+}
