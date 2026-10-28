@@ -15,7 +15,7 @@ One API call returns what regulators and courts published today. Every item is s
 
 AI agents now answer legal and compliance questions, but they answer from training data that is months old. Ask one what the SEC did this week and it guesses. In compliance, a guess is a liability, and a correct answer you cannot prove is barely better.
 
-Pulse is a live data layer for agents: **1,221 verified sources across 23 categories**, served as structured JSON. Its **Regulatory & Legal** feed pulls from **38 verified sources**. **24 are primary sources** published by the regulator, court or legislature itself: the SEC, Federal Reserve, OCC, FTC, DOJ, FCA, ESMA, ECB, EDPB, the European Commission, EUR-Lex, UK legislation, US bills and public laws, the US Supreme Court and three federal appeals courts. **14 are tracked news topics** (MiCA, GDPR fines, the AI Act, OFAC sanctions, AML and more) for coverage the primary sources do not carry.
+Pulse is a live data layer for agents: **1,221 verified sources across 23 categories**, served as structured JSON. Its **Regulatory & Legal** feed pulls from **38 verified sources**. **25 are primary sources** published by the regulator, court or legislature itself: the SEC, Federal Reserve, OCC, FTC, DOJ, FCA, ESMA, ECB, EDPB, the European Commission, EUR-Lex, UK legislation, US bills and public laws, the US Supreme Court and three federal appeals courts. **13 are tracked news topics** (MiCA, GDPR fines, the AI Act, OFAC sanctions, AML and more) for coverage the primary sources do not carry.
 
 Three ideas shape it:
 
@@ -94,7 +94,7 @@ Captured from the live site by `tests/readme_shots.py`.
 
 ```mermaid
 flowchart LR
-    S[38 feeds: 24 primary<br/>SEC, Fed, FCA, ESMA, ECB,<br/>EUR-Lex, courts, Federal Register<br/>+ 14 news topics] --> F[Fetcher<br/>round-robin, parse RSS/Atom]
+    S[38 feeds: 25 primary<br/>SEC, Fed, FCA, ESMA, ECB,<br/>EUR-Lex, courts, Federal Register<br/>+ 13 news topics] --> F[Fetcher<br/>round-robin, parse RSS/Atom]
     F --> H[Seal<br/>sha256 per item<br/>sha256 digest per day]
     H --> DB[(SQLite<br/>reg_items, reg_snapshots,<br/>reg_anchors)]
     DB --> API[FastAPI<br/>/data/feed, /data/regulatory/*]
@@ -156,7 +156,7 @@ python anchor.py
 
 ## Roadmap
 
-- [x] Regulatory & Legal feed, 38 sources (24 primary, 14 news topics)
+- [x] Regulatory & Legal feed, 38 sources (25 primary, 13 news topics)
 - [x] Per-item sha256 seals and daily digests
 - [x] Daily on-chain anchor and an independent verifier
 - [ ] Anchor on Base mainnet
