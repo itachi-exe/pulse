@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Pulse: Live data for AI agents</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='116' fill='%230d0c0b'/%3E%3Cpath d='M104 268 H200 L236 150 L282 362 L312 268 H408' fill='none' stroke='%2375e5b0' stroke-width='36' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <meta name="description" content="Your AI knows everything happening in the world right now. Pulse delivers live data from 1,000+ sources instantly into your AI agent. No search, no delay, no hallucination."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -51,7 +52,7 @@ ul{list-style:none}
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:800;display:flex;align-items:center;justify-content:space-between;padding:0 var(--m);height:3.5rem;transition:background .4s;}
 nav.scrolled{background:rgba(13,12,11,.92);backdrop-filter:blur(20px);}
-.nav-logo{font-size:.9375rem;font-weight:700;letter-spacing:-.02em;}
+.nav-logo{font-size:.9375rem;font-weight:700;letter-spacing:-.02em;display:inline-flex;align-items:center;}.logo-mark{width:1.35em;height:1.05em;margin-right:.45em;vertical-align:-.16em;flex:none}
 .nav-center{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:2.5rem;font-size:.875rem;color:var(--ink-2);}
 .nav-link{position:relative;overflow:hidden;display:inline-flex;flex-direction:column;height:1.15em;}
 .nav-link span{display:block;transition:transform .4s var(--ease);}
@@ -408,7 +409,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);}
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="/" class="nav-logo">PULSE</a>
+  <a href="/" class="nav-logo"><svg class="logo-mark" viewBox="50 70 196 152" aria-hidden="true"><path d="M60 151 H118 L140 92 L168 210 L186 151 H234" fill="none" stroke="#75e5b0" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/></svg>PULSE</a>
   <div class="nav-center">
     <a class="nav-link" href="#about" data-l="About"><span>About</span></a>
     <a class="nav-link" href="#work" data-l="Work"><span>Work</span></a>

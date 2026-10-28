@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Pulse: Dashboard</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='116' fill='%230d0c0b'/%3E%3Cpath d='M104 268 H200 L236 150 L282 362 L312 268 H408' fill='none' stroke='%2375e5b0' stroke-width='36' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -16,7 +17,7 @@ button{background:none;border:none;cursor:pointer;font:inherit;color:inherit}
 /* SIDEBAR */
 .sidebar{position:fixed;top:0;left:0;bottom:0;width:15rem;background:rgba(13,12,11,.95);border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:50;backdrop-filter:blur(20px);}
 .sidebar-top{padding:1.5rem var(--m);border-bottom:1px solid var(--line);}
-.sidebar-logo{font-size:.9375rem;font-weight:700;letter-spacing:-.02em;}
+.sidebar-logo{font-size:.9375rem;font-weight:700;letter-spacing:-.02em;display:inline-flex;align-items:center;}.logo-mark{width:1.35em;height:1.05em;margin-right:.45em;vertical-align:-.16em;flex:none}
 .sidebar-nav{flex:1;padding:1.25rem 0;overflow-y:auto;}
 .snav-label{font-family:'Space Mono',monospace;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);padding:.5rem 1.5rem;margin-top:.75rem;}
 .snav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem 1.5rem;font-size:.875rem;color:var(--muted);transition:color .2s,background .2s;cursor:pointer;border-radius:0;}
@@ -114,7 +115,7 @@ button{background:none;border:none;cursor:pointer;font:inherit;color:inherit}
 
 /* MOBILE SIDEBAR TOGGLE */
 .mob-bar{display:none;position:fixed;top:0;left:0;right:0;height:3.5rem;z-index:60;background:rgba(13,12,11,.95);border-bottom:1px solid var(--line);align-items:center;justify-content:space-between;padding:0 1.25rem;}
-.mob-logo{font-size:.9375rem;font-weight:700;}
+.mob-logo{font-size:.9375rem;font-weight:700;display:inline-flex;align-items:center;}
 .mob-burger{display:flex;flex-direction:column;gap:5px;width:2rem;height:2rem;align-items:center;justify-content:center;cursor:pointer;}
 .mob-burger span{display:block;width:14px;height:1px;background:var(--ink-2);}
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:49;}
@@ -141,7 +142,7 @@ button{background:none;border:none;cursor:pointer;font:inherit;color:inherit}
 
 <!-- MOBILE BAR -->
 <div class="mob-bar">
-  <span class="mob-logo">PULSE</span>
+  <span class="mob-logo"><svg class="logo-mark" viewBox="50 70 196 152" aria-hidden="true"><path d="M60 151 H118 L140 92 L168 210 L186 151 H234" fill="none" stroke="#75e5b0" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/></svg>PULSE</span>
   <div class="mob-burger" onclick="toggleSidebar()"><span></span><span></span><span></span></div>
 </div>
 <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
@@ -149,7 +150,7 @@ button{background:none;border:none;cursor:pointer;font:inherit;color:inherit}
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-top">
-    <a href="/" class="sidebar-logo">PULSE</a>
+    <a href="/" class="sidebar-logo"><svg class="logo-mark" viewBox="50 70 196 152" aria-hidden="true"><path d="M60 151 H118 L140 92 L168 210 L186 151 H234" fill="none" stroke="#75e5b0" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/></svg>PULSE</a>
   </div>
   <nav class="sidebar-nav">
     <div class="snav-label">Overview</div>

@@ -83,7 +83,7 @@ def seal_html():
 
 def end_html():
     body = """<div class="wrap" style="align-items:center;text-align:center">
-     <div class="ln" id="e1" style="font-size:150px;font-weight:700;letter-spacing:-.04em">Pulse</div>
+     <div class="ln" id="e1" style="display:flex;align-items:center;gap:44px"><svg viewBox="50 70 196 152" style="width:210px;height:163px"><path d="M60 151 H118 L140 92 L168 210 L186 151 H234" fill="none" stroke="#75e5b0" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:150px;font-weight:700;letter-spacing:-.04em">Pulse</span></div>
      <div class="ln" id="e2" style="font-size:44px;color:var(--ink2);margin-top:18px">The regulatory feed for AI agents, with proof.</div>
      <div class="ln" id="e3" style="margin-top:70px;font-family:'Space Mono',monospace;font-size:30px;color:var(--acc)">getpulsedata.online</div>
      <div class="ln" id="e4" style="margin-top:22px;font-family:'Space Mono',monospace;font-size:21px;color:var(--muted)">38 regulatory sources · 1,221 sources total · anchored daily on-chain</div></div>"""
