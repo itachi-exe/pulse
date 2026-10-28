@@ -207,7 +207,7 @@ curl "$PULSE_BASE/data/sources/medical"     # every source URL for one category
 
 ## Regulatory & Legal
 
-`GET /data/feed/regulatory` (no key needed) returns 38 official and verified sources: SEC, CFTC and Treasury via the Federal Register, the Federal Reserve, OCC, FTC, DOJ, FCA, ESMA, ECB, EDPB, EUR-Lex, the European Commission, UK legislation, US bills and public laws, and court opinions from the Supreme Court, 2nd, 9th and DC Circuits.
+`GET /data/feed/regulatory` (no key needed) returns 38 verified sources. 24 are primary sources, published by the regulator, court or legislature itself: SEC, CFTC and Treasury via the Federal Register, the Federal Reserve, OCC, FTC, DOJ, FCA, ESMA, ECB, EDPB, EUR-Lex, the European Commission, UK legislation, US bills and public laws, and court opinions from the Supreme Court, 2nd, 9th and DC Circuits. The other 14 are tracked news topics (Google News searches for MiCA, GDPR fines, the AI Act, OFAC sanctions, AML, FinCEN and similar), labelled `GNews:` in the `feed` field so agents can tell primary text from coverage.
 
 Every article carries `sha256` over its feed, title, URL and publish date. Every fetch is stored as a dated snapshot with a `digest` (sha256 of the sorted item hashes). To prove what the feed said on a given day:
 

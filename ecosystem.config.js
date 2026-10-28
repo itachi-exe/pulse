@@ -19,7 +19,7 @@ module.exports = {
       env: {
         DB_PATH: '/root/pulse/pulse.db',
         PULSE_API_URL: 'http://localhost:7070',
-        JWT_SECRET: 'change-me-in-production',
+        // JWT_SECRET is read from .env (see start_auth.sh), never from this file.
         // Google OAuth — paste ID + secret from Google Cloud Console to go live.
         // While these are empty, the Google button uses a demo-account fallback.
         // If the public domain changes, update GOOGLE_REDIRECT_URI here AND in the
