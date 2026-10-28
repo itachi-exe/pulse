@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Pulse MCP Server — mcp 2.x
-Exposes live crypto prices, gas estimates, and confidence scoring
+Exposes live crypto prices, gas estimates, confidence scoring, and the\nsealed regulatory & legal feed (pulse_regulatory, pulse_regulatory_verify)
 as native tools for any Claude-based agent.
 
 Usage (stdio — Claude Desktop / Claude Code):
@@ -28,6 +28,7 @@ from mcp.server.mcpserver import MCPServer
 
 # ── Config ───────────────────────────────────────────────────────────────────
 PULSE_API = os.getenv("PULSE_API_URL", "http://localhost:7070")
+PULSE_DATA = os.getenv("PULSE_DATA_URL", "https://getpulsedata.online")  # /data/* feeds
 TIMEOUT   = 8.0
 
 mcp = MCPServer("pulse", version="0.1.0")
@@ -168,6 +169,57 @@ async def pulse_feed(feed_type: str) -> str:
     if status != 200:
         return f"Error: {data.get('error', 'unknown')}"
     return _fmt(data)
+
+
+async def _data(path: str, timeout: float = 60.0) -> tuple[int, dict]:
+    try:
+        async with httpx.AsyncClient(base_url=PULSE_DATA, timeout=timeout) as c:
+            r = await c.get(path)
+            return r.status_code, r.json()
+    except Exception as e:
+        return 503, {"error": f"Pulse data API unreachable at {PULSE_DATA}: {type(e).__name__}"}
+
+
+@mcp.tool(description=(
+    "Latest regulatory and legal updates from 38 verified sources: SEC, Federal Reserve, "
+    "OCC, FTC, DOJ, FCA, ESMA, ECB, EDPB, EUR-Lex, UK legislation, US bills and laws, and "
+    "US Supreme Court and federal appeals opinions, plus tracked news topics (feed names "
+    "starting 'GNews:'). Every item carries a sha256 seal. Use this instead of guessing "
+    "about recent rules, enforcement actions or rulings. Optional query filters titles "
+    "and feed names (case-insensitive)."
+))
+async def pulse_regulatory(query: str = "", limit: int = 20) -> str:
+    status, body = await _data("/data/feed/regulatory")
+    if status != 200:
+        return f"Error: {body.get('error') or body.get('detail') or status}"
+    d = body.get("data", body)
+    arts = d.get("articles", [])
+    q = query.strip().lower()
+    if q:
+        arts = [a for a in arts if q in (a.get("title", "") + " " + a.get("feed", "")).lower()]
+    snap = d.get("snapshot") or {}
+    lines = [f"{len(arts)} item(s). Snapshot {snap.get('fetched_at', '?')}, digest {str(snap.get('digest', '?'))[:16]}"]
+    for a in arts[:max(1, min(limit, 80))]:
+        kind = "news" if str(a.get("feed", "")).startswith("GNews:") else "primary"
+        lines.append(f"- [{a.get('feed')}] ({kind}) {a.get('title')} | {a.get('published')} | {str(a.get('url') or '').strip()} | sha256 {str(a.get('sha256', ''))[:12]}")
+    return "\n".join(lines)
+
+
+@mcp.tool(description=(
+    "Prove what the regulatory feed said on a given day (YYYY-MM-DD). Returns whether every "
+    "stored item still matches its seal and whether the day's digest matches the one "
+    "anchored on-chain, with the transaction link."
+))
+async def pulse_regulatory_verify(day: str) -> str:
+    status, d = await _data(f"/data/regulatory/snapshot/{day.strip()}")
+    if status != 200:
+        return f"Error: {d.get('detail') or d.get('error') or status}"
+    oc = d.get("onchain")
+    out = [f"{day}: {len(d.get('items', []))} items, verified={d.get('verified')}, broken_items={len(d.get('broken_items', []))}",
+           f"digest {d.get('digest')}"]
+    out.append(f"on-chain: {oc['chain']} tx {oc['tx']} verified={oc['verified']} ({oc['explorer']})" if oc
+               else "on-chain: not anchored yet (anchors are written daily at 23:55 UTC)")
+    return "\n".join(out)
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────

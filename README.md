@@ -71,7 +71,7 @@ The **Live Preview** on the dashboard has a picker for all 23 feeds. Picking **R
 
 ### Everything else agents need
 
-The same API serves 22 other live categories: crypto and on-chain data, markets, economics, news, politics, weather, climate, disasters, space, science, medical, tech, cybersecurity, sports, aviation, jobs and commodities. Pulse also ships an **MCP server** (`mcp_server.py`) so Claude-style agents get these feeds as built-in tools, and a small **Python SDK** in `sdk/python`. Full reference: [DOCS.md](./DOCS.md).
+The same API serves 22 other live categories: crypto and on-chain data, markets, economics, news, politics, weather, climate, disasters, space, science, medical, tech, cybersecurity, sports, aviation, jobs and commodities. Pulse also ships an **MCP server** (`mcp_server.py`) with `pulse_regulatory` (search the feed) and `pulse_regulatory_verify` (prove a day against the chain) as built-in agent tools, and a small **Python SDK** in `sdk/python`. Full reference: [DOCS.md](./DOCS.md).
 
 ---
 
