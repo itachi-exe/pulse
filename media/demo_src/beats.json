@@ -1,25 +1,97 @@
 {
  "voice": "en-GB-SoniaNeural",
- "rate": "+2%",
- "gap": 0.45,
+ "rate": "+0%",
+ "gap": 0.5,
  "beats": [
-  {"id": "b1", "kind": "footage", "scene": "hook",
-   "narration": "Ask an AI agent what the SEC did this week. It will guess, from training data that is months old. In compliance, a guess is a liability."},
-  {"id": "b2", "kind": "footage", "scene": "landing",
-   "narration": "Pulse is a live data layer for AI agents. Twelve hundred verified sources, twenty-three categories, one API."},
-  {"id": "b3", "kind": "footage", "scene": "curl",
-   "narration": "Its Regulatory and Legal feed pulls thirty-eight sources. Twenty-four are primary: the SEC, the Federal Reserve, the FCA, ESMA, EUR-Lex, and the federal courts. No key needed."},
-  {"id": "b4", "kind": "footage", "scene": "dashboard",
-   "narration": "In the dashboard, pick Regulatory and Legal, and you read today's headlines, each linked to the original document."},
-  {"id": "b5", "kind": "footage", "scene": "seal",
-   "narration": "Every item is fingerprinted the moment it arrives. Each day rolls up into one digest, and that digest is written on chain."},
-  {"id": "b6", "kind": "footage", "scene": "verify",
-   "narration": "You do not have to trust us. This script uses only the Python standard library. It downloads the day, recomputes every hash, and reads the transaction straight from the chain. Verified."},
-  {"id": "b7", "kind": "footage", "scene": "tamper",
-   "narration": "Now the worst case. Edit one headline in our database, then rewrite every hash to cover it up. Our own data looks clean. The chain disagrees, and the check fails."},
-  {"id": "b8", "kind": "footage", "scene": "agents",
-   "narration": "Agents plug in through the REST API, the MCP server, or the Python SDK. Compliance teams get a record they can prove."},
-  {"id": "b9", "kind": "footage", "scene": "end",
-   "narration": "Pulse. The regulatory feed for AI agents, with proof. Live now at getpulsedata dot online."}
+  {
+   "id": "b1",
+   "kind": "footage",
+   "scene": "hook",
+   "narration": "Ask an AI assistant a simple question. What did the SEC, America's financial regulator, do this week? It answers anyway, from memory that is months old. It sounds sure, and you can't check it."
+  },
+  {
+   "id": "b2",
+   "kind": "footage",
+   "scene": "flood",
+   "narration": "Here is the problem. Every day, regulators and courts publish new rules, fines and rulings. The SEC. The Federal Reserve. Britain's FCA. The European Union. The Supreme Court. Miss one, and a bank, a crypto company or a law firm can pay for it."
+  },
+  {
+   "id": "b3",
+   "kind": "footage",
+   "scene": "frozen",
+   "narration": "More of that reading is now done by AI. But an AI model learns once, then its knowledge is frozen. Anything published after that, it does not know. So it guesses."
+  },
+  {
+   "id": "b4",
+   "kind": "footage",
+   "scene": "proof",
+   "narration": "There is a second problem. Even if you give an AI the latest news, can you prove later what it saw? Pages get edited. Notices get withdrawn. In law, the website said so is not evidence."
+  },
+  {
+   "id": "b5",
+   "kind": "footage",
+   "scene": "landing",
+   "narration": "Pulse fixes both. It is a live data service for AI agents. Over twelve hundred checked sources, behind one web address."
+  },
+  {
+   "id": "b6",
+   "kind": "footage",
+   "scene": "sources",
+   "narration": "For legal and compliance work, there is the Regulatory and Legal feed. Thirty-eight sources. Twenty-five come straight from regulators, courts and lawmakers. Thirteen follow the news on topics like crypto law and privacy fines, clearly labelled as news."
+  },
+  {
+   "id": "b7",
+   "kind": "footage",
+   "scene": "curl",
+   "narration": "A feed is just a list of the latest updates that a computer can read. Any agent gets it with one request, no key needed. Each update has its source, its date, and a link to the original."
+  },
+  {
+   "id": "b8",
+   "kind": "footage",
+   "scene": "dashboard",
+   "narration": "People can read it too. In the dashboard, pick Regulatory and Legal, and you see today's headlines."
+  },
+  {
+   "id": "b9",
+   "kind": "footage",
+   "scene": "fingerprint",
+   "narration": "Now, the proof. When Pulse receives an update, it takes a digital fingerprint of it. Change one word, and the fingerprint is completely different."
+  },
+  {
+   "id": "b10",
+   "kind": "footage",
+   "scene": "seal",
+   "narration": "Each night, the day's fingerprints are combined into one, and written onto a public blockchain. A record anyone can read, and nobody can edit. Not even us."
+  },
+  {
+   "id": "b11",
+   "kind": "footage",
+   "scene": "verify",
+   "narration": "So you don't have to trust us. Anyone can run this small script. It recalculates every fingerprint on their own computer and compares it with the blockchain. Verified."
+  },
+  {
+   "id": "b12",
+   "kind": "footage",
+   "scene": "tamper",
+   "narration": "Now let's attack it. We edit one headline in our own database, then rewrite every fingerprint to hide it. Our records look clean. But the blockchain disagrees, and the edit is caught."
+  },
+  {
+   "id": "b13",
+   "kind": "footage",
+   "scene": "agents",
+   "narration": "For AI builders, Pulse plugs in as a tool. The agent asks about the SEC, and gets real, dated updates instead of a guess."
+  },
+  {
+   "id": "b14",
+   "kind": "footage",
+   "scene": "who",
+   "narration": "A compliance officer sees what changed today. A lawyer can prove what a regulator published on any date. And an agent answers from facts, not memory."
+  },
+  {
+   "id": "b15",
+   "kind": "footage",
+   "scene": "end",
+   "narration": "Pulse. The regulatory feed for AI agents, with proof. Live now at getpulsedata dot online."
+  }
  ]
 }
