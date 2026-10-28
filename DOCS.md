@@ -218,6 +218,8 @@ curl "$PULSE_BASE/data/regulatory/snapshot/2026-10-28"
 
 If any stored item is edited after the fact, `verified` turns false and `broken_items` names it.
 
+Once a day, the day's digest is written on-chain (0G Galileo testnet) as a transaction from the Pulse anchor wallet `0xDF3c44548a767f2417A9DBa9C5Db6BcBE82Dbb4d` with calldata `PULSE-REG:v1:<day>:<digest>`. The snapshot response includes `onchain.tx` and `onchain.explorer`, and Pulse re-reads that transaction from the chain on every request. Even if the Pulse database itself were rewritten, `onchain.verified` would turn false. You can check the transaction on the explorer without trusting Pulse at all.
+
 ---
 
 ## Connecting Pulse to Your AI

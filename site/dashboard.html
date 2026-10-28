@@ -535,7 +535,7 @@ async function loadPreview(cat){
       try{
         const v=await (await fetch(`${API}/data/regulatory/snapshot/${data.snapshot.fetched_at.slice(0,10)}`)).json();
         seal = v.verified
-          ? `<div class="pv-seal"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>Sealed today. Nothing has been edited since.</div>`
+          ? `<div class="pv-seal"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>${v.onchain&&v.onchain.verified?`Sealed and anchored on ${_esc(v.onchain.chain.replace(' testnet',''))}. Nothing edited since. <a href="${_esc(v.onchain.explorer)}" target="_blank" rel="noopener" style="color:var(--accent);margin-left:auto;white-space:nowrap">See proof ↗</a>`:'Sealed today. Nothing has been edited since.'}</div>`
           : `<div class="pv-seal bad"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/><path d="M12 9v4M12 16h.01"/></svg>${v.broken_items.length} item(s) changed after sealing.</div>`;
       }catch(e){}
     }

@@ -1712,21 +1712,47 @@ async def public_sources_category(category: str):
 async def reg_snapshots(limit: int = 30):
     async with aiosqlite.connect(DB_PATH) as db:
         try:
-            async with db.execute("SELECT day, COUNT(*), MAX(fetched_at) FROM reg_snapshots GROUP BY day ORDER BY day DESC LIMIT ?", (min(limit, 365),)) as cur:
+            async with db.execute("SELECT s.day, COUNT(*), MAX(s.fetched_at), MAX(a.tx) FROM reg_snapshots s LEFT JOIN reg_anchors a ON a.day = s.day GROUP BY s.day ORDER BY s.day DESC LIMIT ?", (min(limit, 365),)) as cur:
                 rows = await cur.fetchall()
         except Exception:
-            rows = []
-    return {"days": [{"day": d, "snapshots": n, "latest": l} for d, n, l in rows]}
+            async with db.execute("SELECT day, COUNT(*), MAX(fetched_at), NULL FROM reg_snapshots GROUP BY day ORDER BY day DESC LIMIT ?", (min(limit, 365),)) as cur:
+                rows = await cur.fetchall()
+    return {"days": [{"day": d, "snapshots": n, "latest": l, "anchor_tx": t} for d, n, l, t in rows]}
+
+async def _reg_anchor_check(anchor: dict) -> bool:
+    """Read the anchor tx straight from the chain and confirm it carries this digest."""
+    try:
+        async with httpx.AsyncClient(timeout=10) as c:
+            r = await c.post(anchor["rpc"], json={"jsonrpc": "2.0", "id": 1, "method": "eth_getTransactionByHash", "params": [anchor["tx"]]})
+            tx = r.json().get("result") or {}
+        expected = "0x" + f"PULSE-REG:v1:{anchor['day']}:{anchor['digest']}".encode().hex()
+        return (tx.get("input", "").lower() == expected.lower()
+                and (tx.get("from") or "").lower() == anchor["address"].lower()
+                and tx.get("blockNumber") is not None)
+    except Exception:
+        return False
 
 @app.get("/data/regulatory/snapshot/{day}")
 async def reg_snapshot(day: str):
-    """Return the latest snapshot for a day, every item in it, and a fresh
-    recomputation of every hash so the caller can see nothing was altered."""
+    """Return the day's sealed snapshot, every item in it, a fresh recomputation
+    of every hash, and (once anchored) a live check against the chain."""
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", day):
         raise HTTPException(400, "day must be YYYY-MM-DD")
     async with aiosqlite.connect(DB_PATH) as db:
+        anchor = None
         try:
-            async with db.execute("SELECT fetched_at, digest, hashes FROM reg_snapshots WHERE day=? ORDER BY fetched_at DESC LIMIT 1", (day,)) as cur:
+            async with db.execute("SELECT day, fetched_at, digest, chain_id, chain_name, rpc, explorer, address, tx, block, anchored_at FROM reg_anchors WHERE day=?", (day,)) as cur:
+                row = await cur.fetchone()
+            if row:
+                anchor = dict(zip(("day", "fetched_at", "digest", "chain_id", "chain_name", "rpc", "explorer", "address", "tx", "block", "anchored_at"), row))
+        except Exception:
+            anchor = None
+        try:
+            if anchor:
+                q = ("SELECT fetched_at, digest, hashes FROM reg_snapshots WHERE fetched_at=?", (anchor["fetched_at"],))
+            else:
+                q = ("SELECT fetched_at, digest, hashes FROM reg_snapshots WHERE day=? ORDER BY fetched_at DESC LIMIT 1", (day,))
+            async with db.execute(*q) as cur:
                 snap = await cur.fetchone()
         except Exception:
             snap = None
@@ -1743,10 +1769,17 @@ async def reg_snapshot(day: str):
             if _reg_item_hash(it) != h:
                 broken.append(h)
             items.append({**it, "sha256": h})
-    recomputed = _reg_digest(hashes)
+    local_ok = _reg_digest(hashes) == digest and not broken
+    onchain = None
+    if anchor:
+        onchain_ok = anchor["digest"] == digest and await _reg_anchor_check(anchor)
+        onchain = {"chain": anchor["chain_name"], "chain_id": anchor["chain_id"], "tx": anchor["tx"],
+                   "block": anchor["block"], "explorer": anchor["explorer"] + anchor["tx"],
+                   "calldata": f"PULSE-REG:v1:{day}:{anchor['digest']}", "verified": onchain_ok}
     return {
         "day": day, "fetched_at": fetched_at, "digest": digest,
-        "verified": recomputed == digest and not broken,
+        "verified": local_ok and (onchain is None or onchain["verified"]),
+        "anchored": onchain is not None, "onchain": onchain,
         "broken_items": broken, "items": items,
     }
 
