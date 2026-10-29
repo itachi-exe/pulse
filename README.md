@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/brand/pulse_mark_1024.png" width="72" alt="Pulse heartbeat logo">
+
 # Pulse
 
 **The live regulatory feed for AI agents, with proof.**
