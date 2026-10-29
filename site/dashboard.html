@@ -281,14 +281,15 @@ button{background:none;border:none;cursor:pointer;font:inherit;color:inherit}
 
         <div id="doc-python">
           <div class="code-block">
-            <span class="hl-green">from</span> pulse <span class="hl-green">import</span> PulseClient<br/><br/>
-            client = PulseClient(<span class="hl-str">"https://pulse.itachi.dev/data"</span>, api_key=<span class="hl-str" id="docKey1">"YOUR_KEY"</span>)<br/><br/>
+            <span class="hl-green">import</span> requests<br/><br/>
+            BASE = <span class="hl-str">"https://getpulsedata.online/data"</span><br/>
+            KEY = <span class="hl-str" id="docKey1">"YOUR_KEY"</span><br/><br/>
             <span class="hl-comment"># Get crypto feed</span><br/>
-            ctx = client.feed(<span class="hl-str">"crypto"</span>)<br/>
-            print(ctx[<span class="hl-str">"data"</span>][<span class="hl-str">"ethereum"</span>][<span class="hl-str">"price_usd"</span>])<br/><br/>
+            crypto = requests.get(f<span class="hl-str">"{BASE}/feed/crypto"</span>, headers={<span class="hl-str">"X-Pulse-Key"</span>: KEY}).json()<br/>
+            print(crypto[<span class="hl-str">"data"</span>][<span class="hl-str">"prices"</span>][<span class="hl-str">"ethereum"</span>][<span class="hl-str">"price_usd"</span>])<br/><br/>
             <span class="hl-comment"># Get news feed</span><br/>
-            news = client.feed(<span class="hl-str">"news"</span>)<br/>
-            <span class="hl-green">for</span> story <span class="hl-green">in</span> news[<span class="hl-str">"data"</span>][<span class="hl-str">"stories"</span>]:<br/>
+            news = requests.get(f<span class="hl-str">"{BASE}/feed/news"</span>, headers={<span class="hl-str">"X-Pulse-Key"</span>: KEY}).json()<br/>
+            <span class="hl-green">for</span> story <span class="hl-green">in</span> news[<span class="hl-str">"data"</span>][<span class="hl-str">"articles"</span>]:<br/>
             &nbsp;&nbsp;print(story[<span class="hl-str">"title"</span>])
             <span class="code-copy" onclick="copyCode(this)">Copy</span>
           </div>
@@ -296,7 +297,7 @@ button{background:none;border:none;cursor:pointer;font:inherit;color:inherit}
         <div id="doc-js" style="display:none">
           <div class="code-block">
             <span class="hl-green">const</span> key = <span class="hl-str" id="docKey2">"YOUR_KEY"</span>;<br/>
-            <span class="hl-green">const</span> base = <span class="hl-str">"https://pulse.itachi.dev/data"</span>;<br/><br/>
+            <span class="hl-green">const</span> base = <span class="hl-str">"https://getpulsedata.online/data"</span>;<br/><br/>
             <span class="hl-green">async function</span> pulseGet(category) {<br/>
             &nbsp;&nbsp;<span class="hl-green">const</span> r = <span class="hl-green">await</span> fetch(`${base}/feed/${category}?key=${key}`);<br/>
             &nbsp;&nbsp;<span class="hl-green">return</span> r.json();<br/>
@@ -309,13 +310,13 @@ button{background:none;border:none;cursor:pointer;font:inherit;color:inherit}
         <div id="doc-curl" style="display:none">
           <div class="code-block">
             <span class="hl-comment"># Crypto prices</span><br/>
-            curl https://pulse.itachi.dev/data/feed/crypto \<br/>
+            curl https://getpulsedata.online/data/feed/crypto \<br/>
             &nbsp;&nbsp;-H <span class="hl-str" id="docKey3">"X-Pulse-Key: YOUR_KEY"</span><br/><br/>
             <span class="hl-comment"># News headlines</span><br/>
-            curl https://pulse.itachi.dev/data/feed/news \<br/>
+            curl https://getpulsedata.online/data/feed/news \<br/>
             &nbsp;&nbsp;-H <span class="hl-str">"X-Pulse-Key: YOUR_KEY"</span><br/><br/>
             <span class="hl-comment"># Weather</span><br/>
-            curl https://pulse.itachi.dev/data/feed/weather \<br/>
+            curl https://getpulsedata.online/data/feed/weather \<br/>
             &nbsp;&nbsp;-H <span class="hl-str">"X-Pulse-Key: YOUR_KEY"</span>
             <span class="code-copy" onclick="copyCode(this)">Copy</span>
           </div>

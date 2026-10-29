@@ -1649,7 +1649,7 @@ async def get_feed(category: str, request: Request, db=Depends(get_db)):
         # Read-only, non-commercial categories only. Full catalog needs a key.
         FREE_PREVIEW = ("crypto", "weather", "medical", "politics", "news", "science", "disasters", "regulatory")
         if category not in FREE_PREVIEW:
-            raise HTTPException(401, "API key required. Sign up at pulse.dev")
+            raise HTTPException(401, "API key required. Sign up at https://getpulsedata.online/login")
 
     if category not in FEED_MAP:
         raise HTTPException(404, f"Unknown category '{category}'. Available: {list(FEED_MAP.keys())}")
