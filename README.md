@@ -293,7 +293,8 @@ To regenerate the screenshots: `pip install playwright mcp && playwright install
 - [x] Nightly on-chain anchor, independent verifier and tamper demo
 - [x] MCP tools for search and verification
 - [ ] Anchor on Base mainnet
-- [ ] Chainlink CRE workflow, so a decentralised oracle network fetches and agrees on the feed before anchoring
+- [x] [Chainlink CRE workflow](cre/pulse-regulatory-seal/daily-seal): the oracle network fetches the day's seal and must agree on its digest (simulated, deploy waiting on Chainlink access)
+- [ ] Anchor the agreed seal on-chain from the CRE workflow
 - [ ] Filters by regulator, jurisdiction and topic
 
 ---
